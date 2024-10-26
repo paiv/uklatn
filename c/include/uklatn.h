@@ -8,20 +8,36 @@
 #endif
 
 
-#if defined(__cplusplus) || defined(c_plusplus)
+#if defined(__cplusplus)
 extern "C" {
 #endif
 
 
-/* Cyrillic to Latin transiteration */
-int uklatn_encode(const UChar* restrict src, UChar* restrict dest, int destsize);
+/* Cyrillic to Latin transiteration
+  UTF-8 parameters.
+*/
+int uklatn_encode(const char* restrict src, char* restrict dest, int destsize);
 
 
-/* Latin to Cyrillic re-transliteration */
-int uklatn_decode(const UChar* restrict src, UChar* restrict dest, int destsize);
+/* Cyrillic to Latin transiteration
+  UTF-16 parameters.
+*/
+int uklatn_encodeu(const UChar* restrict src, UChar* restrict dest, int destsize);
 
 
-#if defined(__cplusplus) || defined(c_plusplus)
+/* Latin to Cyrillic re-transliteration
+  UTF-8 parameters.
+*/
+int uklatn_decode(const char* restrict src, char* restrict dest, int destsize);
+
+
+/* Latin to Cyrillic re-transliteration
+  UTF-16 parameters.
+*/
+int uklatn_decodeu(const UChar* restrict src, UChar* restrict dest, int destsize);
+
+
+#if defined(__cplusplus)
 } /* extern "C" */
 #endif
 

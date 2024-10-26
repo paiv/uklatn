@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <uklatn.h>
 #include <unicode/ustring.h>
 #include <unicode/utrans.h>
@@ -195,7 +196,7 @@ uklatn_gettr(const UChar* tid, UTransDirection dir, UTransliterator** ptr) {
         if (err == U_INVALID_ID) {
             err = uklatn_init();
             if (U_FAILURE(err)) { return err; }
-            tr = utrans_openU(Tid_DSTU_A, -1, UTRANS_FORWARD, NULL, 0, NULL, &err);
+            tr = utrans_openU(tid, -1, dir, NULL, 0, NULL, &err);
         }
         if (U_FAILURE(err)) {
             trace("utrans_openU: %s\n", u_errorName(err));
@@ -208,7 +209,7 @@ uklatn_gettr(const UChar* tid, UTransDirection dir, UTransliterator** ptr) {
 
 
 int
-uklatn_encode(const UChar* src, UChar* dest, int destsize) {
+uklatn_encodeu(const UChar* src, UChar* dest, int destsize) {
     UErrorCode err = U_ZERO_ERROR;
     UTransliterator* tr = NULL;
     err = uklatn_gettr(Tid_DSTU_A, UTRANS_FORWARD, &tr);
@@ -228,7 +229,7 @@ uklatn_encode(const UChar* src, UChar* dest, int destsize) {
 
 
 int
-uklatn_decode(const UChar* src, UChar* dest, int destsize) {
+uklatn_decodeu(const UChar* src, UChar* dest, int destsize) {
     UErrorCode err = U_ZERO_ERROR;
     UTransliterator* tr = NULL;
     err = uklatn_gettr(Tid_DSTU_A, UTRANS_REVERSE, &tr);
@@ -245,3 +246,84 @@ uklatn_decode(const UChar* src, UChar* dest, int destsize) {
     utrans_close(tr);
     return 0;
 }
+
+
+int
+uklatn_encode(const char* src, char* dest, int destsize) {
+    UErrorCode err = U_ZERO_ERROR;
+    int32_t bufsize = 0;
+    u_strFromUTF8WithSub(NULL, 0, &bufsize, src, -1, 0xFFFD, NULL, &err);
+    if (U_FAILURE(err) && err != U_BUFFER_OVERFLOW_ERROR) {
+        trace("u_strFromUTF8WithSub: %s\n", u_errorName(err));
+        return err;
+    }
+    err = U_ZERO_ERROR;
+    UChar* usrc = calloc(bufsize, sizeof(UChar));
+    u_strFromUTF8WithSub(usrc, bufsize, NULL, src, -1, 0xFFFD, NULL, &err);
+    if (U_FAILURE(err)) {
+        free(usrc);
+        trace("u_strFromUTF8WithSub: %s\n", u_errorName(err));
+        return err;
+    }
+
+    bufsize *= 3;
+    UChar* udst = calloc(bufsize, sizeof(UChar));
+
+    err = uklatn_encodeu(usrc, udst, bufsize);
+    free(usrc);
+    if (U_FAILURE(err)) {
+        free(udst);
+        trace("uklatn_encodeu: %s\n", u_errorName(err));
+        return err;
+    }
+
+    u_strToUTF8WithSub(dest, destsize, NULL, udst, -1, 0xFFFD, NULL, &err);
+    free(udst);
+    if (U_FAILURE(err)) {
+        trace("u_strToUTF8WithSub: %s\n", u_errorName(err));
+        return err;
+    }
+
+    return 0;
+}
+
+
+int
+uklatn_decode(const char* src, char* dest, int destsize) {
+    UErrorCode err = U_ZERO_ERROR;
+    int32_t bufsize = 0;
+    u_strFromUTF8WithSub(NULL, 0, &bufsize, src, -1, 0xFFFD, NULL, &err);
+    if (U_FAILURE(err) && err != U_BUFFER_OVERFLOW_ERROR) {
+        trace("u_strFromUTF8WithSub: %s\n", u_errorName(err));
+        return err;
+    }
+    err = U_ZERO_ERROR;
+    UChar* usrc = calloc(bufsize, sizeof(UChar));
+    u_strFromUTF8WithSub(usrc, bufsize, NULL, src, -1, 0xFFFD, NULL, &err);
+    if (U_FAILURE(err)) {
+        free(usrc);
+        trace("u_strFromUTF8WithSub: %s\n", u_errorName(err));
+        return err;
+    }
+
+    bufsize *= 3;
+    UChar* udst = calloc(bufsize, sizeof(UChar));
+
+    err = uklatn_decodeu(usrc, udst, bufsize);
+    free(usrc);
+    if (U_FAILURE(err)) {
+        free(udst);
+        trace("uklatn_decodeu: %s\n", u_errorName(err));
+        return err;
+    }
+
+    u_strToUTF8WithSub(dest, destsize, NULL, udst, -1, 0xFFFD, NULL, &err);
+    free(udst);
+    if (U_FAILURE(err)) {
+        trace("u_strToUTF8WithSub: %s\n", u_errorName(err));
+        return err;
+    }
+
+    return 0;
+}
+

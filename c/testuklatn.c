@@ -22,7 +22,7 @@ static int
 _test_uk2latn(const UChar* input, const UChar* expect) {
     const size_t bufsize = 2000;
     UChar lat[bufsize];
-    int err = uklatn_encode(input, lat, 2000);
+    int err = uklatn_encodeu(input, lat, 2000);
     if (err != 0) { return err; }
     int i = u_strcmp(lat, expect);
     if (i != 0) {
@@ -42,7 +42,7 @@ static int
 _test_latn2uk(const UChar* input, const UChar* expect) {
     const size_t bufsize = 2000;
     UChar cyr[bufsize];
-    int err = uklatn_decode(input, cyr, 2000);
+    int err = uklatn_decodeu(input, cyr, 2000);
     if (err != 0) { return err; }
     int i = u_strcmp(cyr, expect);
     if (i != 0) {
