@@ -12,29 +12,33 @@ PyDoc_STRVAR(_uklatn_encode__doc__,
     "Transliterates a string of Ukrainian Cyrillic to Latin script.\n"
     "\n"
     "Signature:\n"
-    "  encode(str)\n"
+    "  encode(str, int)\n"
     "\n"
     "Args:\n"
     "  text (str): The Ukrainian Cyrillic string to transliterate.\n"
+    "  table (int): The transliteration table, one of:\n"
+    "    uklatn.DSTU_A: DSTU 9112:2021 System A\n"
+    "    uklatn.DSTU_B: DSTU 9112:2021 System B\n"
     "\n"
     "Returns:\n"
     "  The transliterated string.\n"
     "\n"
     "Raises:\n"
-    "  _uklatn.error: if encoding fails.\n"
+    "  uklatn.error: if encoding fails.\n"
 );
 
 
 static PyObject*
 _uklatn_encode(PyObject* self, PyObject* args) {
     const char* src = NULL;
+    int table = 0;
 
-    int err = PyArg_ParseTuple(args, "s:encode", &src);
+    int err = PyArg_ParseTuple(args, "s|i:encode", &src, &table);
     if (err == 0) { return NULL; }
 
-    int dstsize = 3 * strlen(src);;
+    int dstsize = 3 * strlen(src);
     char* dst = malloc(dstsize);
-    err = uklatn_encode(src, dst, dstsize);
+    err = uklatn_encode(src, table, dst, dstsize);
     if (err != 0) {
         free(dst);
         char m[100] = "transliteration failed (code ";
@@ -53,29 +57,33 @@ PyDoc_STRVAR(_uklatn_decode__doc__,
     "Re-transliterates a string of Ukrainian Latin to Cyrillic script.\n"
     "\n"
     "Signature:\n"
-    "  decode(str)\n"
+    "  decode(str, int)\n"
     "\n"
     "Args:\n"
     "  text (str): The Ukrainian Latin string to transliterate.\n"
+    "  table (int): The transliteration table, one of:\n"
+    "    uklatn.DSTU_A: DSTU 9112:2021 System A\n"
+    "    uklatn.DSTU_B: DSTU 9112:2021 System B\n"
     "\n"
     "Returns:\n"
     "  The re-transliterated string.\n"
     "\n"
     "Raises:\n"
-    "  _uklatn.error: if decoding fails.\n"
+    "  uklatn.error: if decoding fails.\n"
 );
 
 
 static PyObject*
 _uklatn_decode(PyObject* self, PyObject* args) {
     const char* src = NULL;
+    int table = 0;
 
-    int err = PyArg_ParseTuple(args, "s:decode", &src);
+    int err = PyArg_ParseTuple(args, "s|i:decode", &src, &table);
     if (err == 0) { return NULL; }
 
-    int dstsize = 3 * strlen(src);;
+    int dstsize = 3 * strlen(src);
     char* dst = malloc(dstsize);
-    err = uklatn_decode(src, dst, dstsize);
+    err = uklatn_decode(src, table, dst, dstsize);
     if (err != 0) {
         free(dst);
         char m[100] = "transliteration failed (code ";
@@ -133,5 +141,9 @@ PyInit__uklatn(void) {
         Py_DECREF(module);
         return NULL;
     }
+
+    PyModule_AddIntConstant(module, "DSTU_A", UklatnTable_DSTU_A);
+    PyModule_AddIntConstant(module, "DSTU_B", UklatnTable_DSTU_B);
+
     return module;
 }

@@ -8,6 +8,18 @@
 #endif
 
 
+enum UklatnTable {
+    UklatnTable_default = 0,
+    UklatnTable_DSTU_A = 1,
+    UklatnTable_DSTU_B = 2,
+};
+
+
+#ifndef UKLATN_DEFAULT_TABLE
+#define UKLATN_DEFAULT_TABLE UklatnTable_DSTU_A
+#endif
+
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -16,25 +28,25 @@ extern "C" {
 /* Cyrillic to Latin transiteration
   UTF-8 parameters.
 */
-int uklatn_encode(const char* restrict src, char* restrict dest, int destsize);
+int uklatn_encode(const char* restrict src, int table, char* restrict dest, int destsize);
 
 
 /* Cyrillic to Latin transiteration
   UTF-16 parameters.
 */
-int uklatn_encodeu(const UChar* restrict src, UChar* restrict dest, int destsize);
+int uklatn_encodeu(const UChar* restrict src, int table, UChar* restrict dest, int destsize);
 
 
 /* Latin to Cyrillic re-transliteration
   UTF-8 parameters.
 */
-int uklatn_decode(const char* restrict src, char* restrict dest, int destsize);
+int uklatn_decode(const char* restrict src, int table, char* restrict dest, int destsize);
 
 
 /* Latin to Cyrillic re-transliteration
   UTF-16 parameters.
 */
-int uklatn_decodeu(const UChar* restrict src, UChar* restrict dest, int destsize);
+int uklatn_decodeu(const UChar* restrict src, int table, UChar* restrict dest, int destsize);
 
 
 #if defined(__cplusplus)
