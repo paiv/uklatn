@@ -5,7 +5,6 @@ from setuptools_scm import get_version
 
 setuptools.setup(
     version = get_version(),
-    license_files = ["license"],
     py_modules = ["uklatn"],
     ext_modules = [
         Extension(
@@ -21,8 +20,6 @@ setuptools.setup(
                 "c/include",
             ],
             libraries = [
-                "icuuc",
-                "icudata",
                 "icui18n",
             ],
             py_limited_api = True,

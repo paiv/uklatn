@@ -5,6 +5,14 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "uklatn"
 dynamic = ["version"]
+authors = [
+    {name = "Pavlo Ivashkov"},
+]
+license = {file = "license"}
+requires-python = ">=3.10"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+]
 
 [tool.setuptools]
 package-dir = {"" = "python"}
