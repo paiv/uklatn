@@ -1,6 +1,9 @@
+.DS_Store
+.build/
 build/
 
 __pycache__/
 *.py[cdo]
 *.egg-info/
 *.so
+
