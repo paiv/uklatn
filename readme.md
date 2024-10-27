@@ -37,7 +37,7 @@ Swift package
 
 Add package dependency:
 ```sh
-swift package add-dependency 'https://github.com/paiv/uklatn' --from '1.0.0'
+swift package add-dependency 'https://github.com/paiv/uklatn.git' --from '1.0.0'
 ```
 
 Use in target dependencies in `Package.swift`:
