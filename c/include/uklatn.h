@@ -10,13 +10,14 @@
 
 enum UklatnTable {
     UklatnTable_default = 0,
-    UklatnTable_DSTU_A = 1,
-    UklatnTable_DSTU_B = 2,
+    UklatnTable_DSTU_9112_A = 1,
+    UklatnTable_DSTU_9112_B = 2,
+    UklatnTable_KMU_55 = 3,
 };
 
 
 #ifndef UKLATN_DEFAULT_TABLE
-#define UKLATN_DEFAULT_TABLE UklatnTable_DSTU_A
+#define UKLATN_DEFAULT_TABLE UklatnTable_DSTU_9112_A
 #endif
 
 

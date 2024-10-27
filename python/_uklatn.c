@@ -17,8 +17,9 @@ PyDoc_STRVAR(_uklatn_encode__doc__,
     "Args:\n"
     "  text (str): The Ukrainian Cyrillic string to transliterate.\n"
     "  table (int): The transliteration table, one of:\n"
-    "    uklatn.DSTU_A: DSTU 9112:2021 System A\n"
-    "    uklatn.DSTU_B: DSTU 9112:2021 System B\n"
+    "    uklatn.DSTU_9112_A: DSTU 9112:2021 System A\n"
+    "    uklatn.DSTU_9112_B: DSTU 9112:2021 System B\n"
+    "    uklatn.KMU_55: KMU 55:2010\n"
     "\n"
     "Returns:\n"
     "  The transliterated string.\n"
@@ -62,8 +63,8 @@ PyDoc_STRVAR(_uklatn_decode__doc__,
     "Args:\n"
     "  text (str): The Ukrainian Latin string to transliterate.\n"
     "  table (int): The transliteration table, one of:\n"
-    "    uklatn.DSTU_A: DSTU 9112:2021 System A\n"
-    "    uklatn.DSTU_B: DSTU 9112:2021 System B\n"
+    "    uklatn.DSTU_9112_A: DSTU 9112:2021 System A\n"
+    "    uklatn.DSTU_9112_B: DSTU 9112:2021 System B\n"
     "\n"
     "Returns:\n"
     "  The re-transliterated string.\n"
@@ -80,6 +81,11 @@ _uklatn_decode(PyObject* self, PyObject* args) {
 
     int err = PyArg_ParseTuple(args, "s|i:decode", &src, &table);
     if (err == 0) { return NULL; }
+
+    if (table == UklatnTable_KMU_55) {
+        PyErr_SetString(UklatnError, "KMU_55 is not reversible");
+        return NULL;
+    }
 
     int dstsize = 3 * strlen(src);
     char* dst = malloc(dstsize);
@@ -142,8 +148,9 @@ PyInit__uklatn(void) {
         return NULL;
     }
 
-    PyModule_AddIntConstant(module, "DSTU_A", UklatnTable_DSTU_A);
-    PyModule_AddIntConstant(module, "DSTU_B", UklatnTable_DSTU_B);
+    PyModule_AddIntConstant(module, "DSTU_9112_A", UklatnTable_DSTU_9112_A);
+    PyModule_AddIntConstant(module, "DSTU_9112_B", UklatnTable_DSTU_9112_B);
+    PyModule_AddIntConstant(module, "KMU_55", UklatnTable_KMU_55);
 
     return module;
 }

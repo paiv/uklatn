@@ -12,6 +12,7 @@ static const UChar Tid_DSTU_A[] = u"uk-uk_DSTUA";
 static const UChar Rid_DSTU_A[] = u"uk_DSTUA-uk";
 static const UChar Tid_DSTU_B[] = u"uk-uk_DSTUB";
 static const UChar Rid_DSTU_B[] = u"uk_DSTUB-uk";
+static const UChar Tid_KMU[] = u"uk-uk_KMU";
 
 
 static char _rules_dstu_a[] =
@@ -166,6 +167,73 @@ static char _rules_dstu_b[] =
     ;
 
 
+static char _rules_kmu[] =
+    ":: [АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯЬабвгґдеєжзиіїйклмнопрстуфхцчшщюяь’] ;"
+    ":: NFC ;"
+    "$quote = \\u0027 ;"
+    "$cyrlow = [бвгґджзйклмнпрстфхцчшщьаеєиіїоуюя’] ;"
+    "$wordBoundary = [^[:L:][:M:][:N:]] ;"
+
+    "А > A ; а > a ;"
+    "Б > B ; б > b ;"
+    "В > V ; в > v ;"
+    "Г > H ; г > h ;"
+    "Ґ > G ; ґ > g ;"
+    "Д > D ; д > d ;"
+    "Е > E ; е > e ;"
+    "$wordBoundary {Є} $cyrlow > Ye ;"
+    "$wordBoundary {Є > YE ;"
+    "$wordBoundary {є > ye ;"
+    "Є} $cyrlow > Ie ;"
+    "Є > IE ; є > ie ;"
+    "Ж} $cyrlow > Zh ;"
+    "Ж > ZH ; ж > zh ;"
+    "З > Z ; з > z ;"
+    "И > Y ; и > y ;"
+    "І > I ; і > i ;"
+    "$wordBoundary {Ї} $cyrlow > Yi ;"
+    "$wordBoundary {Ї > YI ;"
+    "$wordBoundary {ї > yi ;"
+    "Ї > I ; ї > i ;"
+    "$wordBoundary {Й > Y ;"
+    "$wordBoundary {й > y ;"
+    "Й > I ; й > i ;"
+    "К > K ; к > k ;"
+    "Л > L ; л > l ;"
+    "М > M ; м > m ;"
+    "Н > N ; н > n ;"
+    "О > O ; о > o ;"
+    "П > P ; п > p ;"
+    "Р > R ; р > r ;"
+    "С > S ; с > s ;"
+    "Т > T ; т > t ;"
+    "У > U ; у > u ;"
+    "Ф > F ; ф > f ;"
+    "Х} $cyrlow > Kh ;"
+    "Х > KH ; х > kh ;"
+    "Ц} $cyrlow > Ts ;"
+    "Ц > TS ; ц > ts ;"
+    "Ч} $cyrlow > Ch ;"
+    "Ч > CH ; ч > ch ;"
+    "Ш} $cyrlow > Sh ;"
+    "Ш > SH ; ш > sh ;"
+    "Щ} $cyrlow > Shch ; "
+    "Щ > SHCH ; щ > shch ;"
+    "$wordBoundary {Ю} $cyrlow > Yu ;"
+    "$wordBoundary {Ю > YU ;"
+    "$wordBoundary {ю > yu ;"
+    "Ю} $cyrlow > Iu ;"
+    "Ю > IU ; ю > iu ;"
+    "$wordBoundary {Я} $cyrlow > Ya ;"
+    "$wordBoundary {Я > YA ;"
+    "$wordBoundary {я > ya ;"
+    "Я} $cyrlow > Ia ;"
+    "Я > IA ; я > ia ;"
+    "[Ьь] > ;"
+    "’ > ;"
+    ;
+
+
 #if defined(DEBUG) && DEBUG
 
 #include <stdio.h>
@@ -233,19 +301,21 @@ _uklatn_register_rules(const UChar* name, const UChar* rname, const char* text) 
         return err;
     }
 
-    tr = utrans_openU(rname, -1, UTRANS_REVERSE, rules, -1, &perr, &err);
-    if (U_FAILURE(err)) {
-        trace("utrans_openU: %s\n", u_errorName(err));
-        return err;
-    }
+    if (rname != NULL) {
+        tr = utrans_openU(rname, -1, UTRANS_REVERSE, rules, -1, &perr, &err);
+        if (U_FAILURE(err)) {
+            trace("utrans_openU: %s\n", u_errorName(err));
+            return err;
+        }
 
-    // dump_rules(tr);
+        // dump_rules(tr);
 
-    utrans_register(tr, &err);
-    if (U_FAILURE(err)) {
-        trace("utrans_register: %s\n", u_errorName(err));
-        utrans_close(tr);
-        return err;
+        utrans_register(tr, &err);
+        if (U_FAILURE(err)) {
+            trace("utrans_register: %s\n", u_errorName(err));
+            utrans_close(tr);
+            return err;
+        }
     }
 
     return 0;
@@ -260,6 +330,9 @@ _uklatn_init(void) {
     if (U_FAILURE(err)) { return err; }
 
     err = _uklatn_register_rules(Tid_DSTU_B, Rid_DSTU_B, _rules_dstu_b);
+    if (U_FAILURE(err)) { return err; }
+
+    err = _uklatn_register_rules(Tid_KMU, NULL, _rules_kmu);
     if (U_FAILURE(err)) { return err; }
 
     return 0;
@@ -307,10 +380,12 @@ _uklatn_table_name(int table) {
     }
     switch (table) {
         case UklatnTable_default:
-        case UklatnTable_DSTU_A:
+        case UklatnTable_DSTU_9112_A:
             return Tid_DSTU_A;
-        case UklatnTable_DSTU_B:
+        case UklatnTable_DSTU_9112_B:
             return Tid_DSTU_B;
+        case UklatnTable_KMU_55:
+            return Tid_KMU;
         default:
             trace("invalid table %d", table);
             return NULL;
@@ -343,6 +418,10 @@ uklatn_encodeu(const UChar* src, int table, UChar* dest, int destsize) {
 
 int
 uklatn_decodeu(const UChar* src, int table, UChar* dest, int destsize) {
+    if (table == UklatnTable_KMU_55) {
+        return -1;
+    }
+
     const UChar* name = _uklatn_table_name(table);
     if (name == NULL) { return -1; }
 
@@ -353,7 +432,6 @@ uklatn_decodeu(const UChar* src, int table, UChar* dest, int destsize) {
 
     u_strncpy(dest, src, destsize);
     int32_t lim = u_strlen(dest);
-    int32_t oldlim = lim;
 
     utrans_transUChars(tr, dest, NULL, destsize, 0, &lim, &err);
     if (U_FAILURE(err)) {
@@ -408,6 +486,10 @@ uklatn_encode(const char* src, int table, char* dest, int destsize) {
 
 int
 uklatn_decode(const char* src, int table, char* dest, int destsize) {
+    if (table == UklatnTable_KMU_55) {
+        return -1;
+    }
+
     UErrorCode err = U_ZERO_ERROR;
     int32_t bufsize = 0;
     u_strFromUTF8WithSub(NULL, 0, &bufsize, src, -1, 0xFFFD, NULL, &err);
