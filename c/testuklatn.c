@@ -252,5 +252,30 @@ int main(int argc, const char* argv[]) {
         }
     }
 
+    /* one way only */
+    const struct testcase_s data1[] = {
+        {
+            u"в’я в'я",
+            u"v'ja v'ja",
+            UklatnTable_DSTU_9112_A,
+        },
+        {
+            u"в’я в'я",
+            u"v'ja v'ja",
+            UklatnTable_DSTU_9112_B,
+        },
+        {
+            u"в’я в'я",
+            u"via via",
+            UklatnTable_KMU_55,
+        },
+    };
+
+    n = sizeof(data1)/sizeof(data1[0]);
+    for (size_t i = 0; i < n; ++i) {
+        int err = _test_uk2latn(data1[i].cyr, data1[i].lat, data1[i].table);
+        if (err != 0) { return err; }
+    }
+
     return 0;
 }
