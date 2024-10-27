@@ -31,6 +31,21 @@ C library
 - [uklatn C library](c/)
 
 
+Swift package
+--
+- [uklatn Swift package](swift/)
+
+Add package dependency:
+```sh
+swift package add-dependency 'https://github.com/paiv/uklatn' --from '1.0.0'
+```
+
+Use in target dependencies in `Package.swift`:
+```swift
+.product(name: "UKLatn", package: "uklatn")
+```
+
+
 Notes
 --
 Input is assumed to be in Ukrainian (Cyrillic or Latin script), and will be processed fully.
