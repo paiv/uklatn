@@ -22,10 +22,17 @@ Usage:
 ```py
 import uklatn
 uklatn.encode("Доброго вечора!")
+uklatn.decode("Paljanycja")
 ```
 
 
 C library
 --
 - [uklatn C library](c/)
+
+
+Notes
+--
+Input is assumed to be in Ukrainian (Cyrillic or Latin script), and will be processed fully.
+If your data has mixed languages, do preprocessing to extract Ukrainian chunks.
 
