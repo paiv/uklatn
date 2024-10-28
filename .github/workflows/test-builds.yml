@@ -1,19 +1,77 @@
-name: Test the builds
+name: Build
 
 on:
   push:
-    branches: [acton]
-
-env:
-  BUILD_TYPE: Release
+    tags: ['*']
 
 jobs:
-  build:
+
+  build-c:
+    strategy:
+      matrix:
+        BUILD_TYPE: [Debug, Release]
+
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Hello
-      run: echo Hello
+    - name: Install ICU
+      run: |
+        # sudo apt-get update -y
+        sudo apt-get install -y libicu-dev libicu70
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.BUILD_TYPE}}
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{matrix.BUILD_TYPE}}
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C ${{matrix.BUILD_TYPE}}
+
+
+  build-py:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install ICU
+      run: |
+        sudo apt-get install -y libicu-dev libicu70
+
+    - name: Configure Python
+      run: |
+        pip install 'setuptools>=74' 'setuptools-scm>=8'
+
+    - name: Build
+      working-directory: ${{github.workspace}}/python
+      run: make build
+
+    - name: Test
+      working-directory: ${{github.workspace}}/python
+      run: make test
+
+
+  build-swift:
+    strategy:
+      matrix:
+        BUILD_TYPE: [debug, release]
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install ICU
+      run: |
+        sudo apt-get install -y libicu-dev libicu70
+
+    - name: Build
+      run: swift build -c ${{matrix.BUILD_TYPE}}
+
+    - name: Test
+      run: swift test -c ${{matrix.BUILD_TYPE}}
 

@@ -3,6 +3,7 @@ uklatn
 Ukrainian Cyrillic transliteration to Latin script.
 
 [![standwithukraine](docs/StandWithUkraine.svg)](https://ukrainewar.carrd.co/)
+[![](https://github.com/paiv/uklatn/actions/workflows/test-builds.yml/badge.svg)](https://github.com/paiv/uklatn/actions)
 
 Supported transliteration schemes:
 - [DSTU 9112:2021](https://uk.wikipedia.org/wiki/ДСТУ_9112:2021)
