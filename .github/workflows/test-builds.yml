@@ -1,0 +1,19 @@
+name: Test the builds
+
+on:
+  push:
+    branches: [acton]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Hello
+      run: echo Hello
+
