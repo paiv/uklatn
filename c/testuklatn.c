@@ -114,8 +114,8 @@ int main(int argc, const char* argv[]) {
             UklatnTable_DSTU_9112_A,
         },
         {
-            u"на́голос надві́рний лля́ю",
-            u"náğolos nadvírnyj lljáju",
+            u"на́голос надві́рний лля́ю Є́ва Ї́жа Ю́шка Я́ва",
+            u"náğolos nadvírnyj lljáju Jéva Ḯža Júška Jáva",
             UklatnTable_DSTU_9112_A,
         },
         {
@@ -171,8 +171,8 @@ int main(int argc, const char* argv[]) {
             UklatnTable_DSTU_9112_B,
         },
         {
-            u"на́голос надві́рний лля́ю",
-            u"nágholos nadvírnyj lljáju",
+            u"на́голос надві́рний лля́ю Є́ва Ї́жа Ю́шка Я́ва",
+            u"nágholos nadvírnyj lljáju Jéva Jízha Júshka Jáva",
             UklatnTable_DSTU_9112_B,
         },
         {
@@ -223,8 +223,8 @@ int main(int argc, const char* argv[]) {
             UklatnTable_KMU_55,
         },
         {
-            u"на́голос надві́рний лля́ю",
-            u"náholos nadvírnyi lliáiu",
+            u"на́голос надві́рний лля́ю Є́ва Ї́жа Ю́шка Я́ва лЄ́в лЇ́ж лЮ́ш лЯ́в",
+            u"náholos nadvírnyi lliáiu Yéva Yízha Yúshka Yáva lIév lÍzh lIúsh lIáv",
             UklatnTable_KMU_55,
         },
         {
