@@ -14,11 +14,13 @@ make clean all test
 Usage:
 ```py
 import uklatn
-uklatn.encode("Доброго вечора!")
-uklatn.decode("Paljanycja")
+s = uklatn.encode("Доброго вечора!")
+print(s)
+t = uklatn.decode("Paljanycja")
+print(t)
 ```
 
 Select a transliteration scheme:
 ```py
-uklatn.encode("Борщ", uklatn.DSTU_9112_A)
+s = uklatn.encode("Борщ", uklatn.DSTU_9112_A)
 ```
