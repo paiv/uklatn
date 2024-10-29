@@ -193,6 +193,11 @@ int main(int argc, const char* argv[]) {
             UklatnTable_KMU_55,
         },
         {
+            u"згин зГ зГин Згин Зг ЗГ ЗГИН",
+            u"zghyn zGH zGhyn Zghyn Zgh ZGH ZGHYN",
+            UklatnTable_KMU_55,
+        },
+        {
             u"ь Ь ль льє льї лью лья лье льі льу льа льйо льо",
             u"  l lie li liu lia le li lu la lio lo",
             UklatnTable_KMU_55,

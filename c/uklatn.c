@@ -191,6 +191,8 @@ static char _rules_kmu[] =
     "Є > IE ; є > ie ;"
     "Ж} $cyrlow > Zh ;"
     "Ж > ZH ; ж > zh ;"
+    "зГ} $cyrlow > zGh ; зГ > zGH ;"
+    "ЗГ > ZGH ; Зг > Zgh ; зг > zgh ;"
     "З > Z ; з > z ;"
     "И > Y ; и > y ;"
     "І > I ; і > i ;"
