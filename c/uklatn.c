@@ -16,7 +16,7 @@ static const UChar Tid_KMU[] = u"uk-uk_KMU";
 
 
 static char _rules_dstu_a[] =
-    ":: [АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯЬабвгґдеєжзиіїйклмнопрстуфхцчшщюяь’ЁЎЪЫЭёўъыэ] ;"
+    ":: [[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯЬабвгґдеєжзиіїйклмнопрстуфхцчшщюяь’ЁЎЪЫЭёўъыэ] [\\u0301\\u0306\\u0308]] ;"
     ":: NFC (NFC) ;"
     "$quote = \\u0027 ;"
     "$acute = \\u0301 ;"
@@ -33,7 +33,7 @@ static char _rules_dstu_a[] =
     "Д <> D ; д <> d ;"
     "Е <> E ; е <> e ;"
     "Є} $acute? $cyrlow > Je ;"
-    "Є <> JE ; є <> je ; Є < Je ;"
+    "Є <> JE ; є <> je ; Є < Je ; є < jE ;"
     "Ж <> Ž ; ж <> ž ;"
     "З <> Z ; з <> z ;"
     "И <> Y ; и <> y ;"
@@ -56,9 +56,9 @@ static char _rules_dstu_a[] =
     "Ш <> Š ; ш <> š ;"
     "Щ <> Ŝ ; щ <> ŝ ;"
     "Ю} $acute? $cyrlow > Ju ;"
-    "Ю <> JU ; ю <> ju ; Ю < Ju ;"
+    "Ю <> JU ; ю <> ju ; Ю < Ju ; ю < jU ;"
     "Я} $acute? $cyrlow > Ja ;"
-    "Я <> JA ; я <> ja ; Я < Ja ;"
+    "Я <> JA ; я <> ja ; Я < Ja ; я < jA ;"
     "$wordBoundary {Ь > Ĵ ;"
     "$wordBoundary {ь > ĵ ;"
     "Ь < Ĵ ; ь < ĵ ;"
@@ -78,12 +78,21 @@ static char _rules_dstu_a[] =
     "Ъ <> Ǒ ; ъ <> ǒ ;"
     "Ы <> Ȳ ; ы <> ȳ ;"
     "Э <> Ē ; э <> ē ;"
-    ":: ([BCČDFGĞKLMNPRSŜŠTVXZŽbcčdfgğklmnprsŝštvxzžAEIÏOUYaeiïouyJjĴĵ'ÖŬǑȲĒöŭǒȳē]) ;"
+    ":: Null ;"
+    "A $acute < Á ; a $acute < á ;"
+    "E $acute < É ; e $acute < é ;"
+    "I $acute < Í ; i $acute < í ;"
+    "O $acute < Ó ; o $acute < ó ;"
+    "U $acute < Ú ; u $acute < ú ;"
+    "Y $acute < Ý ; y $acute < ý ;"
+    "Ï $acute < Ḯ ; ï $acute < ḯ ;"
+    ":: NFC (NFC) ;"
+    ":: ([[BCČDFGĞKLMNPRSŜŠTVXZŽbcčdfgğklmnprsŝštvxzžAEIÏOUYaeiïouyJjĴĵÁáÉéÍíÓóÚúÝýḮḯ'ÖŬǑȲĒöŭǒȳē] [\\u0301\\u0302\\u0304\\u0306\\u0308\\u030C]]) ;"
     ;
 
 
 static char _rules_dstu_b[] =
-    ":: [АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯЬабвгґдеєжзиіїйклмнопрстуфхцчшщюяь’ЁЎЪЫЭёўъыэ] ;"
+    ":: [[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯЬабвгґдеєжзиіїйклмнопрстуфхцчшщюяь’ЁЎЪЫЭёўъыэ] [\\u0301\\u0306\\u0308]] ;"
     ":: NFC (NFC) ;"
     "$quote = \\u0027 ;"
     "$acute = \\u0301 ;"
@@ -101,21 +110,21 @@ static char _rules_dstu_b[] =
     "Б <> B ; б <> b ;"
     "В <> V ; в <> v ;"
     "Г} $cyrlow > Gh ;"
-    "Г <> GH ; г <> gh ; Г < Gh ;"
+    "Г <> GH ; г <> gh ; Г < Gh ; г < gH ;"
     "Ґ <> G ; ґ <> g ;"
     "Д <> D ; д <> d ;"
     "Е <> E ; е <> e ;"
     "Є} $acute? $cyrlow > Je ;"
-    "Є <> JE ; є <> je ; Є < Je ;"
+    "Є <> JE ; є <> je ; Є < Je ; є < jE ;"
     "Ж} $cyrlow > Zh ;"
-    "Ж <> ZH ; ж <> zh ; Ж < Zh ;"
+    "Ж <> ZH ; ж <> zh ; Ж < Zh ; ж < zH ;"
     "З <> Z ; з <> z ;"
     "И <> Y ; и <> y ;"
     "І <> I ; і <> i ;"
     "Ї} $acute? $cyrlow > Ji ;"
-    "Ї <> JI ; ї <> ji ; Ї < Ji ;"
+    "Ї <> JI ; ї <> ji ; Ї < Ji ; ї < jI ;"
     "Х} $cyrlow > Kh ;"
-    "Х <> KH ; х <> kh ; Х < Kh ;"
+    "Х <> KH ; х <> kh ; Х < Kh ; х < kH ;"
     "К <> K ; к <> k ;"
     "Л <> L ; л <> l ;"
     "М <> M ; м <> m ;"
@@ -128,22 +137,22 @@ static char _rules_dstu_b[] =
     "Щ < S [Hh] [Cc] [Hh] ;"
     "щ < s [Hh] [Cc] [Hh] ;"
     "Ш} $cyrlow > Sh ;"
-    "Ш <> SH ; ш <> sh ; Ш < Sh ;"
+    "Ш <> SH ; ш <> sh ; Ш < Sh ; ш < sH ;"
     "С <> S ; с <> s ;"
     "Т <> T ; т <> t ;"
     "У <> U ; у <> u ;"
     "Ф <> F ; ф <> f ;"
     "Ч} $cyrlow > Ch ;"
-    "Ч <> CH ; ч <> ch ; Ч < Ch ;"
+    "Ч <> CH ; ч <> ch ; Ч < Ch ; ч < cH ;"
     "Ц <> C ; ц <> c ;"
     "Ю} $acute? $cyrlow > Ju ;"
-    "Ю <> JU ; ю <> ju ; Ю < Ju ;"
+    "Ю <> JU ; ю <> ju ; Ю < Ju ; ю < jU ;"
     "Я} $acute? $cyrlow > Ja ;"
-    "Я <> JA ; я <> ja ; Я < Ja ;"
+    "Я <> JA ; я <> ja ; Я < Ja ; я < jA ;"
     "Й > J ; й > j ;"
     "$wordBoundary {Ь > Hj ;"
     "$wordBoundary {ь > hj ;"
-    "Ь < H[Jj] ; ь < hj ;"
+    "Ь < H[Jj] ; ь < h [Jj] ;"
     "Ь} [АаЕеІіУу] > J $quote ;"
     "ь} [АаЕеІіУу] > j $quote ;"
     "Ь > J ; ь > j ;"
@@ -165,12 +174,20 @@ static char _rules_dstu_b[] =
     "Ы > YW ; ы > yw ;"
     "Э} $cyrlow > Ehw ;"
     "Э > EHW ; э > ehw ;"
-    ":: ([BCDFGHKLMNPRSTVWXZbcdfghklmnprstvwxzAEIOUYaeiouyJj']) ;"
+    ":: Null ;"
+    "A $acute < Á ; a $acute < á ;"
+    "E $acute < É ; e $acute < é ;"
+    "I $acute < Í ; i $acute < í ;"
+    "O $acute < Ó ; o $acute < ó ;"
+    "U $acute < Ú ; u $acute < ú ;"
+    "Y $acute < Ý ; y $acute < ý ;"
+    ":: NFC (NFC) ;"
+    ":: ([[BCDFGHKLMNPRSTVWXZbcdfghklmnprstvwxzAEIOUYaeiouyJj'ÁáÉéÍíÓóÚúÝý] [\\u0301]]) ;"
     ;
 
 
 static char _rules_kmu[] =
-    ":: [АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯЬабвгґдеєжзиіїйклмнопрстуфхцчшщюяь’'] ;"
+    ":: [[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯЬабвгґдеєжзиіїйклмнопрстуфхцчшщюяь’'] [\\u0301]] ;"
     ":: NFC ;"
     "$quote = \\u0027 ;"
     "$acute = \\u0301 ;"
@@ -237,10 +254,11 @@ static char _rules_kmu[] =
     "[Ьь] > ;"
     "’ > ;"
     "$quote > ;"
+    ":: NFC ;"
     ;
 
 
-#if defined(DEBUG) && DEBUG
+#if !defined(NDEBUG)
 
 #include <stdio.h>
 
@@ -281,7 +299,7 @@ dump_rules(UTransliterator* tr) {
 static int
 _uklatn_register_rules(const UChar* name, const UChar* rname, const char* text) {
     UErrorCode err = U_ZERO_ERROR;
-    UChar rules[2000];
+    UChar rules[2400];
     int rulessize = sizeof(rules) / sizeof(rules[0]);
 
     u_strFromUTF8(rules, rulessize, NULL, text, -1, &err);

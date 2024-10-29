@@ -26,6 +26,7 @@ _test_uk2latn(const UChar* input, const UChar* expect, int table) {
     if (err != 0) { return err; }
     int i = u_strcmp(lat, expect);
     if (i != 0) {
+        trace("table: %d cyr-lat\n", table);
         trace(" input: ");
         utrace(input);
         trace("expect: ");
@@ -46,6 +47,7 @@ _test_latn2uk(const UChar* input, const UChar* expect, int table) {
     if (err != 0) { return err; }
     int i = u_strcmp(cyr, expect);
     if (i != 0) {
+        trace("table: %d lat-cyr\n", table);
         trace(" input: ");
         utrace(input);
         trace("expect: ");
@@ -114,8 +116,13 @@ int main(int argc, const char* argv[]) {
             UklatnTable_DSTU_9112_A,
         },
         {
-            u"на́голос надві́рний лля́ю Є́ва Ї́жа Ю́шка Я́ва",
-            u"náğolos nadvírnyj lljáju Jéva Ḯža Júška Jáva",
+            u"А́ а́ Е́ е́ Є́ є́ И́ и́ І́ і́ Ї́ ї́ О́ о́ У́ у́ Ю́ ю́ Я́ я́",
+            u"Á á É é JÉ jé Ý ý Í í Ḯ ḯ Ó ó Ú ú JÚ jú JÁ já",
+            UklatnTable_DSTU_9112_A,
+        },
+        {
+            u"Є́с сЄ́с є́с сє́с Ї́с сЇ́с ї́с сї́с Ю́с сЮ́с ю́с сю́с Я́с сЯ́с я́с ся́с",
+            u"Jés sJés jés sjés Ḯs sḮs ḯs sḯs Jús sJús jús sjús Jás sJás jás sjás",
             UklatnTable_DSTU_9112_A,
         },
         {
@@ -171,8 +178,13 @@ int main(int argc, const char* argv[]) {
             UklatnTable_DSTU_9112_B,
         },
         {
-            u"на́голос надві́рний лля́ю Є́ва Ї́жа Ю́шка Я́ва",
-            u"nágholos nadvírnyj lljáju Jéva Jízha Júshka Jáva",
+            u"А́ а́ Е́ е́ Є́ є́ И́ и́ І́ і́ Ї́ ї́ О́ о́ У́ у́ Ю́ ю́ Я́ я́",
+            u"Á á É é JÉ jé Ý ý Í í JÍ jí Ó ó Ú ú JÚ jú JÁ já",
+            UklatnTable_DSTU_9112_B,
+        },
+        {
+            u"Є́с сЄ́с є́с сє́с Ї́с сЇ́с ї́с сї́с Ю́с сЮ́с ю́с сю́с Я́с сЯ́с я́с ся́с",
+            u"Jés sJés jés sjés Jís sJís jís sjís Jús sJús jús sjús Jás sJás jás sjás",
             UklatnTable_DSTU_9112_B,
         },
         {
@@ -228,8 +240,13 @@ int main(int argc, const char* argv[]) {
             UklatnTable_KMU_55,
         },
         {
-            u"на́голос надві́рний лля́ю Є́ва Ї́жа Ю́шка Я́ва лЄ́в лЇ́ж лЮ́ш лЯ́в",
-            u"náholos nadvírnyi lliáiu Yéva Yízha Yúshka Yáva lIév lÍzh lIúsh lIáv",
+            u"А́ а́ Е́ е́ Є́ є́ И́ и́ І́ і́ Ї́ ї́ О́ о́ У́ у́ Ю́ ю́ Я́ я́",
+            u"Á á É é YÉ yé Ý ý Í í YÍ yí Ó ó Ú ú YÚ yú YÁ yá",
+            UklatnTable_KMU_55,
+        },
+        {
+            u"Є́с сЄ́с є́с сє́с Ї́с сЇ́с ї́с сї́с Ю́с сЮ́с ю́с сю́с Я́с сЯ́с я́с ся́с",
+            u"Yés sIés yés siés Yís sÍs yís sís Yús sIús yús siús Yás sIás yás siás",
             UklatnTable_KMU_55,
         },
         {
@@ -257,7 +274,7 @@ int main(int argc, const char* argv[]) {
         }
     }
 
-    /* one way only */
+    /* cyr to lat one way only */
     const struct testcase_s data1[] = {
         {
             u"в’я в'я",
@@ -274,11 +291,71 @@ int main(int argc, const char* argv[]) {
             u"via via",
             UklatnTable_KMU_55,
         },
+        {
+            u"І\u0308 і\u0308 И\u0306 и\u0306 Е\u0308 е\u0308 У\u0306 у\u0306",
+            u"Ï ï J j Ö ö Ŭ ŭ",
+            UklatnTable_DSTU_9112_A,
+        },
+        {
+            u"І\u0308 і\u0308 И\u0306 и\u0306 Е\u0308 е\u0308 У\u0306 у\u0306",
+            u"JI ji J j JOW jow UH uh",
+            UklatnTable_DSTU_9112_B,
+        },
     };
 
     n = sizeof(data1)/sizeof(data1[0]);
     for (size_t i = 0; i < n; ++i) {
         int err = _test_uk2latn(data1[i].cyr, data1[i].lat, data1[i].table);
+        if (err != 0) { return err; }
+    }
+
+    /* lat to cyr one way only */
+    const struct testcase_s data2[] = {
+        {
+            u"jA jE jU",
+            u"я є ю",
+            UklatnTable_DSTU_9112_A,
+        },
+        {
+            u"jA jI jE jU gH zH kH sHcH sH cH hJ",
+            u"я ї є ю г ж х щ ш ч ь",
+            UklatnTable_DSTU_9112_B,
+        },
+        {
+            u"I\u0308 i\u0308 J\u0302 j\u0302 C\u030C c\u030C G\u0306 g\u0306 S\u0302 s\u0302 S\u030C s\u030C Z\u030C z\u030C",
+            u"Ї ї Ь ь Ч ч Г г Щ щ Ш ш Ж ж",
+            UklatnTable_DSTU_9112_A,
+        },
+        {
+            u"O\u0308 o\u0308 U\u0306 u\u0306 O\u030C o\u030C Y\u0304 y\u0304 E\u0304 e\u0304",
+            u"Ё ё Ў ў Ъ ъ Ы ы Э э",
+            UklatnTable_DSTU_9112_A,
+        },
+        {
+            u"A\u0301 a\u0301 E\u0301 e\u0301 JE\u0301 Je\u0301 jE\u0301 je\u0301 Y\u0301 y\u0301 I\u0301 i\u0301 Ï\u0301 ï\u0301 O\u0301 o\u0301 U\u0301 u\u0301 JU\u0301 Ju\u0301 jU\u0301 ju\u0301 JA\u0301 Ja\u0301 jA\u0301 ja\u0301",
+            u"А́ а́ Е́ е́ Є́ Є́ є́ є́ И́ и́ І́ і́ Ї́ ї́ О́ о́ У́ у́ Ю́ Ю́ ю́ ю́ Я́ Я́ я́ я́",
+            UklatnTable_DSTU_9112_A,
+        },
+        {
+            u"Je\u0301s sJe\u0301s je\u0301s sje\u0301s Ï\u0301s sÏ\u0301s ï\u0301s sï\u0301s Ju\u0301s sJu\u0301s ju\u0301s sju\u0301s Ja\u0301s sJa\u0301s ja\u0301s sja\u0301s",
+            u"Є́с сЄ́с є́с сє́с Ї́с сЇ́с ї́с сї́с Ю́с сЮ́с ю́с сю́с Я́с сЯ́с я́с ся́с",
+            UklatnTable_DSTU_9112_A,
+        },
+        {
+            u"A\u0301 a\u0301 E\u0301 e\u0301 JE\u0301 Je\u0301 jE\u0301 je\u0301 Y\u0301 y\u0301 I\u0301 i\u0301 JI\u0301 Ji\u0301 jI\u0301 ji\u0301 O\u0301 o\u0301 U\u0301 u\u0301 JU\u0301 Ju\u0301 jU\u0301 ju\u0301 JA\u0301 Ja\u0301 jA\u0301 ja\u0301",
+            u"А́ а́ Е́ е́ Є́ Є́ є́ є́ И́ и́ І́ і́ Ї́ Ї́ ї́ ї́ О́ о́ У́ у́ Ю́ Ю́ ю́ ю́ Я́ Я́ я́ я́",
+            UklatnTable_DSTU_9112_B,
+        },
+        {
+            u"Je\u0301s sJe\u0301s je\u0301s sje\u0301s Ji\u0301s sJi\u0301s ji\u0301s sji\u0301s Ju\u0301s sJu\u0301s ju\u0301s sju\u0301s Ja\u0301s sJa\u0301s ja\u0301s sja\u0301s",
+            u"Є́с сЄ́с є́с сє́с Ї́с сЇ́с ї́с сї́с Ю́с сЮ́с ю́с сю́с Я́с сЯ́с я́с ся́с",
+            UklatnTable_DSTU_9112_B,
+        },
+    };
+
+    n = sizeof(data2)/sizeof(data2[0]);
+    for (size_t i = 0; i < n; ++i) {
+        int err = _test_latn2uk(data2[i].cyr, data2[i].lat, data2[i].table);
         if (err != 0) { return err; }
     }
 
