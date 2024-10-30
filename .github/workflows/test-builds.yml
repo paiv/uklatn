@@ -6,6 +6,9 @@ on:
   push:
     tags: ['*']
 
+env:
+  LIBICU: libicu70
+
 jobs:
 
   build-c:
@@ -21,7 +24,7 @@ jobs:
     - name: Install ICU
       run: |
         # sudo apt-get update -y
-        sudo apt-get install -y libicu-dev libicu70
+        sudo apt-get install -y libicu-dev ${{env.LIBICU}}
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.BUILD_TYPE}}
@@ -42,7 +45,7 @@ jobs:
 
     - name: Install ICU
       run: |
-        sudo apt-get install -y libicu-dev libicu70
+        sudo apt-get install -y libicu-dev ${{env.LIBICU}}
 
     - name: Configure Python
       run: |
@@ -69,7 +72,7 @@ jobs:
 
     - name: Install ICU
       run: |
-        sudo apt-get install -y libicu-dev libicu70
+        sudo apt-get install -y libicu-dev ${{env.LIBICU}}
 
     - name: Build
       run: swift build -c ${{matrix.BUILD_TYPE}}
