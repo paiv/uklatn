@@ -76,7 +76,7 @@ static char _Table_DSTU_9112_A_uk[] =
 static const UChar _TableName_uk_KMU_55[] = u"uk-uk_KMU55";
 
 static char _Table_uk_KMU_55[] =
-    ":: [[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯЬабвгґдеєжзиіїйклмнопрстуфхцчшщюяь’'] [\\u0301]];"
+    "::[[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯЬабвгґдеєжзиіїйклмнопрстуфхцчшщюяь’'] [\\u0301]];"
     "::NFC;"
     "$quote = \\u0027;"
     "$acute = \\u0301;"
@@ -149,14 +149,14 @@ static char _Table_uk_KMU_55[] =
 static const UChar _TableName_uk_DSTU_9112_B[] = u"uk-uk_DSTU9112B";
 
 static char _Table_uk_DSTU_9112_B[] =
-    ":: [[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯЬабвгґдеєжзиіїйклмнопрстуфхцчшщюяь’ЁЎЪЫЭёўъыэ] [\\u0301\\u0306\\u0308]];"
+    "::[[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯЬабвгґдеєжзиіїйклмнопрстуфхцчшщюяь’ЁЎЪЫЭёўъыэ] [\\u0301\\u0306\\u0308]];"
     "::NFC;"
     "$quote = \\u0027;"
     "$acute = \\u0301;"
     "$cyrcons = [БВГҐДЖЗКЛМНПРСТФХЦЧШЩбвгґджзклмнпрстфхцчшщ];"
     "$cyrlow = [бвгґджзйклмнпрстфхцчшщьаеєиіїоуюя’];"
     "$wordBoundary = [^[:L:][:M:][:N:]];"
-    "($cyrcons) } [Йй] > | $1 $quote ;"
+    "($cyrcons) } [Йй] > | $1 $quote;"
     "А > A; а > a;"
     "Б > B; б > b;"
     "В > V; в > v;"
@@ -221,7 +221,7 @@ static char _Table_uk_DSTU_9112_B[] =
 static const UChar _TableName_DSTU_9112_B_uk[] = u"uk_DSTU9112B-uk";
 
 static char _Table_DSTU_9112_B_uk[] =
-    ":: ([[BCDFGHKLMNPRSTVWXZbcdfghklmnprstvwxzAEIOUYaeiouyJj'ÁáÉéÍíÓóÚúÝý] [\\u0301]]);"
+    "::([[BCDFGHKLMNPRSTVWXZbcdfghklmnprstvwxzAEIOUYaeiouyJj'ÁáÉéÍíÓóÚúÝý] [\\u0301]]);"
     "::NFC;"
     "$quote = \\u0027;"
     "$acute = \\u0301;"
@@ -291,7 +291,7 @@ static char _Table_uk_DSTU_9112_A[] =
     "$cyrcons = [БВГҐДЖЗКЛМНПРСТФХЦЧШЩбвгґджзклмнпрстфхцчшщ];"
     "$cyrlow = [бвгґджзйклмнпрстфхцчшщьаеєиіїоуюя’];"
     "$wordBoundary = [^[:L:][:M:][:N:]];"
-    "($cyrcons)} [Йй] > | $1 $quote;"
+    "($cyrcons) } [Йй] > | $1 $quote;"
     "А > A; а > a;"
     "Б > B; б > b;"
     "В > V; в > v;"
