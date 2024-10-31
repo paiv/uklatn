@@ -126,6 +126,11 @@ int main(int argc, const char* argv[]) {
             UklatnTable_DSTU_9112_A,
         },
         {
+            u"' ім’я 'жук' \"жук\" ' '",
+            u"' im'ja 'žuk' \"žuk\" ' '",
+            UklatnTable_DSTU_9112_A,
+        },
+        {
             u"Сонце світить майже білим світлом, однак через сильніше розсіювання і поглинання короткохвильової частини спектра атмосферою Землі пряме світло Сонця біля поверхні нашої планети набуває певного жовтого відтінку. Якщо небо ясне, то блакитний відтінок розсіяного світла складається з жовтуватим прямим сонячним світлом і загальне освітлення об’єктів на Землі стає білим.",
             u"Sonce svitytj majže bilym svitlom, odnak čerez syljniše rozsijuvannja i poğlynannja korotkoxvyljovoï častyny spektra atmosferoju Zemli prjame svitlo Soncja bilja poverxni našoï planety nabuvaje pevnoğo žovtoğo vidtinku. Jakŝo nebo jasne, to blakytnyj vidtinok rozsijanoğo svitla skladajetjsja z žovtuvatym prjamym sonjačnym svitlom i zağaljne osvitlennja ob'jektiv na Zemli staje bilym.",
             UklatnTable_DSTU_9112_A,
@@ -188,6 +193,11 @@ int main(int argc, const char* argv[]) {
             UklatnTable_DSTU_9112_B,
         },
         {
+            u"' ім’я 'жук' \"жук\" ' '",
+            u"' im'ja 'zhuk' \"zhuk\" ' '",
+            UklatnTable_DSTU_9112_B,
+        },
+        {
             u"Сонце світить майже білим світлом, однак через сильніше розсіювання і поглинання короткохвильової частини спектра атмосферою Землі пряме світло Сонця біля поверхні нашої планети набуває певного жовтого відтінку. Якщо небо ясне, то блакитний відтінок розсіяного світла складається з жовтуватим прямим сонячним світлом і загальне освітлення об’єктів на Землі стає білим.",
             u"Sonce svitytj majzhe bilym svitlom, odnak cherez syljnishe rozsijuvannja i poghlynannja korotkokhvyljovoji chastyny spektra atmosferoju Zemli prjame svitlo Soncja bilja poverkhni nashoji planety nabuvaje pevnogho zhovtogho vidtinku. Jakshcho nebo jasne, to blakytnyj vidtinok rozsijanogho svitla skladajetjsja z zhovtuvatym prjamym sonjachnym svitlom i zaghaljne osvitlennja ob'jektiv na Zemli staje bilym.",
             UklatnTable_DSTU_9112_B,
@@ -247,6 +257,11 @@ int main(int argc, const char* argv[]) {
         {
             u"Є́с сЄ́с є́с сє́с Ї́с сЇ́с ї́с сї́с Ю́с сЮ́с ю́с сю́с Я́с сЯ́с я́с ся́с",
             u"Yés sIés yés siés Yís sÍs yís sís Yús sIús yús siús Yás sIás yás siás",
+            UklatnTable_KMU_55,
+        },
+        {
+            u"' ім’я 'жук' \"жук\" ' '",
+            u"' imia 'zhuk' \"zhuk\" ' '",
             UklatnTable_KMU_55,
         },
         {

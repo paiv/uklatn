@@ -82,6 +82,8 @@ static char _Table_uk_KMU_55[] =
     "$acute = \\u0301;"
     "$cyrlow = [бвгґджзйклмнпрстфхцчшщьаеєиіїоуюя’];"
     "$wordBoundary = [^[:L:][:M:][:N:]];"
+    "[:L:] {[’\\u0027]} [:L:] > ;"
+    "::Null;"
     "А > A; а > a;"
     "Б > B; б > b;"
     "В > V; в > v;"
@@ -141,8 +143,6 @@ static char _Table_uk_KMU_55[] =
     "Я} $acute? $cyrlow > Ia;"
     "Я > IA; я > ia;"
     "[Ьь] > ;"
-    "’ > ;"
-    "$quote > ;"
     "::NFC;"
     ;
 
