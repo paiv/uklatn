@@ -3,260 +3,6 @@
 #include <unicode/ustring.h>
 #include <unicode/utrans.h>
 
-/* For the rule syntax refer to
-  https://www.unicode.org/reports/tr35/tr35-general.html#Transform_Rules_Syntax
-  icu4c/source/i18n/unicode/translit.h
-*/
-
-static const UChar Tid_DSTU_A[] = u"uk-uk_DSTUA";
-static const UChar Rid_DSTU_A[] = u"uk_DSTUA-uk";
-static const UChar Tid_DSTU_B[] = u"uk-uk_DSTUB";
-static const UChar Rid_DSTU_B[] = u"uk_DSTUB-uk";
-static const UChar Tid_KMU[] = u"uk-uk_KMU";
-
-
-static char _rules_dstu_a[] =
-    ":: [[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯЬабвгґдеєжзиіїйклмнопрстуфхцчшщюяь’ЁЎЪЫЭёўъыэ] [\\u0301\\u0306\\u0308]] ;"
-    ":: NFC (NFC) ;"
-    "$quote = \\u0027 ;"
-    "$acute = \\u0301 ;"
-    "$cyrcons = [БВГҐДЖЗКЛМНПРСТФХЦЧШЩбвгґджзклмнпрстфхцчшщ] ;"
-    "$cyrlow = [бвгґджзйклмнпрстфхцчшщьаеєиіїоуюя’] ;"
-    "$wordBoundary = [^[:L:][:M:][:N:]] ;"
-
-    "($cyrcons) } [Йй] > | $1 $quote ;"
-    "А <> A ; а <> a ;"
-    "Б <> B ; б <> b ;"
-    "В <> V ; в <> v ;"
-    "Г <> Ğ ; г <> ğ ;"
-    "Ґ <> G ; ґ <> g ;"
-    "Д <> D ; д <> d ;"
-    "Е <> E ; е <> e ;"
-    "Є} $acute? $cyrlow > Je ;"
-    "Є <> JE ; є <> je ; Є < Je ; є < jE ;"
-    "Ж <> Ž ; ж <> ž ;"
-    "З <> Z ; з <> z ;"
-    "И <> Y ; и <> y ;"
-    "І <> I ; і <> i ;"
-    "Ї <> Ï ; ї <> ï ;"
-    "К <> K ; к <> k ;"
-    "Л <> L ; л <> l ;"
-    "М <> M ; м <> m ;"
-    "Н <> N ; н <> n ;"
-    "О <> O ; о <> o ;"
-    "П <> P ; п <> p ;"
-    "Р <> R ; р <> r ;"
-    "С <> S ; с <> s ;"
-    "Т <> T ; т <> t ;"
-    "У <> U ; у <> u ;"
-    "Ф <> F ; ф <> f ;"
-    "Х <> X ; х <> x ;"
-    "Ц <> C ; ц <> c ;"
-    "Ч <> Č ; ч <> č ;"
-    "Ш <> Š ; ш <> š ;"
-    "Щ <> Ŝ ; щ <> ŝ ;"
-    "Ю} $acute? $cyrlow > Ju ;"
-    "Ю <> JU ; ю <> ju ; Ю < Ju ; ю < jU ;"
-    "Я} $acute? $cyrlow > Ja ;"
-    "Я <> JA ; я <> ja ; Я < Ja ; я < jA ;"
-    "$wordBoundary {Ь > Ĵ ;"
-    "$wordBoundary {ь > ĵ ;"
-    "Ь < Ĵ ; ь < ĵ ;"
-    "Ь} [АаЕеУу] > J $quote ;"
-    "ь} [АаЕеУу] > j $quote ;"
-    "Ь > J ; ь > j ;"
-    "Ь < $cyrcons {J ;"
-    "ь < $cyrcons {j ;"
-    " < $cyrcons [Ьь] {$quote} [AaEeUu] ;"
-    "Й < $quote J} [^AaEeIiUu] ;"
-    "й < $quote j} [^AaEeIiUu] ;"
-    "Й <> J ; й <> j ;"
-    "’ > $quote ;"
-    "’ < $quote} [Jj] ;"
-    "Ё <> Ö ; ё <> ö ;"
-    "Ў <> Ŭ ; ў <> ŭ ;"
-    "Ъ <> Ǒ ; ъ <> ǒ ;"
-    "Ы <> Ȳ ; ы <> ȳ ;"
-    "Э <> Ē ; э <> ē ;"
-    ":: Null ;"
-    "A $acute < Á ; a $acute < á ;"
-    "E $acute < É ; e $acute < é ;"
-    "I $acute < Í ; i $acute < í ;"
-    "O $acute < Ó ; o $acute < ó ;"
-    "U $acute < Ú ; u $acute < ú ;"
-    "Y $acute < Ý ; y $acute < ý ;"
-    "Ï $acute < Ḯ ; ï $acute < ḯ ;"
-    ":: NFC (NFC) ;"
-    ":: ([[BCČDFGĞKLMNPRSŜŠTVXZŽbcčdfgğklmnprsŝštvxzžAEIÏOUYaeiïouyJjĴĵÁáÉéÍíÓóÚúÝýḮḯ'ÖŬǑȲĒöŭǒȳē] [\\u0301\\u0302\\u0304\\u0306\\u0308\\u030C]]) ;"
-    ;
-
-
-static char _rules_dstu_b[] =
-    ":: [[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯЬабвгґдеєжзиіїйклмнопрстуфхцчшщюяь’ЁЎЪЫЭёўъыэ] [\\u0301\\u0306\\u0308]] ;"
-    ":: NFC (NFC) ;"
-    "$quote = \\u0027 ;"
-    "$acute = \\u0301 ;"
-    "$cyrcons = [БВГҐДЖЗКЛМНПРСТФХЦЧШЩбвгґджзклмнпрстфхцчшщ] ;"
-    "$cyrlow = [бвгґджзйклмнпрстфхцчшщьаеєиіїоуюя’] ;"
-    "$wordBoundary = [^[:L:][:M:][:N:]] ;"
-
-    "($cyrcons) } [Йй] > | $1 $quote ;"
-    "Ё < J [Oo] [Ww] ; ё < j [Oo] [Ww] ;"
-    "Ў < U [Hh] ; ў < u [Hh] ;"
-    "Ъ < O [Hh] ; ъ < o [Hh] ;"
-    "Ы < Y [Ww] ; ы < y [Ww] ;"
-    "Э < E [Hh] [Ww] ; э < e [Hh] [Ww] ;"
-    "А <> A ; а <> a ;"
-    "Б <> B ; б <> b ;"
-    "В <> V ; в <> v ;"
-    "Г} $cyrlow > Gh ;"
-    "Г <> GH ; г <> gh ; Г < Gh ; г < gH ;"
-    "Ґ <> G ; ґ <> g ;"
-    "Д <> D ; д <> d ;"
-    "Е <> E ; е <> e ;"
-    "Є} $acute? $cyrlow > Je ;"
-    "Є <> JE ; є <> je ; Є < Je ; є < jE ;"
-    "Ж} $cyrlow > Zh ;"
-    "Ж <> ZH ; ж <> zh ; Ж < Zh ; ж < zH ;"
-    "З <> Z ; з <> z ;"
-    "И <> Y ; и <> y ;"
-    "І <> I ; і <> i ;"
-    "Ї} $acute? $cyrlow > Ji ;"
-    "Ї <> JI ; ї <> ji ; Ї < Ji ; ї < jI ;"
-    "Х} $cyrlow > Kh ;"
-    "Х <> KH ; х <> kh ; Х < Kh ; х < kH ;"
-    "К <> K ; к <> k ;"
-    "Л <> L ; л <> l ;"
-    "М <> M ; м <> m ;"
-    "Н <> N ; н <> n ;"
-    "О <> O ; о <> o ;"
-    "П <> P ; п <> p ;"
-    "Р <> R ; р <> r ;"
-    "Щ} $cyrlow > Shch ; "
-    "Щ > SHCH ; щ > shch ;"
-    "Щ < S [Hh] [Cc] [Hh] ;"
-    "щ < s [Hh] [Cc] [Hh] ;"
-    "Ш} $cyrlow > Sh ;"
-    "Ш <> SH ; ш <> sh ; Ш < Sh ; ш < sH ;"
-    "С <> S ; с <> s ;"
-    "Т <> T ; т <> t ;"
-    "У <> U ; у <> u ;"
-    "Ф <> F ; ф <> f ;"
-    "Ч} $cyrlow > Ch ;"
-    "Ч <> CH ; ч <> ch ; Ч < Ch ; ч < cH ;"
-    "Ц <> C ; ц <> c ;"
-    "Ю} $acute? $cyrlow > Ju ;"
-    "Ю <> JU ; ю <> ju ; Ю < Ju ; ю < jU ;"
-    "Я} $acute? $cyrlow > Ja ;"
-    "Я <> JA ; я <> ja ; Я < Ja ; я < jA ;"
-    "Й > J ; й > j ;"
-    "$wordBoundary {Ь > Hj ;"
-    "$wordBoundary {ь > hj ;"
-    "Ь < H[Jj] ; ь < h [Jj] ;"
-    "Ь} [АаЕеІіУу] > J $quote ;"
-    "ь} [АаЕеІіУу] > j $quote ;"
-    "Ь > J ; ь > j ;"
-    "Ь < $cyrcons {J ;"
-    "ь < $cyrcons {j ;"
-    " < $cyrcons [Ьь] {$quote} [AaEeIiUu] ;"
-    "Й < $quote J} [^AaEeIiUu] ;"
-    "й < $quote j} [^AaEeIiUu] ;"
-    "Й < J ; й < j ;"
-    "’ > $quote ;"
-    "’ < $quote} [Jj] ;"
-    "Ё} $cyrlow > Jow ;"
-    "Ё > JOW ; ё > jow ;"
-    "Ў} $cyrlow > Uh ;"
-    "Ў > UH ; ў > uh ;"
-    "Ъ} $cyrlow > Oh ;"
-    "Ъ > OH ; ъ > oh ;"
-    "Ы} $cyrlow > Yw ;"
-    "Ы > YW ; ы > yw ;"
-    "Э} $cyrlow > Ehw ;"
-    "Э > EHW ; э > ehw ;"
-    ":: Null ;"
-    "A $acute < Á ; a $acute < á ;"
-    "E $acute < É ; e $acute < é ;"
-    "I $acute < Í ; i $acute < í ;"
-    "O $acute < Ó ; o $acute < ó ;"
-    "U $acute < Ú ; u $acute < ú ;"
-    "Y $acute < Ý ; y $acute < ý ;"
-    ":: NFC (NFC) ;"
-    ":: ([[BCDFGHKLMNPRSTVWXZbcdfghklmnprstvwxzAEIOUYaeiouyJj'ÁáÉéÍíÓóÚúÝý] [\\u0301]]) ;"
-    ;
-
-
-static char _rules_kmu[] =
-    ":: [[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯЬабвгґдеєжзиіїйклмнопрстуфхцчшщюяь’'] [\\u0301]] ;"
-    ":: NFC ;"
-    "$quote = \\u0027 ;"
-    "$acute = \\u0301 ;"
-    "$cyrlow = [бвгґджзйклмнпрстфхцчшщьаеєиіїоуюя’] ;"
-    "$wordBoundary = [^[:L:][:M:][:N:]] ;"
-
-    "А > A ; а > a ;"
-    "Б > B ; б > b ;"
-    "В > V ; в > v ;"
-    "Г > H ; г > h ;"
-    "Ґ > G ; ґ > g ;"
-    "Д > D ; д > d ;"
-    "Е > E ; е > e ;"
-    "$wordBoundary {Є} $acute? $cyrlow > Ye ;"
-    "$wordBoundary {Є > YE ;"
-    "$wordBoundary {є > ye ;"
-    "Є} $acute? $cyrlow > Ie ;"
-    "Є > IE ; є > ie ;"
-    "Ж} $cyrlow > Zh ;"
-    "Ж > ZH ; ж > zh ;"
-    "зГ} $cyrlow > zGh ; зГ > zGH ;"
-    "ЗГ > ZGH ; Зг > Zgh ; зг > zgh ;"
-    "З > Z ; з > z ;"
-    "И > Y ; и > y ;"
-    "І > I ; і > i ;"
-    "$wordBoundary {Ї} $acute? $cyrlow > Yi ;"
-    "$wordBoundary {Ї > YI ;"
-    "$wordBoundary {ї > yi ;"
-    "Ї > I ; ї > i ;"
-    "$wordBoundary {Й > Y ;"
-    "$wordBoundary {й > y ;"
-    "Й > I ; й > i ;"
-    "К > K ; к > k ;"
-    "Л > L ; л > l ;"
-    "М > M ; м > m ;"
-    "Н > N ; н > n ;"
-    "О > O ; о > o ;"
-    "П > P ; п > p ;"
-    "Р > R ; р > r ;"
-    "С > S ; с > s ;"
-    "Т > T ; т > t ;"
-    "У > U ; у > u ;"
-    "Ф > F ; ф > f ;"
-    "Х} $cyrlow > Kh ;"
-    "Х > KH ; х > kh ;"
-    "Ц} $cyrlow > Ts ;"
-    "Ц > TS ; ц > ts ;"
-    "Ч} $cyrlow > Ch ;"
-    "Ч > CH ; ч > ch ;"
-    "Ш} $cyrlow > Sh ;"
-    "Ш > SH ; ш > sh ;"
-    "Щ} $cyrlow > Shch ; "
-    "Щ > SHCH ; щ > shch ;"
-    "$wordBoundary {Ю} $acute? $cyrlow > Yu ;"
-    "$wordBoundary {Ю > YU ;"
-    "$wordBoundary {ю > yu ;"
-    "Ю} $acute? $cyrlow > Iu ;"
-    "Ю > IU ; ю > iu ;"
-    "$wordBoundary {Я} $acute? $cyrlow > Ya ;"
-    "$wordBoundary {Я > YA ;"
-    "$wordBoundary {я > ya ;"
-    "Я} $acute? $cyrlow > Ia ;"
-    "Я > IA ; я > ia ;"
-    "[Ьь] > ;"
-    "’ > ;"
-    "$quote > ;"
-    ":: NFC ;"
-    ;
-
 
 #if !defined(NDEBUG)
 
@@ -296,8 +42,14 @@ dump_rules(UTransliterator* tr) {
 #endif
 
 
+enum UklatnDirection {
+    UklatnDirection_forward,
+    UklatnDirection_reverse,
+};
+
+
 static int
-_uklatn_register_rules(const UChar* name, const UChar* rname, const char* text) {
+_uklatn_register_table(const UChar* name, const char* text) {
     UErrorCode err = U_ZERO_ERROR;
     UChar rules[2400];
     int rulessize = sizeof(rules) / sizeof(rules[0]);
@@ -325,49 +77,18 @@ _uklatn_register_rules(const UChar* name, const UChar* rname, const char* text) 
         return err;
     }
 
-    if (rname != NULL) {
-        tr = utrans_openU(rname, -1, UTRANS_REVERSE, rules, -1, &perr, &err);
-        if (U_FAILURE(err)) {
-            trace("utrans_openU: %s\n", u_errorName(err));
-            return err;
-        }
-
-        // dump_rules(tr);
-
-        utrans_register(tr, &err);
-        if (U_FAILURE(err)) {
-            trace("utrans_register: %s\n", u_errorName(err));
-            utrans_close(tr);
-            return err;
-        }
-    }
-
     return 0;
 }
 
 
-static int
-_uklatn_init(void) {
-    UErrorCode err = U_ZERO_ERROR;
-
-    err = _uklatn_register_rules(Tid_DSTU_A, Rid_DSTU_A, _rules_dstu_a);
-    if (U_FAILURE(err)) { return err; }
-
-    err = _uklatn_register_rules(Tid_DSTU_B, Rid_DSTU_B, _rules_dstu_b);
-    if (U_FAILURE(err)) { return err; }
-
-    err = _uklatn_register_rules(Tid_KMU, NULL, _rules_kmu);
-    if (U_FAILURE(err)) { return err; }
-
-    return 0;
-}
+#include "_tables.c"
 
 
 static int
-_uklatn_gettr(const UChar* tid, UTransDirection dir, UTransliterator** ptr) {
+_uklatn_gettr(const UChar* tid, UTransliterator** ptr) {
     UErrorCode err = U_ZERO_ERROR;
     UTransliterator* tr;
-    tr = utrans_openU(tid, -1, dir, NULL, 0, NULL, &err);
+    tr = utrans_openU(tid, -1, UTRANS_FORWARD, NULL, 0, NULL, &err);
     #if 0
     /* id hierarchy is a mess
       https://unicode-org.atlassian.net/browse/ICU-21324
@@ -383,9 +104,9 @@ _uklatn_gettr(const UChar* tid, UTransDirection dir, UTransliterator** ptr) {
     #endif
     if (U_FAILURE(err)) {
         if (err == U_INVALID_ID) {
-            err = _uklatn_init();
+            err = _uklatn_register_tables();
             if (U_FAILURE(err)) { return err; }
-            tr = utrans_openU(tid, -1, dir, NULL, 0, NULL, &err);
+            tr = utrans_openU(tid, -1, UTRANS_FORWARD, NULL, 0, NULL, &err);
         }
         if (U_FAILURE(err)) {
             trace("utrans_openU: %s\n", u_errorName(err));
@@ -398,20 +119,27 @@ _uklatn_gettr(const UChar* tid, UTransDirection dir, UTransliterator** ptr) {
 
 
 static const UChar*
-_uklatn_table_name(int table) {
+_uklatn_table_name(int table, int direction) {
     if (table == UklatnTable_default) {
         table = UKLATN_DEFAULT_TABLE;
     }
     switch (table) {
         case UklatnTable_default:
         case UklatnTable_DSTU_9112_A:
-            return Tid_DSTU_A;
+            return direction == UklatnDirection_reverse ?
+                _TableName_DSTU_9112_A_uk :
+                _TableName_uk_DSTU_9112_A ;
         case UklatnTable_DSTU_9112_B:
-            return Tid_DSTU_B;
+            return direction == UklatnDirection_reverse ?
+                _TableName_DSTU_9112_B_uk :
+                _TableName_uk_DSTU_9112_B ;
         case UklatnTable_KMU_55:
-            return Tid_KMU;
+            if (direction == UklatnDirection_forward) {
+                return _TableName_uk_KMU_55;
+            }
+            // pass through
         default:
-            trace("invalid table %d", table);
+            trace("invalid table %d (direction %d)", table, direction);
             return NULL;
     }
 }
@@ -419,12 +147,12 @@ _uklatn_table_name(int table) {
 
 int
 uklatn_encodeu(const UChar* src, int table, UChar* dest, int destsize) {
-    const UChar* name = _uklatn_table_name(table);
+    const UChar* name = _uklatn_table_name(table, UklatnDirection_forward);
     if (name == NULL) { return -1; }
 
     UErrorCode err = U_ZERO_ERROR;
     UTransliterator* tr = NULL;
-    err = _uklatn_gettr(name, UTRANS_FORWARD, &tr);
+    err = _uklatn_gettr(name, &tr);
     if (err != 0) { return err; }
 
     u_strncpy(dest, src, destsize);
@@ -446,12 +174,12 @@ uklatn_decodeu(const UChar* src, int table, UChar* dest, int destsize) {
         return -1;
     }
 
-    const UChar* name = _uklatn_table_name(table);
+    const UChar* name = _uklatn_table_name(table, UklatnDirection_reverse);
     if (name == NULL) { return -1; }
 
     UErrorCode err = U_ZERO_ERROR;
     UTransliterator* tr = NULL;
-    err = _uklatn_gettr(name, UTRANS_REVERSE, &tr);
+    err = _uklatn_gettr(name, &tr);
     if (err != 0) { return err; }
 
     u_strncpy(dest, src, destsize);
