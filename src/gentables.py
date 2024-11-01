@@ -6,11 +6,11 @@ import re
 from pathlib import Path
 
 
-logger = logging.getLogger('')
+logger = logging.getLogger(Path(__file__).stem)
 
 
 def gen_c(fns):
-    logger.debug('C generator start')
+    logger.info('C generator start')
     def table_name(s):
         s = re.sub(r'\buk_Latn_', 'uk_', s, flags=re.I)
         return '-'.join(
@@ -26,7 +26,7 @@ def gen_c(fns):
         return f'_Table_{s}'
     names = list()
     for fn in fns:
-        logger.debug(f'processing {fn!s}')
+        logger.info(f'processing {fn!s}')
         name = fn.stem
         tname = table_name(name)
         vname = table_varname(name)
@@ -53,13 +53,13 @@ def gen_c(fns):
         print('    return 0;', file=so)
         print('}', file=so)
         print(so.getvalue())
-    logger.debug('C generator end')
+    logger.info('C generator end')
 
 
 def main(args):
     cwd = Path.cwd()
     src = Path(__file__).parent.relative_to(cwd, walk_up=True)
-    fns = list(src.glob('uk*.txt'))
+    fns = sorted(src.glob('uk*.txt'))
     for p in args.package:
         gn = f'gen_{p}'
         g = globals()[gn]
@@ -68,14 +68,14 @@ def main(args):
 
 if __name__ == '__main__':
     import argparse
-    parser = argparse.ArgumentParser(description='Generate source code for the transform tables, and update source packages.')
+    parser = argparse.ArgumentParser(description='Generate source code for the transform tables.')
     parser.add_argument('package', choices=['c'], nargs='*', help='target packages')
     parser.add_argument('-v', '--verbose', action='store_true', help='verbose output')
     args = parser.parse_args()
     if not args.package:
         parser.print_usage()
     else:
-        level = logging.DEBUG if args.verbose else logging.WARN
+        level = logging.DEBUG if args.verbose else logging.INFO
         logging.basicConfig(level=level)
         main(args)
 

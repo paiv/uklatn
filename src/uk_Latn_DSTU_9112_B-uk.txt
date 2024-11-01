@@ -1,4 +1,4 @@
-::([[BCDFGHKLMNPRSTVWXZbcdfghklmnprstvwxzAEIOUYaeiouyJj'ÁáÉéÍíÓóÚúÝý] [\u0301]]);
+::[[BCDFGHKLMNPRSTVWXZbcdfghklmnprstvwxzAEIOUYaeiouyJj'ÁáÉéÍíÓóÚúÝý] [\u0301]];
 ::NFC;
 $quote = \u0027;
 $acute = \u0301;
