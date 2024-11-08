@@ -75,6 +75,61 @@ def gen_c(fns):
     logger.info('C generator end')
 
 
+def gen_py(fns):
+    logger.info('PY generator start')
+    def table_name(s):
+        return re.sub(r'test_', '', s)
+    def _j(s):
+        return json.dumps(s, ensure_ascii=False)
+    def _emit_tests(kind, data, table, file):
+        data = [(cyr,lat) for k,cyr,lat in data if k == kind]
+        if not data: return
+        print(f'    def test_{kind}(self):', file=so)
+        print('        data = [', file=so)
+        for cyr,lat in data:
+            print('            (', file=so)
+            print(f'                {_j(cyr)},', file=so)
+            print(f'                {_j(lat)},', file=so)
+            print('            ),', file=so)
+        print('        ]\n', file=so)
+        print(f'        for cyr,lat in data:', file=so)
+        if kind[0] == 'c':
+            print(f'            q = uklatn.encode(cyr, uklatn.{table})', file=so)
+            print(f'            self.assertEqual(q, lat)', file=so)
+        else:
+            print(f'            q = uklatn.decode(lat, uklatn.{table})', file=so)
+            print(f'            self.assertEqual(q, cyr)', file=so)
+        if kind[-1] == 'r':
+            if kind[0] == 'c':
+                print(f'            q = uklatn.decode(lat, uklatn.{table})', file=so)
+                print(f'            self.assertEqual(q, cyr)', file=so)
+            else:
+                print(f'            q = uklatn.encode(cyr, uklatn.{table})', file=so)
+                print(f'            self.assertEqual(q, lat)', file=so)
+        print('', file=so)
+
+    with io.StringIO() as so:
+        print('import uklatn', file=so)
+        print('import unittest\n\n', file=so)
+        for fn in fns:
+            logger.info(f'processing {fn!s}')
+            name = fn.stem
+            table = table_name(name)
+            data = _parse_tests(fn)
+            print(f'class Test{table} (unittest.TestCase):\n', file=so)
+            _emit_tests('c2lr', data, table, file=so)
+            _emit_tests('l2cr', data, table, file=so)
+            _emit_tests('c2l', data, table, file=so)
+            _emit_tests('l2c', data, table, file=so)
+            print('', file=so)
+
+        print('if __name__ == "__main__":', file=so)
+        print('    unittest.main()', file=so)
+        print(so.getvalue())
+
+    logger.info('PY generator end')
+
+
 def main(args):
     cwd = Path.cwd()
     src = Path(__file__).parent.relative_to(cwd, walk_up=True)
@@ -89,7 +144,7 @@ def main(args):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='Generate test code for the transform tables.')
-    parser.add_argument('package', choices=['c'], nargs='*', help='target packages')
+    parser.add_argument('package', choices=['c', 'py'], nargs='*', help='target packages')
     parser.add_argument('-v', '--verbose', action='store_true', help='verbose output')
     args = parser.parse_args()
     if not args.package:

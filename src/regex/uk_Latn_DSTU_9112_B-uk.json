@@ -152,7 +152,25 @@
       }
     },
     {
-      "regex": "(?<=[Ss][Hh][Cc][Hh]|[CcGgKkSsZz][Hh]|[BCDFGKLMNPRSTVZbcdfgklmnprstvzv])([Jj]\\u0027(?=[AaEeIiUu])|[Jj])",
+      "regex": "(?<=[Ss][Hh][Cc][Hh])([Jj]\\u0027(?=[AaEeIiUu])|[Jj])",
+      "map": {
+        "J": "Ь",
+        "j": "ь",
+        "J'": "Ь",
+        "j'": "ь"
+      }
+    },
+    {
+      "regex": "(?<=[CcGgKkSsZz][Hh])([Jj]\\u0027(?=[AaEeIiUu])|[Jj])",
+      "map": {
+        "J": "Ь",
+        "j": "ь",
+        "J'": "Ь",
+        "j'": "ь"
+      }
+    },
+    {
+      "regex": "(?<=[BCDFGKLMNPRSTVZbcdfgklmnprstvzv])([Jj]\\u0027(?=[AaEeIiUu])|[Jj])",
       "map": {
         "J": "Ь",
         "j": "ь",
