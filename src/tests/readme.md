@@ -1,23 +1,28 @@
 Test data
 ==
 
-The format of a test data file:
-- The file is divided into sections, each section having a header.
-- Possible section headers are:
-  - `== cyr <> lat`
-  - `== lat <> cyr`
-  - `== cyr > lat`
-  - `== lat > cyr`
-- Each test case inside a section is a pair of `"`-quoted strings.
-- Each string in the pair is iterpreted according to its section header.
-
+The structure of a test json file:
+- Each test record has these properties:
+  - `cyr` the Cyrillic text,
+  - `lat` the Latin equivalent,
+  - `test` the direction of the test, one of:
+    - `cyr <> lat`
+    - `cyr > lat`
+    - `lat > cyr`
 
 Example
 --
-```txt
-== cyr > lat
-"щастя"
-"shchastja"
-"мрія"
-"mrija"
+```json
+[
+  {
+    "test": "cyr > lat",
+    "cyr": "щастя",
+    "lat": "shchastja"
+  },
+  {
+    "test": "lat > cyr",
+    "lat": "mrija",
+    "cyr": "мрія"
+  }
+]
 ```

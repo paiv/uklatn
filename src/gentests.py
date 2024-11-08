@@ -11,77 +11,21 @@ logger = logging.getLogger(Path(__file__).stem)
 
 
 def _parse_tests(fn):
-    hrx = re.compile(r'^\s*==\s*(.*?)\s*$', re.I)
-    def state_for_header(line):
-        m = hrx.match(line)
-        if m:
-            ps = tuple(m.group(1).lower().split())
-            if (len(ps) == 3):
-                match ps:
-                    case ('cyr', '<>', 'lat'):
-                        return 0
-                    case ('lat', '<>', 'cyr'):
-                        return 2
-                    case ('cyr', '>', 'lat'):
-                        return 4
-                    case ('lat', '>', 'cyr'):
-                        return 6
-            raise Exception(f'invalid section header: {line!r}')
-
-    text = fn.read_text()
-    test_in = None
-    state = 0
-    for row, line in enumerate(text.splitlines(), 1):
-        if not line.strip(): continue
-        header = state_for_header(line)
-        match state:
-            case 0:
-                if header is not None:
-                    state = header
-                else:
-                    test_in = line
-                    state += 1
-            case 1:
-                if header is not None:
-                    raise Exception(f':{row}: incomplete test')
-                yield ('c2lr', test_in, line)
-                state -= 1
-            case 2:
-                if header is not None:
-                    state = header
-                else:
-                    test_in = line
-                    state += 1
-            case 3:
-                if header is not None:
-                    raise Exception(f':{row}: incomplete test')
-                yield ('l2cr', line, test_in)
-                state -= 1
-            case 4:
-                if header is not None:
-                    state = header
-                else:
-                    test_in = line
-                    state += 1
-            case 5:
-                if header is not None:
-                    raise Exception(f':{row}: incomplete test')
-                yield ('c2l', test_in, line)
-                state -= 1
-            case 6:
-                if header is not None:
-                    state = header
-                else:
-                    test_in = line
-                    state += 1
-            case 7:
-                if header is not None:
-                    raise Exception(f':{row}: incomplete test')
-                yield ('l2c', line, test_in)
-                state -= 1
-    match state:
-        case 1 | 3 | 5 | 7:
-            raise Exception(f':{row}: incomplete test')
+    def parse_kind(s):
+        match s.lower().split():
+            case ['cyr', '<>', 'lat']:
+                return 'c2lr'
+            case ['lat', '<>', 'cyr']:
+                return 'l2cr'
+            case ['cyr', '>', 'lat']:
+                return 'c2l'
+            case ['lat', '>', 'cyr']:
+                return 'l2c'
+            case _:
+                raise Exception(f'unknown test kind: {s!r}')
+    with fn.open() as fp:
+        data = json.load(fp)
+    return [[parse_kind(obj['test']), obj['cyr'], obj['lat']] for obj in data]
 
 
 def _collect_tests(fns):
@@ -96,12 +40,12 @@ def _collect_tests(fns):
         logger.info(f'processing {fn!s}')
         name = fn.stem
         table = table_name(name)
-        for kind, a, b in _parse_tests(fn):
+        for kind, cyr, lat in _parse_tests(fn):
             match kind:
-                case 'c2lr': c2lr.append((a, b, table))
-                case 'l2cr': l2cr.append((a, b, table))
-                case 'c2l' : c2l.append((a, b, table))
-                case 'l2c' : l2c.append((a, b, table))
+                case 'c2lr': c2lr.append((cyr, lat, table))
+                case 'l2cr': l2cr.append((cyr, lat, table))
+                case 'c2l' : c2l.append((cyr, lat, table))
+                case 'l2c' : l2c.append((cyr, lat, table))
                 case _: raise Exception()
     return [c2lr, l2cr, c2l, l2c]
 
@@ -110,13 +54,15 @@ def gen_c(fns):
     logger.info('C generator start')
     c2lr, l2cr, c2l, l2c = _collect_tests(fns)
 
+    def _j(s):
+        return json.dumps(s, ensure_ascii=False)
     def gen_test_data(name, data, file):
         print(f'static const struct _uklatn_test _{name}_data[] = {{', file=file)
-        for a,b,t in data:
+        for cyr, lat, table in data:
             print('    {', file=file)
-            print(f'        u{a},', file=file)
-            print(f'        u{b},', file=file)
-            print(f'        UklatnTable_{t},', file=file)
+            print(f'        u{_j(cyr)},', file=file)
+            print(f'        u{_j(lat)},', file=file)
+            print(f'        UklatnTable_{table},', file=file)
             print('    },', file=file)
         print('};\n', file=file)
     with io.StringIO() as so:
@@ -133,7 +79,7 @@ def main(args):
     cwd = Path.cwd()
     src = Path(__file__).parent.relative_to(cwd, walk_up=True)
     src /= 'tests'
-    fns = sorted(src.glob('test*.txt'))
+    fns = sorted(src.glob('test*.json'))
     for p in args.package:
         gn = f'gen_{p}'
         g = globals()[gn]

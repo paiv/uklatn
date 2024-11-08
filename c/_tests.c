@@ -153,7 +153,7 @@ static const struct _uklatn_test _cyr2lat_data[] = {
         UklatnTable_DSTU_9112_A,
     },
     {
-        u"І\u0308 і\u0308 И\u0306 и\u0306 Е\u0308 е\u0308 У\u0306 у\u0306",
+        u"Ї ї Й й Ё ё Ў ў",
         u"Ï ï J j Ö ö Ŭ ŭ",
         UklatnTable_DSTU_9112_A,
     },
@@ -163,7 +163,7 @@ static const struct _uklatn_test _cyr2lat_data[] = {
         UklatnTable_DSTU_9112_B,
     },
     {
-        u"І\u0308 і\u0308 И\u0306 и\u0306 Е\u0308 е\u0308 У\u0306 у\u0306",
+        u"Ї ї Й й Ё ё Ў ў",
         u"JI ji J j JOW jow UH uh",
         UklatnTable_DSTU_9112_B,
     },
@@ -247,22 +247,22 @@ static const struct _uklatn_test _lat2cyr_data[] = {
     },
     {
         u"Ї ї Ь ь Ч ч Г г Щ щ Ш ш Ж ж",
-        u"I\u0308 i\u0308 J\u0302 j\u0302 C\u030C c\u030C G\u0306 g\u0306 S\u0302 s\u0302 S\u030C s\u030C Z\u030C z\u030C",
+        u"Ï ï Ĵ ĵ Č č Ğ ğ Ŝ ŝ Š š Ž ž",
         UklatnTable_DSTU_9112_A,
     },
     {
         u"Ё ё Ў ў Ъ ъ Ы ы Э э",
-        u"O\u0308 o\u0308 U\u0306 u\u0306 O\u030C o\u030C Y\u0304 y\u0304 E\u0304 e\u0304",
+        u"Ö ö Ŭ ŭ Ǒ ǒ Ȳ ȳ Ē ē",
         UklatnTable_DSTU_9112_A,
     },
     {
         u"А́ а́ Е́ е́ Є́ Є́ є́ є́ И́ и́ І́ і́ Ї́ ї́ О́ о́ У́ у́ Ю́ Ю́ ю́ ю́ Я́ Я́ я́ я́",
-        u"A\u0301 a\u0301 E\u0301 e\u0301 JE\u0301 Je\u0301 jE\u0301 je\u0301 Y\u0301 y\u0301 I\u0301 i\u0301 Ï\u0301 ï\u0301 O\u0301 o\u0301 U\u0301 u\u0301 JU\u0301 Ju\u0301 jU\u0301 ju\u0301 JA\u0301 Ja\u0301 jA\u0301 ja\u0301",
+        u"Á á É é JÉ Jé jÉ jé Ý ý Í í Ḯ ḯ Ó ó Ú ú JÚ Jú jÚ jú JÁ Já jÁ já",
         UklatnTable_DSTU_9112_A,
     },
     {
         u"Є́с сЄ́с є́с сє́с Ї́с сЇ́с ї́с сї́с Ю́с сЮ́с ю́с сю́с Я́с сЯ́с я́с ся́с",
-        u"Je\u0301s sJe\u0301s je\u0301s sje\u0301s Ï\u0301s sÏ\u0301s ï\u0301s sï\u0301s Ju\u0301s sJu\u0301s ju\u0301s sju\u0301s Ja\u0301s sJa\u0301s ja\u0301s sja\u0301s",
+        u"Jés sJés jés sjés Ḯs sḮs ḯs sḯs Jús sJús jús sjús Jás sJás jás sjás",
         UklatnTable_DSTU_9112_A,
     },
     {
@@ -272,12 +272,12 @@ static const struct _uklatn_test _lat2cyr_data[] = {
     },
     {
         u"А́ а́ Е́ е́ Є́ Є́ є́ є́ И́ и́ І́ і́ Ї́ Ї́ ї́ ї́ О́ о́ У́ у́ Ю́ Ю́ ю́ ю́ Я́ Я́ я́ я́",
-        u"A\u0301 a\u0301 E\u0301 e\u0301 JE\u0301 Je\u0301 jE\u0301 je\u0301 Y\u0301 y\u0301 I\u0301 i\u0301 JI\u0301 Ji\u0301 jI\u0301 ji\u0301 O\u0301 o\u0301 U\u0301 u\u0301 JU\u0301 Ju\u0301 jU\u0301 ju\u0301 JA\u0301 Ja\u0301 jA\u0301 ja\u0301",
+        u"Á á É é JÉ Jé jÉ jé Ý ý Í í JÍ Jí jÍ jí Ó ó Ú ú JÚ Jú jÚ jú JÁ Já jÁ já",
         UklatnTable_DSTU_9112_B,
     },
     {
         u"Є́с сЄ́с є́с сє́с Ї́с сЇ́с ї́с сї́с Ю́с сЮ́с ю́с сю́с Я́с сЯ́с я́с ся́с",
-        u"Je\u0301s sJe\u0301s je\u0301s sje\u0301s Ji\u0301s sJi\u0301s ji\u0301s sji\u0301s Ju\u0301s sJu\u0301s ju\u0301s sju\u0301s Ja\u0301s sJa\u0301s ja\u0301s sja\u0301s",
+        u"Jés sJés jés sjés Jís sJís jís sjís Jús sJús jús sjús Jás sJás jás sjás",
         UklatnTable_DSTU_9112_B,
     },
 };

@@ -1,0 +1,98 @@
+[
+  {
+    "test": "cyr <> lat",
+    "cyr": "Україна, Хмельницький",
+    "lat": "Ukrajina, Khmeljnycjkyj"
+  },
+  {
+    "test": "cyr <> lat",
+    "cyr": "Щастям б’єш жук їх глицю в фон й ґедзь пріч.",
+    "lat": "Shchastjam b'jesh zhuk jikh ghlycju v fon j gedzj prich."
+  },
+  {
+    "test": "cyr <> lat",
+    "cyr": "ь Ь ль льє льї лью лья лье льі льу льа льйо льо",
+    "lat": "hj Hj lj ljje ljji ljju ljja lj'e lj'i lj'u lj'a ljjo ljo"
+  },
+  {
+    "test": "cyr <> lat",
+    "cyr": "Єл Їл Юл Ял",
+    "lat": "Jel Jil Jul Jal"
+  },
+  {
+    "test": "cyr <> lat",
+    "cyr": "бь вь гь ґь дь жь зь кь ль мь нь пь рь сь ть фь хь ць чь шь щь",
+    "lat": "bj vj ghj gj dj zhj zj kj lj mj nj pj rj sj tj fj khj cj chj shj shchj"
+  },
+  {
+    "test": "cyr <> lat",
+    "cyr": "бя вя гя ґя дя жя зя кя ля мя ня пя ря ся тя фя хя ця чя шя щя",
+    "lat": "bja vja ghja gja dja zhja zja kja lja mja nja pja rja sja tja fja khja cja chja shja shchja"
+  },
+  {
+    "test": "cyr <> lat",
+    "cyr": "б’я в’я г’я ґ’я д’я ж’я з’я к’я л’я м’я н’я п’я р’я с’я т’я ф’я х’я ц’я ч’я ш’я щ’я",
+    "lat": "b'ja v'ja gh'ja g'ja d'ja zh'ja z'ja k'ja l'ja m'ja n'ja p'ja r'ja s'ja t'ja f'ja kh'ja c'ja ch'ja sh'ja shch'ja"
+  },
+  {
+    "test": "cyr <> lat",
+    "cyr": "бй бйо вй гй ґй дй жй зй кй лй мй нй пй рй сй тй фй хй цй чй шй щй",
+    "lat": "b'j b'jo v'j gh'j g'j d'j zh'j z'j k'j l'j m'j n'j p'j r'j s'j t'j f'j kh'j c'j ch'j sh'j shch'j"
+  },
+  {
+    "test": "cyr <> lat",
+    "cyr": "ня ньа н’я нь'н ньн",
+    "lat": "nja nj'a n'ja nj'n njn"
+  },
+  {
+    "test": "cyr <> lat",
+    "cyr": "рос дыня эзёдынъ. бр кроў.",
+    "lat": "ros dywnja ehwzjowdywnoh. br krouh."
+  },
+  {
+    "test": "cyr <> lat",
+    "cyr": "А́ а́ Е́ е́ Є́ є́ И́ и́ І́ і́ Ї́ ї́ О́ о́ У́ у́ Ю́ ю́ Я́ я́",
+    "lat": "Á á É é JÉ jé Ý ý Í í JÍ jí Ó ó Ú ú JÚ jú JÁ já"
+  },
+  {
+    "test": "cyr <> lat",
+    "cyr": "Є́с сЄ́с є́с сє́с Ї́с сЇ́с ї́с сї́с Ю́с сЮ́с ю́с сю́с Я́с сЯ́с я́с ся́с",
+    "lat": "Jés sJés jés sjés Jís sJís jís sjís Jús sJús jús sjús Jás sJás jás sjás"
+  },
+  {
+    "test": "cyr <> lat",
+    "cyr": "' ім’я 'жук' \"жук\" ' '",
+    "lat": "' im'ja 'zhuk' \"zhuk\" ' '"
+  },
+  {
+    "test": "cyr <> lat",
+    "cyr": "Сонце світить майже білим світлом, однак через сильніше розсіювання і поглинання короткохвильової частини спектра атмосферою Землі пряме світло Сонця біля поверхні нашої планети набуває певного жовтого відтінку. Якщо небо ясне, то блакитний відтінок розсіяного світла складається з жовтуватим прямим сонячним світлом і загальне освітлення об’єктів на Землі стає білим.",
+    "lat": "Sonce svitytj majzhe bilym svitlom, odnak cherez syljnishe rozsijuvannja i poghlynannja korotkokhvyljovoji chastyny spektra atmosferoju Zemli prjame svitlo Soncja bilja poverkhni nashoji planety nabuvaje pevnogho zhovtogho vidtinku. Jakshcho nebo jasne, to blakytnyj vidtinok rozsijanogho svitla skladajetjsja z zhovtuvatym prjamym sonjachnym svitlom i zaghaljne osvitlennja ob'jektiv na Zemli staje bilym."
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "в’я в'я",
+    "lat": "v'ja v'ja"
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "І\u0308 і\u0308 И\u0306 и\u0306 Е\u0308 е\u0308 У\u0306 у\u0306",
+    "lat": "JI ji J j JOW jow UH uh"
+  },
+  {
+    "test": "lat > cyr",
+    "lat": "jA jI jE jU gH zH kH sHcH sH cH hJ",
+    "cyr": "я ї є ю г ж х щ ш ч ь"
+  },
+  {
+    "test": "lat > cyr",
+    "lat": "A\u0301 a\u0301 E\u0301 e\u0301 JE\u0301 Je\u0301 jE\u0301 je\u0301 Y\u0301 y\u0301 I\u0301 i\u0301 JI\u0301 Ji\u0301 jI\u0301 ji\u0301 O\u0301 o\u0301 U\u0301 u\u0301 JU\u0301 Ju\u0301 jU\u0301 ju\u0301 JA\u0301 Ja\u0301 jA\u0301 ja\u0301",
+    "cyr": "А́ а́ Е́ е́ Є́ Є́ є́ є́ И́ и́ І́ і́ Ї́ Ї́ ї́ ї́ О́ о́ У́ у́ Ю́ Ю́ ю́ ю́ Я́ Я́ я́ я́"
+  },
+  {
+    "test": "lat > cyr",
+    "lat": "Je\u0301s sJe\u0301s je\u0301s sje\u0301s Ji\u0301s sJi\u0301s ji\u0301s sji\u0301s Ju\u0301s sJu\u0301s ju\u0301s sju\u0301s Ja\u0301s sJa\u0301s ja\u0301s sja\u0301s",
+    "cyr": "Є́с сЄ́с є́с сє́с Ї́с сЇ́с ї́с сї́с Ю́с сЮ́с ю́с сю́с Я́с сЯ́с я́с ся́с"
+  }
+]
+

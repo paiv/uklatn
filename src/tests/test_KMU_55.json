@@ -1,0 +1,73 @@
+[
+  {
+    "test": "cyr > lat",
+    "cyr": "Україна, Хмельницький",
+    "lat": "Ukraina, Khmelnytskyi"
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "Щастям б’єш жук їх глицю в фон й ґедзь пріч.",
+    "lat": "Shchastiam biesh zhuk yikh hlytsiu v fon y gedz prich."
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "згин зГ зГин Згин Зг ЗГ ЗГИН",
+    "lat": "zghyn zGH zGhyn Zghyn Zgh ZGH ZGHYN"
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "ь Ь ль льє льї лью лья лье льі льу льа льйо льо",
+    "lat": "  l lie li liu lia le li lu la lio lo"
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "Єл Їл Юл Ял",
+    "lat": "Yel Yil Yul Yal"
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "бь вь гь ґь дь жь зь кь ль мь нь пь рь сь ть фь хь ць чь шь щь",
+    "lat": "b v h g d zh z k l m n p r s t f kh ts ch sh shch"
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "бя вя гя ґя дя жя зя кя ля мя ня пя ря ся тя фя хя ця чя шя щя",
+    "lat": "bia via hia gia dia zhia zia kia lia mia nia pia ria sia tia fia khia tsia chia shia shchia"
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "б’я в’я г’я ґ’я д’я ж’я з’я к’я л’я м’я н’я п’я р’я с’я т’я ф’я х’я ц’я ч’я ш’я щ’я",
+    "lat": "bia via hia gia dia zhia zia kia lia mia nia pia ria sia tia fia khia tsia chia shia shchia"
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "бй бйо вй гй ґй дй жй зй кй лй мй нй пй рй сй тй фй хй цй чй шй щй",
+    "lat": "bi bio vi hi gi di zhi zi ki li mi ni pi ri si ti fi khi tsi chi shi shchi"
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "А́ а́ Е́ е́ Є́ є́ И́ и́ І́ і́ Ї́ ї́ О́ о́ У́ у́ Ю́ ю́ Я́ я́",
+    "lat": "Á á É é YÉ yé Ý ý Í í YÍ yí Ó ó Ú ú YÚ yú YÁ yá"
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "Є́с сЄ́с є́с сє́с Ї́с сЇ́с ї́с сї́с Ю́с сЮ́с ю́с сю́с Я́с сЯ́с я́с ся́с",
+    "lat": "Yés sIés yés siés Yís sÍs yís sís Yús sIús yús siús Yás sIás yás siás"
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "' ім’я 'жук' \"жук\" ' '",
+    "lat": "' imia 'zhuk' \"zhuk\" ' '"
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "Сонце світить майже білим світлом, однак через сильніше розсіювання і поглинання короткохвильової частини спектра атмосферою Землі пряме світло Сонця біля поверхні нашої планети набуває певного жовтого відтінку. Якщо небо ясне, то блакитний відтінок розсіяного світла складається з жовтуватим прямим сонячним світлом і загальне освітлення об’єктів на Землі стає білим.",
+    "lat": "Sontse svityt maizhe bilym svitlom, odnak cherez sylnishe rozsiiuvannia i pohlynannia korotkokhvylovoi chastyny spektra atmosferoiu Zemli priame svitlo Sontsia bilia poverkhni nashoi planety nabuvaie pevnoho zhovtoho vidtinku. Yakshcho nebo yasne, to blakytnyi vidtinok rozsiianoho svitla skladaietsia z zhovtuvatym priamym soniachnym svitlom i zahalne osvitlennia obiektiv na Zemli staie bilym."
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "в’я в'я",
+    "lat": "via via"
+  }
+]
+
