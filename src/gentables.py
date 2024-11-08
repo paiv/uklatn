@@ -58,7 +58,7 @@ def gen_c(fns):
 
 def main(args):
     cwd = Path.cwd()
-    src = Path(__file__).parent.relative_to(cwd, walk_up=True)
+    src = Path(__file__).parent.relative_to(cwd, walk_up=True) / 'icu'
     fns = sorted(src.glob('uk*.txt'))
     for p in args.package:
         gn = f'gen_{p}'
