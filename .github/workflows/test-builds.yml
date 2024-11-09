@@ -43,18 +43,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install ICU
-      run: |
-        sudo apt-get install -y libicu-dev ${{env.LIBICU}}
-
-    - name: Configure Python
-      run: |
-        pip install 'setuptools>=74' 'setuptools-scm>=8'
-
-    - name: Build
-      working-directory: ${{github.workspace}}/python
-      run: make build
-
     - name: Test
       working-directory: ${{github.workspace}}/python
       run: make test
