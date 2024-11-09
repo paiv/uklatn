@@ -10,6 +10,23 @@ Supported transliteration schemes:
 - [KMU 55:2010](https://zakon.rada.gov.ua/laws/show/55-2010-п)
 
 
+JavaScript package
+--
+- [uklatn JavaScript package](js/)
+
+Install with npm:
+```sh
+npm install 'git+https://github.com/paiv/uklatn.git'
+```
+
+Usage:
+```js
+import * as uklatn from 'uklatn';
+uklatn.encode("Доброго вечора!");
+uklatn.decode("Paljanycja");
+```
+
+
 Python module
 --
 - [uklatn Python module](python/)

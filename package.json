@@ -16,14 +16,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/paiv/uklatn.git",
-    "directory": "js"
+    "url": "git+https://github.com/paiv/uklatn.git"
   },
   "type": "module",
-  "main": "uklatn.js",
-  "bin": "cli.js",
+  "main": "js/uklatn.js",
+  "bin": "js/cli.js",
+  "files": [],
   "scripts": {
-    "test": "node testuklatn.js"
+    "test": "node js/testuklatn.js"
   }
 }
 
