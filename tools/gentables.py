@@ -40,6 +40,17 @@ def gen_c(args):
     logger.info('C generator end')
 
 
+def gen_js(src):
+    logger.info('JS generator start')
+    from gen import gen_js
+
+    source = _basegen(args, 'src/regex', 'uk*.json', gen_js.gen_transforms)
+    for text in source:
+        print(text, end='')
+
+    logger.info('JS generator end')
+
+
 def gen_py(src):
     logger.info('PY generator start')
     from gen import gen_py
@@ -60,6 +71,10 @@ if __name__ == '__main__':
     parse_c = subpar.add_parser('c', help='C code generator')
     parse_c.add_argument('source', nargs='*', help='source directory')
     parse_c.set_defaults(func=gen_c)
+
+    parse_py = subpar.add_parser('js', help='JavaScript code generator')
+    parse_py.add_argument('source', nargs='*', help='source directory')
+    parse_py.set_defaults(func=gen_js)
 
     parse_py = subpar.add_parser('py', help='Python code generator')
     parse_py.add_argument('source', nargs='*', help='source directory')

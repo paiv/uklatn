@@ -1,0 +1,29 @@
+{
+  "name": "uklatn",
+  "description": "Ukrainian Cyrillic transliteration to Latin script",
+  "author": "Pavel Ivashkov (https://github.com/paiv)",
+  "homepage": "https://github.com/paiv/uklatn",
+  "license": "MIT",
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://www.paypal.com/donate/?hosted_button_id=4BQ2Y97YUMM7L"
+    },
+    {
+      "type": "patreon",
+      "url": "https://patreon.com/paiv"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paiv/uklatn.git",
+    "directory": "js"
+  },
+  "type": "module",
+  "main": "uklatn.js",
+  "bin": "cli.js",
+  "scripts": {
+    "test": "node testuklatn.js"
+  }
+}
+
