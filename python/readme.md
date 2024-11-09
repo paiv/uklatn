@@ -17,3 +17,22 @@ Select a transliteration scheme:
 s = uklatn.encode("Борщ", uklatn.DSTU_9112_A)
 ```
 
+Module command line
+--
+```sh
+python -m uklatn 'Бери вершину'
+```
+
+```txt
+usage: uklatn [-h] [-t {DSTU_9112_A,DSTU_9112_B,KMU_55}] [-l] [-c] text [text ...]
+
+positional arguments:
+  text                  text to transliterate
+
+options:
+  -h, --help            show this help message and exit
+  -t, --table {DSTU_9112_A,DSTU_9112_B,KMU_55}
+                        transliteration system (default: DSTU_9112_A)
+  -l, --latin           convert to Latin script (default)
+  -c, --cyrillic        convert to Cyrillic script
+```

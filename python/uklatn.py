@@ -212,3 +212,29 @@ def decode(text, table=None):
     if not dec:
         raise ValueError(f'invalid table {table!r}')
     return dec.transform(text)
+
+
+def main(args):
+    text = ' '.join(args.text)
+    table = args.table
+    if table is None:
+        table = 'DSTU_9112_A'
+    names = {'DSTU_9112_A': 1, 'DSTU_9112_B': 2, 'KMU_55': 3}
+    table = names[table]
+    tr = encode
+    if args.cyrillic and not args.latin:
+        tr = decode
+    res = tr(text, table)
+    print(res)
+
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('text', nargs='+', help='text to transliterate')
+    parser.add_argument('-t', '--table', choices=['DSTU_9112_A', 'DSTU_9112_B', 'KMU_55'], help='transliteration system (default: DSTU_9112_A)')
+    parser.add_argument('-l', '--latin', action='store_true', help='convert to Latin script (default)')
+    parser.add_argument('-c', '--cyrillic', action='store_true', help='convert to Cyrillic script')
+
+    args = parser.parse_args()
+    main(args)
