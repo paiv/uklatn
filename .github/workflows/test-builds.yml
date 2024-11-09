@@ -37,6 +37,16 @@ jobs:
       run: ctest -C ${{matrix.BUILD_TYPE}}
 
 
+  build-js:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Test
+      run: npm test
+
+
   build-py:
     runs-on: ubuntu-latest
 
