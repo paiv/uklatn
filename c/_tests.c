@@ -282,4 +282,3 @@ static const struct _uklatn_test _lat2cyr_data[] = {
     },
 };
 
-
