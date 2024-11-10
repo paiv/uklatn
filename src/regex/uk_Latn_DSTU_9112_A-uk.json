@@ -23,7 +23,7 @@
   ],
   [
     {
-      "regex": "(A|a|B|b|V|v|Ğ|ğ|G|g|D|d|E|e|J[Ee]|j[Ee]|Ž|ž|Z|z|Y|y|I|i|Ï|ï|K|k|L|l|M|m|N|n|O|o|P|p|R|r|S|s|T|t|U|u|F|f|X|x|C|c|Č|č|Š|š|Ŝ|ŝ|J[Uu]|j[Uu]|J[Aa]|j[Aa]|Ĵ|ĵ|Ö|ö|Ŭ|ŭ|Ǒ|ǒ|Ȳ|ȳ|Ē|ē)",
+      "regex": "(J[Ee]|j[Ee]|J[Uu]|j[Uu]|J[Aa]|j[Aa]|[A-GIK-PR-VXYZa-gik-pr-vxyzÏÖïöČčĒēĞğĴĵŜŝŠšŬŭŽžǑǒȲȳ])",
       "map": {
         "A": "А",
         "a": "а",
