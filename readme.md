@@ -5,6 +5,13 @@ Ukrainian Cyrillic transliteration to Latin script.
 [![standwithukraine](docs/StandWithUkraine.svg)](https://ukrainewar.carrd.co/)
 [![](https://github.com/paiv/uklatn/actions/workflows/test-builds.yml/badge.svg)](https://github.com/paiv/uklatn/actions)
 
+
+* [JavaScript package](#javascript-package)
+* [Python module](#python-module)
+* [Swift package](#swift-package)
+* [C library](#c-library)
+
+
 Supported transliteration schemes:
 - [DSTU 9112:2021](https://uk.wikipedia.org/wiki/ДСТУ_9112:2021)
 - [KMU 55:2010](https://zakon.rada.gov.ua/laws/show/55-2010-п)
