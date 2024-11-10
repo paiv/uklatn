@@ -65,6 +65,16 @@ jobs:
       working-directory: ${{github.workspace}}/python
       run: make test
 
+    - name: Test CLI
+      working-directory: ${{github.workspace}}/python
+      run: |
+        sh -c '[ "$(python uklatn.py -t DSTU_9112_B мрії мої)" = "mriji moji" ]'
+
+    - name: Test CLI pipe
+      working-directory: ${{github.workspace}}/python
+      run: |
+        sh -c '[ "$(echo мрії мої | python uklatn.py -t DSTU_9112_B -f -)" = "mriji moji" ]'
+
 
   build-swift:
     strategy:
