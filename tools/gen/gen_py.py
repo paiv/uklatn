@@ -243,28 +243,41 @@ def decode(text, table=None):
 
 
 def main(args):
-    text = ' '.join(args.text)
     table = args.table
     if table is None:
         table = {default_table!r}
+
     names = {table_names!r}
     table = names[table]
+
     tr = encode
     if args.cyrillic and not args.latin:
         tr = decode
-    res = tr(text, table)
-    print(res)
+
+    if args.file:
+        text = args.file.read()
+        res = tr(text, table)
+        print(res, end='')
+
+    if args.text:
+        text = ' '.join(args.text)
+        res = tr(text, table)
+        print(res)
 
 
 if __name__ == '__main__':
-    import argparse
+    import argparse, sys
     parser = argparse.ArgumentParser()
-    parser.add_argument('text', nargs='+', help='text to transliterate')
+    parser.add_argument('text', nargs='*', help='text to transliterate')
+    parser.add_argument('-f', '--file', type=argparse.FileType('r'), help='read text from file')
     parser.add_argument('-t', '--table', choices={table_list!r}, help='transliteration system (default: {default_table})')
     parser.add_argument('-l', '--latin', action='store_true', help='convert to Latin script (default)')
     parser.add_argument('-c', '--cyrillic', action='store_true', help='convert to Cyrillic script')
 
     args = parser.parse_args()
+    if (not args.text) and (not args.file):
+        parser.error(f'the following arguments are required: text or file')
+
     main(args)
 '''
     text = template.format(**context)
