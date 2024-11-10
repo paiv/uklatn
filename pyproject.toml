@@ -12,6 +12,7 @@ authors = [
 ]
 license = {file = "license"}
 requires-python = ">=3.10"
+keywords = ["ukraine", "translit", "romanization"]
 classifiers = [
     "License :: OSI Approved :: MIT License",
 ]
