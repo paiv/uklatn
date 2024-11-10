@@ -252,3 +252,6 @@ export function decode(text, table) {
     if (tr === undefined) { throw new Error("unknown table " + JSON.stringify(table)); }
     return tr.transform(text);
 }
+
+
+export default { encode, decode };
