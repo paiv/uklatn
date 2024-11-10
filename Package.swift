@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version: 5.8
 
 import PackageDescription
 
@@ -6,29 +6,24 @@ let package = Package(
     name: "uklatn",
     products: [
         .library(
-            name: "UKLatn",
-            targets: ["UKLatn"]),
+            name: "UkrainianLatin",
+            targets: ["UkrainianLatin"]),
+        .executable(
+            name: "uklatn",
+            targets: ["cli"]),
     ],
     targets: [
         .target(
-            name: "UKLatn",
-            dependencies: ["_uklatn"],
-            path: "swift/Sources/UKLatn"),
-        .target(
-            name: "_uklatn",
-            path: "swift/Sources/_uklatn",
-            cSettings: [
-                .headerSearchPath("../../../c/include"),
-            ],
-            linkerSettings: [
-                .linkedLibrary("icuuc"),
-                .linkedLibrary("icui18n"),
-            ]),
+            name: "UkrainianLatin",
+            path: "swift/Sources/UkrainianLatin"),
         .testTarget(
             name: "UKLatnTests",
-            dependencies: ["UKLatn"],
-            path: "swift/Tests/UKLatnTests"),
+            dependencies: ["UkrainianLatin"],
+            path: "swift/Tests/UkrainianLatinTests"),
+        .executableTarget(
+            name: "cli",
+            dependencies: ["UkrainianLatin"],
+            path: "swift/Sources/cli"),
     ],
     swiftLanguageVersions: [.v5]
 )
-
