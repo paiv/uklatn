@@ -16,6 +16,10 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
 ]
 
+[project.urls]
+homepage = "https://github.com/paiv/uklatn"
+source = "https://github.com/paiv/uklatn"
+
 [tool.setuptools]
 package-dir = {"" = "python"}
 
