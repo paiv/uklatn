@@ -22,11 +22,10 @@ npx uklatn 'моє щастя'
 ```
 
 ```txt
-usage: uklatn [-h] [-t TABLE] [-c] [-l] text [text ...]
+usage: uklatn [-h] [-t TABLE] [-c] [-l] [-f FILE] [text ...]
 
 arguments:
   text            text to transliterate
-  -               read text from stdin
 
 options:
   -h, --help            show this help message and exit
@@ -34,4 +33,5 @@ options:
                         transliteration system (default: DSTU_9112_A)
   -l, --lat, --latin    convert to Latin script (default)
   -c, --cyr, --cyrillic convert to Cyrillic script
+  -f, --file FILE       read text from file
 ```
