@@ -271,8 +271,8 @@ if __name__ == '__main__':
     parser.add_argument('text', nargs='*', help='text to transliterate')
     parser.add_argument('-f', '--file', type=argparse.FileType('r'), help='read text from file')
     parser.add_argument('-t', '--table', choices={table_list!r}, help='transliteration system (default: {default_table})')
-    parser.add_argument('-l', '--latin', action='store_true', help='convert to Latin script (default)')
-    parser.add_argument('-c', '--cyrillic', action='store_true', help='convert to Cyrillic script')
+    parser.add_argument('-l', '--latin', '--lat', action='store_true', help='convert to Latin script (default)')
+    parser.add_argument('-c', '--cyrillic', '--cyr', action='store_true', help='convert to Cyrillic script')
 
     args = parser.parse_args()
     if (not args.text) and (not args.file):

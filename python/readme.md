@@ -38,6 +38,7 @@ options:
   -f, --file FILE       read text from file
   -t, --table {DSTU_9112_A,DSTU_9112_B,KMU_55}
                         transliteration system (default: DSTU_9112_A)
-  -l, --latin           convert to Latin script (default)
-  -c, --cyrillic        convert to Cyrillic script
+  -l, --latin, --lat    convert to Latin script (default)
+  -c, --cyrillic, --cyr
+                        convert to Cyrillic script
 ```
