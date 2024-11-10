@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import path from 'node:path';
-import * as uklatn from 'uklatn';
+import * as uklatn from './uklatn.js';
 
 
 const _Usage = '[-h] [-t TABLE] [-c] [-l] text [text ...]\n';
