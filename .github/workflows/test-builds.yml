@@ -47,10 +47,17 @@ jobs:
     - name: Test
       run: npm test
 
-    - name: Test CLI
+    - name: Install
       run: |
         npm install --global git+https://github.com/paiv/uklatn.git#wip
+
+    - name: Test CLI
+      run: |
         sh -c '[ "$(npm exec -- uklatn -t DSTU_9112_B мрії мої)" = "mriji moji" ]'
+
+    - name: Test import
+      run: |
+        echo 'import encode from "uklatn"; encode("імпорт");' | node -
 
 
   build-py:
