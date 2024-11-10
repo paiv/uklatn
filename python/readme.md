@@ -2,6 +2,10 @@ uklatn
 ==
 Ukrainian Cyrillic transliteration to Latin script.
 
+Supported transliteration schemes:
+- [DSTU 9112:2021](https://uk.wikipedia.org/wiki/ДСТУ_9112:2021)
+- [KMU 55:2010](https://zakon.rada.gov.ua/laws/show/55-2010-п)
+
 
 Usage:
 ```py
