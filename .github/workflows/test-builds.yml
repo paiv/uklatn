@@ -57,7 +57,7 @@ jobs:
 
     - name: Test import
       run: |
-        echo 'import encode from "uklatn"; encode("імпорт");' | node -
+        echo 'const { encode } = require("uklatn"); encode("імпорт");' | node -
 
 
   build-py:
