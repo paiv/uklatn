@@ -1,5 +1,6 @@
 {
   "name": "uklatn",
+  "version": "1.8.9",
   "description": "Ukrainian Cyrillic transliteration to Latin script",
   "author": "Pavel Ivashkov (https://github.com/paiv)",
   "homepage": "https://github.com/paiv/uklatn",
