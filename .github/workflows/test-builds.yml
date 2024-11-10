@@ -49,7 +49,7 @@ jobs:
 
     - name: Test CLI
       run: |
-        npm install --global
+        npm install
         sh -c '[ "$(npx uklatn -t DSTU_9112_B мрії мої)" = "mriji moji" ]'
 
 
