@@ -46,6 +46,11 @@ jobs:
     - name: Test
       run: npm test
 
+    - name: Test CLI
+      run: |
+        npm install --global
+        '[ "$(npm exec -- uklatn -t DSTU_9112_B мрії мої)" = "mriji moji" ]'
+
 
   build-py:
     runs-on: ubuntu-latest
