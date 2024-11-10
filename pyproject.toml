@@ -4,6 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "uklatn"
+description = "Ukrainian Cyrillic transliteration to Latin script"
+readme = "python/readme.md"
 dynamic = ["version"]
 authors = [
     {name = "Pavlo Ivashkov"},
