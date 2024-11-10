@@ -1,0 +1,4 @@
+global-exclude *
+include pyproject.toml license readme.md
+recursive-include python *.py *.md Makefile
+
