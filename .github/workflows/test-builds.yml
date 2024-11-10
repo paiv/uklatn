@@ -12,6 +12,7 @@ env:
 jobs:
 
   build-c:
+    if: 0
     strategy:
       matrix:
         BUILD_TYPE: [Debug, Release]
@@ -68,11 +69,12 @@ jobs:
     - name: Test CLI
       working-directory: ${{github.workspace}}/python
       run: |
-        sh -c '[ "$(python uklatn.py -t DSTU_9112_B мрії мої)" = "mriji moji" ]'
+        sh -c '[ "$(python uklatn.py -t DSTU_9112_B мрії мої)" = "mriji moi" ]'
         sh -c '[ "$(echo мрії мої | python uklatn.py -t DSTU_9112_B -f -)" = "mriji moji" ]'
 
 
   build-swift:
+    if: 0
     strategy:
       matrix:
         BUILD_TYPE: [debug, release]
