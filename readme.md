@@ -18,7 +18,7 @@ JavaScript package
 
 Install with npm:
 ```sh
-npm install 'git+https://github.com/paiv/uklatn.git'
+npm install uklatn
 ```
 
 Usage:
@@ -35,7 +35,7 @@ Python module
 
 Install with pip:
 ```sh
-pip install 'git+https://github.com/paiv/uklatn.git'
+pip install uklatn
 ```
 
 Usage:
