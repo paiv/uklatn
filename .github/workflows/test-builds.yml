@@ -54,6 +54,10 @@ jobs:
       run: |
         sh -c '[ "$(npm exec -- uklatn -t DSTU_9112_B мрії мої)" = "mriji moji" ]'
 
+    - name: Test CLI pipe
+      run: |
+        sh -c '[ "$(echo мрії мої | npm exec -- uklatn -t DSTU_9112_B -f -)" = "mriji moji" ]'
+
 
   build-py:
     runs-on: ubuntu-latest

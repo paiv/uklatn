@@ -1,14 +1,14 @@
 #!/usr/bin/env node
+import { open } from 'node:fs/promises';
 import path from 'node:path';
 import * as uklatn from './uklatn.js';
 
 
-const _Usage = '[-h] [-t TABLE] [-c] [-l] text [text ...]\n';
+const _Usage = '[-h] [-t TABLE] [-c] [-l] [-f FILE] [text ...]\n';
 
 const _HelpPage = _Usage + `
 arguments:
   text            text to transliterate
-  -               read text from stdin
 
 options:
   -h, --help            show this help message and exit
@@ -16,6 +16,7 @@ options:
                         transliteration system (default: DSTU_9112_A)
   -l, --lat, --latin    convert to Latin script (default)
   -c, --cyr, --cyrillic convert to Cyrillic script
+  -f, --file FILE       read text from file
 `;
 
 
@@ -31,15 +32,7 @@ function parse_args(argv) {
         switch (state) {
             case 0:
                 if (arg[0] === '-') {
-                    if (arg === '-') {
-                        if (args.text) {
-                            args.text.push(arg);
-                        }
-                        else {
-                            args.text = [arg];
-                        }
-                    }
-                    else if (arg === '-h' || arg === '-help' || arg === '--help') {
+                    if (arg === '-h' || arg === '-help' || arg === '--help') {
                         args.print_help = true;
                         return args;
                     }
@@ -51,6 +44,9 @@ function parse_args(argv) {
                     }
                     else if (arg === '-t' || arg === '--table') {
                         state = 1;
+                    }
+                    else if (arg === '-f' || arg === '--file') {
+                        state = 2;
                     }
                     else {
                         args.parse_error = `unrecognized arguments: ${arg}`;
@@ -77,6 +73,10 @@ function parse_args(argv) {
                     return args;
                 }
                 break;
+            case 2:
+                args.file = arg;
+                state = 0;
+                break;
         }
     }
 
@@ -84,10 +84,13 @@ function parse_args(argv) {
         case 1:
             args.parse_error = `argument -t/--table expected table name`;
             return args;
+        case 2:
+            args.parse_error = `argument -f/--file expected file name`;
+            return args;
     }
 
-    if (!args.text || !args.text.length) {
-        args.parse_error = 'missing required arguments: text';
+    if ((!args.text || !args.text.length) && (!args.file)) {
+        args.parse_error = 'missing required arguments: text or file';
         return args;
     }
     return args;
@@ -113,14 +116,23 @@ async function main(argv) {
         tr = uklatn.decode;
     }
 
-    if (args.text.length === 1 && args.text[0] === '-') {
-        for await (const buf of process.stdin) {
+    if (args.file) {
+        let fp = undefined;
+        if (args.file === '-') {
+            fp = process.stdin;
+        }
+        else {
+            const fd = await open(args.file);
+            fp = fd.createReadStream();
+        }
+        for await (const buf of fp) {
             const text = buf.toString('utf-8');
             const s = tr(text, args.table_name);
             process.stdout.write(s);
         }
     }
-    else {
+
+    if (args.text) {
         for (const [i, text] of args.text.entries()) {
             let s = tr(text, args.table_name);
             if (i) { s = ' ' + s; }
