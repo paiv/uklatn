@@ -1,10 +1,13 @@
 {
   "name": "@paiv/uklatn",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "exports": "./js/uklatn.d.ts",
   "publish": {
     "include": [
       "license",
+      "package.json",
+      "readme.md",
+      "js/readme.md",
       "js/**/*.js",
       "js/**/*.ts"
     ]
