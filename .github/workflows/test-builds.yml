@@ -92,6 +92,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Swift version
+      run: swift -version
+
     - name: Build
       run: swift build -c ${{matrix.build_type}}
 
