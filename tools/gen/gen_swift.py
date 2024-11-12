@@ -57,9 +57,9 @@ def gen_tests(fns):
     def _emit_decode_throws(table, file):
         print(f'''
     func test_decode_{table}_throws() throws {{
-        XCTAssertThrowsError({{
+        XCTAssertThrowsError(
             try decode("lat", table: UKLatnTable.{table})
-        }}) {{ error in
+        ) {{ error in
             XCTAssertEqual(error as? UKLatnError, UKLatnError.invalidTable(UKLatnTable.{table}.rawValue))
         }}
     }}''', file=file)

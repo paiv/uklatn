@@ -322,9 +322,9 @@ class Kmu55Tests: XCTestCase {
     }
 
     func test_decode_KMU_55_throws() throws {
-        XCTAssertThrowsError({
+        XCTAssertThrowsError(
             try decode("lat", table: UKLatnTable.KMU_55)
-        }) { error in
+        ) { error in
             XCTAssertEqual(error as? UKLatnError, UKLatnError.invalidTable(UKLatnTable.KMU_55.rawValue))
         }
     }
