@@ -2,6 +2,8 @@
 .build/
 build/
 dist/
+node_modules/
+package-lock.json
 __pycache__/
 *.py[cdo]
 *.egg-info/
