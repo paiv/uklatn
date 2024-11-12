@@ -4,7 +4,7 @@
 import Foundation
 
 
-public enum UKLatnError: Error {
+public enum UKLatnError: Error, Equatable {
     case invalidTable(Int)
 }
 

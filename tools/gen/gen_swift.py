@@ -34,36 +34,38 @@ def gen_tests(fns):
         data = [(cyr,lat) for k,cyr,lat in data if k == kind]
         if not data: return
         print('', file=file)
-        print(f'    @Test func {kind}_{table}() throws {{', file=file)
+        print(f'    func test_{kind}_{table}() throws {{', file=file)
         vs, ws = ' ' * 8, ' ' * 12
         dump = '[\n' + ',\n'.join(f'{vs}(\n{ws}{_j(cyr)},\n{ws}{_j(lat)}\n{vs})' for cyr,lat in data) + '        ]\n'
         print(f'        let data: [(String, String)] = {dump}', file=file)
         print('        for (cyr,lat) in data {', file=file)
         if kind[0] == 'c':
             print(f'            let enc = try encode(cyr, table: UKLatnTable.{table})', file=file)
-            print(f'            #expect(lat == enc)', file=file)
+            print(f'            XCTAssertEqual(lat, enc)', file=file)
         else:
             print(f'            let dec = try decode(lat, table: UKLatnTable.{table})', file=file)
-            print(f'            #expect(cyr == dec)', file=file)
+            print(f'            XCTAssertEqual(cyr, dec)', file=file)
         if kind[-1] == 'r':
             if kind[0] == 'c':
                 print(f'            let dec = try decode(lat, table: UKLatnTable.{table})', file=file)
-                print(f'            #expect(cyr == dec)', file=file)
+                print(f'            XCTAssertEqual(cyr, dec)', file=file)
             else:
                 print(f'            let enc = try encode(cyr, table: UKLatnTable.{table})', file=file)
-                print(f'            #expect(lat == enc)', file=file)
+                print(f'            XCTAssertEqual(lat, enc)', file=file)
         print('        }', file=file)
         print('    }', file=file)
     def _emit_decode_throws(table, file):
         print(f'''
-    @Test func decode_{table}_throws() throws {{
-        #expect(throws: UKLatnError.self) {{
+    func test_decode_{table}_throws() throws {{
+        XCTAssertThrowsError({{
             try decode("lat", table: UKLatnTable.{table})
+        }}) {{ error in
+            XCTAssertEqual(error as? UKLatnError, UKLatnError.invalidTable(UKLatnTable.{table}.rawValue))
         }}
     }}''', file=file)
 
     with io.StringIO() as so:
-        print('import Testing', file=so)
+        print('import XCTest', file=so)
         print('@testable import UkrainianLatin', file=so)
         for fn in fns:
             logger.info(f'processing {fn!s}')
@@ -71,7 +73,7 @@ def gen_tests(fns):
             table = table_name(name)
             cname = class_name(name)
             data = _parse_tests(fn)
-            print(f'\n\n@Suite({_j(table)}) struct {cname}Tests {{', file=so)
+            print(f'\n\nclass {cname}Tests: XCTestCase {{', file=so)
             _emit_tests('c2lr', data, table, file=so)
             _emit_tests('l2cr', data, table, file=so)
             _emit_tests('c2l', data, table, file=so)
@@ -190,7 +192,7 @@ def gen_transforms(fns, default_table=None):
 import Foundation
 
 
-public enum UKLatnError: Error {{
+public enum UKLatnError: Error, Equatable {{
     case invalidTable(Int)
 }}
 
