@@ -72,6 +72,16 @@ static const struct _uklatn_test _cyr2lat2cyr_data[] = {
         UklatnTable_DSTU_9112_A,
     },
     {
+        u"дуб!дуб\"дуб#дуб$дуб%дуб&дуб'дуб(дуб)дуб*дуб+дуб,дуб-дуб.дуб/дуб:дуб;дуб<дуб=дуб>дуб?дуб@дуб[дуб\\дуб]дуб^дуб_дуб`дуб{дуб|дуб}дуб~дуб",
+        u"dub!dub\"dub#dub$dub%dub&dub'dub(dub)dub*dub+dub,dub-dub.dub/dub:dub;dub<dub=dub>dub?dub@dub[dub\\dub]dub^dub_dub`dub{dub|dub}dub~dub",
+        UklatnTable_DSTU_9112_A,
+    },
+    {
+        u"бод бод\tбод\nбод\rбод",
+        u"bod bod\tbod\nbod\rbod",
+        UklatnTable_DSTU_9112_A,
+    },
+    {
         u"Україна, Хмельницький",
         u"Ukrajina, Khmeljnycjkyj",
         UklatnTable_DSTU_9112_B,
@@ -139,6 +149,16 @@ static const struct _uklatn_test _cyr2lat2cyr_data[] = {
     {
         u"Сонце світить майже білим світлом, однак через сильніше розсіювання і поглинання короткохвильової частини спектра атмосферою Землі пряме світло Сонця біля поверхні нашої планети набуває певного жовтого відтінку. Якщо небо ясне, то блакитний відтінок розсіяного світла складається з жовтуватим прямим сонячним світлом і загальне освітлення об’єктів на Землі стає білим.",
         u"Sonce svitytj majzhe bilym svitlom, odnak cherez syljnishe rozsijuvannja i poghlynannja korotkokhvyljovoji chastyny spektra atmosferoju Zemli prjame svitlo Soncja bilja poverkhni nashoji planety nabuvaje pevnogho zhovtogho vidtinku. Jakshcho nebo jasne, to blakytnyj vidtinok rozsijanogho svitla skladajetjsja z zhovtuvatym prjamym sonjachnym svitlom i zaghaljne osvitlennja ob'jektiv na Zemli staje bilym.",
+        UklatnTable_DSTU_9112_B,
+    },
+    {
+        u"дуб!дуб\"дуб#дуб$дуб%дуб&дуб'дуб(дуб)дуб*дуб+дуб,дуб-дуб.дуб/дуб:дуб;дуб<дуб=дуб>дуб?дуб@дуб[дуб\\дуб]дуб^дуб_дуб`дуб{дуб|дуб}дуб~дуб",
+        u"dub!dub\"dub#dub$dub%dub&dub'dub(dub)dub*dub+dub,dub-dub.dub/dub:dub;dub<dub=dub>dub?dub@dub[dub\\dub]dub^dub_dub`dub{dub|dub}dub~dub",
+        UklatnTable_DSTU_9112_B,
+    },
+    {
+        u"бод бод\tбод\nбод\rбод",
+        u"bod bod\tbod\nbod\rbod",
         UklatnTable_DSTU_9112_B,
     },
 };
@@ -235,6 +255,16 @@ static const struct _uklatn_test _cyr2lat_data[] = {
     {
         u"в’я в'я",
         u"via via",
+        UklatnTable_KMU_55,
+    },
+    {
+        u"дуб!дуб\"дуб#дуб$дуб%дуб&дуб'дуб(дуб)дуб*дуб+дуб,дуб-дуб.дуб/дуб:дуб;дуб<дуб=дуб>дуб?дуб@дуб[дуб\\дуб]дуб^дуб_дуб`дуб{дуб|дуб}дуб~дуб",
+        u"dub!dub\"dub#dub$dub%dub&dubdub(dub)dub*dub+dub,dub-dub.dub/dub:dub;dub<dub=dub>dub?dub@dub[dub\\dub]dub^dub_dub`dub{dub|dub}dub~dub",
+        UklatnTable_KMU_55,
+    },
+    {
+        u"бод бод\tбод\nбод\rбод",
+        u"bod bod\tbod\nbod\rbod",
         UklatnTable_KMU_55,
     },
 };

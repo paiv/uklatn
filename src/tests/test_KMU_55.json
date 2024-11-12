@@ -68,6 +68,16 @@
     "test": "cyr > lat",
     "cyr": "в’я в'я",
     "lat": "via via"
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "дуб!дуб\"дуб#дуб$дуб%дуб&дуб'дуб(дуб)дуб*дуб+дуб,дуб-дуб.дуб/дуб:дуб;дуб<дуб=дуб>дуб?дуб@дуб[дуб\\дуб]дуб^дуб_дуб`дуб{дуб|дуб}дуб~дуб",
+    "lat": "dub!dub\"dub#dub$dub%dub&dubdub(dub)dub*dub+dub,dub-dub.dub/dub:dub;dub<dub=dub>dub?dub@dub[dub\\dub]dub^dub_dub`dub{dub|dub}dub~dub"
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "бод бод\tбод\nбод\rбод",
+    "lat": "bod bod\tbod\nbod\rbod"
   }
 ]
 

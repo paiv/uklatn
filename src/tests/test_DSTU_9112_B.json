@@ -93,6 +93,16 @@
     "test": "lat > cyr",
     "lat": "Je\u0301s sJe\u0301s je\u0301s sje\u0301s Ji\u0301s sJi\u0301s ji\u0301s sji\u0301s Ju\u0301s sJu\u0301s ju\u0301s sju\u0301s Ja\u0301s sJa\u0301s ja\u0301s sja\u0301s",
     "cyr": "Є́с сЄ́с є́с сє́с Ї́с сЇ́с ї́с сї́с Ю́с сЮ́с ю́с сю́с Я́с сЯ́с я́с ся́с"
+  },
+  {
+    "test": "cyr <> lat",
+    "cyr": "дуб!дуб\"дуб#дуб$дуб%дуб&дуб'дуб(дуб)дуб*дуб+дуб,дуб-дуб.дуб/дуб:дуб;дуб<дуб=дуб>дуб?дуб@дуб[дуб\\дуб]дуб^дуб_дуб`дуб{дуб|дуб}дуб~дуб",
+    "lat": "dub!dub\"dub#dub$dub%dub&dub'dub(dub)dub*dub+dub,dub-dub.dub/dub:dub;dub<dub=dub>dub?dub@dub[dub\\dub]dub^dub_dub`dub{dub|dub}dub~dub"
+  },
+  {
+    "test": "cyr <> lat",
+    "cyr": "бод бод\tбод\nбод\rбод",
+    "lat": "bod bod\tbod\nbod\rbod"
   }
 ]
 
