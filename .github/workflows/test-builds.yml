@@ -90,10 +90,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install ICU
-      run: |
-        sudo apt-get install -y libicu-dev ${{env.LIBICU}}
-
     - name: Build
       run: swift build -c ${{matrix.BUILD_TYPE}}
 

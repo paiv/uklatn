@@ -166,7 +166,7 @@ def gen_transforms(fns, default_table=None):
 
     context['string_replacing'] = '''private extension String {
 
-    func replacing(_ rx: NSRegularExpression, with replacement: (Int,String) -> String) -> String {
+    func replacing(_ rx: NSRegularExpression, with replacement: @escaping (Int,String) -> String) -> String {
         var so = ""
         rx.enumerateMatches(in: self, range: NSRange(startIndex ..< endIndex, in: self)) { (result: NSTextCheckingResult?, flags: NSRegularExpression.MatchingFlags, stop: UnsafeMutablePointer<ObjCBool>) in
             if let result {
