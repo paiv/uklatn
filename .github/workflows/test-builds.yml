@@ -81,22 +81,20 @@ jobs:
 
 
   build-swift:
+    name: Swift ${{matrix.platform}} ${{matrix.build_type}}
     strategy:
       matrix:
-        BUILD_TYPE: [debug, release]
+        build_type: [debug, release]
+        platform: [macos-latest, ubuntu-latest]
 
-    runs-on: ubuntu-latest
+    runs-on: ${{matrix.platform}}
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install ICU
-      run: |
-        sudo apt-get install -y libicu-dev ${{env.LIBICU}}
-
     - name: Build
-      run: swift build -c ${{matrix.BUILD_TYPE}}
+      run: swift build -c ${{matrix.build_type}}
 
     - name: Test
-      run: swift test -c ${{matrix.BUILD_TYPE}}
+      run: swift test -c ${{matrix.build_type}}
 

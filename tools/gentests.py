@@ -59,6 +59,17 @@ def gen_py(args):
     logger.info('PY generator end')
 
 
+def gen_swift(args):
+    logger.info('Swift generator start')
+    from gen import gen_swift
+
+    source = _basegen(args, 'src/tests', 'test*.json', gen_swift.gen_tests)
+    for text in source:
+        print(text, end='')
+
+    logger.info('Swift generator end')
+
+
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='Generate test code for the transform tables.')
@@ -76,6 +87,10 @@ if __name__ == '__main__':
     parse_py = subpar.add_parser('py', help='Python code generator')
     parse_py.add_argument('source', nargs='*', help='source directory')
     parse_py.set_defaults(func=gen_py)
+
+    parse_swift = subpar.add_parser('swift', help='Swfit code generator')
+    parse_swift.add_argument('source', nargs='*', help='source directory')
+    parse_swift.set_defaults(func=gen_swift)
 
     args = parser.parse_args()
 
