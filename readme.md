@@ -5,7 +5,7 @@ Ukrainian Cyrillic transliteration to Latin script.
 [![standwithukraine](docs/StandWithUkraine.svg)](https://ukrainewar.carrd.co/)
 [![](https://github.com/paiv/uklatn/actions/workflows/test-builds.yml/badge.svg)](https://github.com/paiv/uklatn/actions)
 
-[JavaScript](#javascript-package) | [Python](#python-module) | [C](c/) | [Swift](#swift-package)
+[JavaScript](#javascript-package) | [Python](#python-module) | [C](#c-library) | [Swift](#swift-package)
 
 Supported transliteration schemes:
 - [DSTU 9112:2021](https://uk.wikipedia.org/wiki/ДСТУ_9112:2021)
@@ -46,6 +46,11 @@ uklatn.decode("Paljanycja")
 ```
 
 
+C library
+--
+- [uklatn C library](c/)
+
+
 Swift package
 --
 - [uklatn Swift package](swift/)
@@ -53,7 +58,11 @@ Swift package
 Add package dependency:
 ```sh
 swift package add-dependency 'https://github.com/paiv/uklatn.git' --from '1.0.0'
-swift package add-target-dependency --package uklatn UkrainianLatin <target-name>
+```
+
+Use in target dependencies in `Package.swift`:
+```swift
+.product(name: "UKLatn", package: "uklatn")
 ```
 
 

@@ -6,5 +6,4 @@ __pycache__/
 *.py[cdo]
 *.egg-info/
 *.so
-.swiftpm/
 
