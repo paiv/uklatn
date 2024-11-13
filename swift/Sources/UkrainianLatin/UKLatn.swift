@@ -18,6 +18,7 @@ public enum UKLatnError: Error, Equatable {
 ///     - `DSTU_9112_B`: DSTU 9112:2021 System B
 ///     - `KMU_55`: KMU 55:2010
 /// - Returns: The transliterated string.
+@Sendable
 public func encode(_ text: String, table: UKLatnTable = .DSTU_9112_A) throws -> String {
     guard let transform = _UklatnTables[table]?.encode
     else {
@@ -35,6 +36,7 @@ public func encode(_ text: String, table: UKLatnTable = .DSTU_9112_A) throws -> 
 ///     - `DSTU_9112_A`: DSTU 9112:2021 System A
 ///     - `DSTU_9112_B`: DSTU 9112:2021 System B
 /// - Returns: The transliterated string.
+@Sendable
 public func decode(_ text: String, table: UKLatnTable = .DSTU_9112_A) throws -> String {
     guard let transform = _UklatnTables[table]?.decode
     else {
@@ -75,21 +77,21 @@ private extension String {
 }
 
 
-public enum UKLatnTable : Int {
+public enum UKLatnTable : Int, Sendable {
     case DSTU_9112_A = 1
     case DSTU_9112_B = 2
     case KMU_55 = 3
 }
 
 
-private struct _UKLatnCodec {
-    typealias Transform = ((String) throws -> String)
+private struct _UKLatnCodec : Sendable {
+    typealias Transform = (@Sendable (String) throws -> String)
     let encode: Transform?
     let decode: Transform?
 }
 
 
-private let _Uklatn_uk_uk_Latn_DSTU_9112_A: () -> _UKLatnCodec.Transform = {
+private let _Uklatn_uk_uk_Latn_DSTU_9112_A: @Sendable () -> _UKLatnCodec.Transform = {
         let _rx1 = try! NSRegularExpression(pattern: #"\b([Ьь])|([Ьь](?=[АаЕеУу])|[ЄЮЯ](?=\u0301?[а-щьюяєіїґ’])|(?<=[Б-ДЖЗК-НП-ТФ-Щб-джзк-нп-тф-щҐґ])[Йй])|([ЁЄІЇЎА-яёєіїўҐґ’])|(.)"#, options: [.dotMatchesLineSeparators, .useUnicodeWordBoundaries])
         let _maps1:[[String:String]] = [[:], 
             ["Ь":"Ĵ","ь":"ĵ"],
@@ -97,6 +99,7 @@ private let _Uklatn_uk_uk_Latn_DSTU_9112_A: () -> _UKLatnCodec.Transform = {
             ["А":"A","а":"a","Б":"B","б":"b","В":"V","в":"v","Г":"Ğ","г":"ğ","Ґ":"G","ґ":"g","Д":"D","д":"d","Е":"E","е":"e","Є":"JE","є":"je","Ж":"Ž","ж":"ž","З":"Z","з":"z","И":"Y","и":"y","І":"I","і":"i","Ї":"Ï","ї":"ï","К":"K","к":"k","Л":"L","л":"l","М":"M","м":"m","Н":"N","н":"n","О":"O","о":"o","П":"P","п":"p","Р":"R","р":"r","С":"S","с":"s","Т":"T","т":"t","У":"U","у":"u","Ф":"F","ф":"f","Х":"X","х":"x","Ц":"C","ц":"c","Ч":"Č","ч":"č","Ш":"Š","ш":"š","Щ":"Ŝ","щ":"ŝ","Ю":"JU","ю":"ju","Я":"JA","я":"ja","Ь":"J","ь":"j","Й":"J","й":"j","’":"'","Ё":"Ö","ё":"ö","Ў":"Ŭ","ў":"ŭ","Ъ":"Ǒ","ъ":"ǒ","Ы":"Ȳ","ы":"ȳ","Э":"Ē","э":"ē"],
             [:],
         ]
+    @Sendable
     func transform(_ text: String) throws -> String {
         var text = text
         text = text.precomposedStringWithCanonicalMapping // NFC
@@ -109,7 +112,7 @@ private let _Uklatn_uk_uk_Latn_DSTU_9112_A: () -> _UKLatnCodec.Transform = {
     return transform
 }
 
-private let _Uklatn_uk_uk_Latn_DSTU_9112_B: () -> _UKLatnCodec.Transform = {
+private let _Uklatn_uk_uk_Latn_DSTU_9112_B: @Sendable () -> _UKLatnCodec.Transform = {
         let _rx1 = try! NSRegularExpression(pattern: #"([Ьь](?=[АаЕеІіУу])|(?<=[Б-ДЖЗК-НП-ТФ-Щб-джзк-нп-тф-щҐґ])[Йй])|([ГЄЖЇХЩШЧЮЯЁЎЪЫЭ](?=\u0301?[а-яёєіїўґ’])|\b[Ьь])|([ЁЄІЇЎА-яёєіїўҐґ’])|(.)"#, options: [.dotMatchesLineSeparators, .useUnicodeWordBoundaries])
         let _maps1:[[String:String]] = [[:], 
             ["Ь":"J'","ь":"j'","Й":"'J","й":"'j"],
@@ -117,6 +120,7 @@ private let _Uklatn_uk_uk_Latn_DSTU_9112_B: () -> _UKLatnCodec.Transform = {
             ["А":"A","а":"a","Б":"B","б":"b","В":"V","в":"v","Г":"GH","г":"gh","Ґ":"G","ґ":"g","Д":"D","д":"d","Е":"E","е":"e","Є":"JE","є":"je","Ж":"ZH","ж":"zh","З":"Z","з":"z","И":"Y","и":"y","І":"I","і":"i","Ї":"JI","ї":"ji","Х":"KH","х":"kh","К":"K","к":"k","Л":"L","л":"l","М":"M","м":"m","Н":"N","н":"n","О":"O","о":"o","П":"P","п":"p","Р":"R","р":"r","Щ":"SHCH","щ":"shch","Ш":"SH","ш":"sh","С":"S","с":"s","Т":"T","т":"t","У":"U","у":"u","Ф":"F","ф":"f","Ч":"CH","ч":"ch","Ц":"C","ц":"c","Ю":"JU","ю":"ju","Я":"JA","я":"ja","Й":"J","й":"j","Ь":"J","ь":"j","’":"'","Ё":"JOW","ё":"jow","Ў":"UH","ў":"uh","Ъ":"OH","ъ":"oh","Ы":"YW","ы":"yw","Э":"EHW","э":"ehw"],
             [:],
         ]
+    @Sendable
     func transform(_ text: String) throws -> String {
         var text = text
         text = text.precomposedStringWithCanonicalMapping // NFC
@@ -129,7 +133,7 @@ private let _Uklatn_uk_uk_Latn_DSTU_9112_B: () -> _UKLatnCodec.Transform = {
     return transform
 }
 
-private let _Uklatn_uk_uk_Latn_KMU_55: () -> _UKLatnCodec.Transform = {
+private let _Uklatn_uk_uk_Latn_KMU_55: @Sendable () -> _UKLatnCodec.Transform = {
         let _rx1 = try! NSRegularExpression(pattern: #"(?<=[ЁЄІЇЎА-яёєіїўҐґ])([’\u0027])(?=[ЁЄІЇЎА-яёєіїўҐґ])|(.)"#, options: [.dotMatchesLineSeparators, .useUnicodeWordBoundaries])
         let _maps1:[[String:String]] = [[:], 
             ["’":"","'":""],
@@ -143,6 +147,7 @@ private let _Uklatn_uk_uk_Latn_KMU_55: () -> _UKLatnCodec.Transform = {
             ["ЗГ":"ZGH","Зг":"Zgh","зГ":"zGH","зг":"zgh","А":"A","а":"a","Б":"B","б":"b","В":"V","в":"v","Г":"H","г":"h","Ґ":"G","ґ":"g","Д":"D","д":"d","Е":"E","е":"e","Є":"IE","є":"ie","Ж":"ZH","ж":"zh","З":"Z","з":"z","И":"Y","и":"y","І":"I","і":"i","Ї":"I","ї":"i","Х":"KH","х":"kh","К":"K","к":"k","Л":"L","л":"l","М":"M","м":"m","Н":"N","н":"n","О":"O","о":"o","П":"P","п":"p","Р":"R","р":"r","Щ":"SHCH","щ":"shch","Ш":"SH","ш":"sh","С":"S","с":"s","Т":"T","т":"t","У":"U","у":"u","Ф":"F","ф":"f","Ч":"CH","ч":"ch","Ц":"TS","ц":"ts","Ю":"IU","ю":"iu","Я":"IA","я":"ia","Й":"I","й":"i","Ь":"","ь":"","’":""],
             [:],
         ]
+    @Sendable
     func transform(_ text: String) throws -> String {
         var text = text
         text = text.precomposedStringWithCanonicalMapping // NFC
@@ -158,7 +163,7 @@ private let _Uklatn_uk_uk_Latn_KMU_55: () -> _UKLatnCodec.Transform = {
     return transform
 }
 
-private let _Uklatn_uk_Latn_DSTU_9112_A_uk: () -> _UKLatnCodec.Transform = {
+private let _Uklatn_uk_Latn_DSTU_9112_A_uk: @Sendable () -> _UKLatnCodec.Transform = {
         let _rx1 = try! NSRegularExpression(pattern: #"([ÁáÉéÍíÓóÚúÝýḮḯ])|(.)"#, options: [.dotMatchesLineSeparators, .useUnicodeWordBoundaries])
         let _maps1:[[String:String]] = [[:], 
             ["Á":"Á","á":"á","É":"É","é":"é","Í":"Í","í":"í","Ó":"Ó","ó":"ó","Ú":"Ú","ú":"ú","Ý":"Ý","ý":"ý","Ḯ":"Ḯ","ḯ":"ḯ"],
@@ -171,6 +176,7 @@ private let _Uklatn_uk_Latn_DSTU_9112_A_uk: () -> _UKLatnCodec.Transform = {
             ["'J":"Й","'j":"й","'":"’","J":"Й","j":"й"],
             [:],
         ]
+    @Sendable
     func transform(_ text: String) throws -> String {
         var text = text
         text = text.precomposedStringWithCanonicalMapping // NFC
@@ -186,7 +192,7 @@ private let _Uklatn_uk_Latn_DSTU_9112_A_uk: () -> _UKLatnCodec.Transform = {
     return transform
 }
 
-private let _Uklatn_uk_Latn_DSTU_9112_B_uk: () -> _UKLatnCodec.Transform = {
+private let _Uklatn_uk_Latn_DSTU_9112_B_uk: @Sendable () -> _UKLatnCodec.Transform = {
         let _rx1 = try! NSRegularExpression(pattern: #"([ÁáÉéÍíÓóÚúÝý])|(.)"#, options: [.dotMatchesLineSeparators, .useUnicodeWordBoundaries])
         let _maps1:[[String:String]] = [[:], 
             ["Á":"Á","á":"á","É":"É","é":"é","Í":"Í","í":"í","Ó":"Ó","ó":"ó","Ú":"Ú","ú":"ú","Ý":"Ý","ý":"ý"],
@@ -201,6 +207,7 @@ private let _Uklatn_uk_Latn_DSTU_9112_B_uk: () -> _UKLatnCodec.Transform = {
             ["'J":"Й","'j":"й","'":"’","J":"Й","j":"й"],
             [:],
         ]
+    @Sendable
     func transform(_ text: String) throws -> String {
         var text = text
         text = text.precomposedStringWithCanonicalMapping // NFC

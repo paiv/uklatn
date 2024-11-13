@@ -109,7 +109,7 @@ def gen_transforms(fns, default_table=None):
         precomposedStringWithCompatibilityMapping
         decomposedStringWithCompatibilityMapping
         '''.split()))
-        print(f'private let {cname}: () -> _UKLatnCodec.Transform = {{', file=file)
+        print(f'private let {cname}: @Sendable () -> _UKLatnCodec.Transform = {{', file=file)
         for sid, section in enumerate(rules):
             if not isinstance(section, str):
                 rx, maps = section
@@ -120,6 +120,7 @@ def gen_transforms(fns, default_table=None):
                     ds = '[' + ','.join(f'{_j(k)}:{_j(v)}' for k,v in d.items()) + ']' if d else '[:]'
                     print(f'            {ds},', file=file)
                 print(f'        ]', file=file)
+        print('    @Sendable', file=file)
         print('    func transform(_ text: String) throws -> String {', file=file)
         print('        var text = text', file=file)
         for sid, section in enumerate(rules):
@@ -214,6 +215,7 @@ public enum UKLatnError: Error, Equatable {{
 ///     - `DSTU_9112_B`: DSTU 9112:2021 System B
 ///     - `KMU_55`: KMU 55:2010
 /// - Returns: The transliterated string.
+@Sendable
 public func encode(_ text: String, table: UKLatnTable = .{default_table}) throws -> String {{
     guard let transform = _UklatnTables[table]?.encode
     else {{
@@ -231,6 +233,7 @@ public func encode(_ text: String, table: UKLatnTable = .{default_table}) throws
 ///     - `DSTU_9112_A`: DSTU 9112:2021 System A
 ///     - `DSTU_9112_B`: DSTU 9112:2021 System B
 /// - Returns: The transliterated string.
+@Sendable
 public func decode(_ text: String, table: UKLatnTable = .{default_table}) throws -> String {{
     guard let transform = _UklatnTables[table]?.decode
     else {{
@@ -243,13 +246,13 @@ public func decode(_ text: String, table: UKLatnTable = .{default_table}) throws
 {string_replacing}
 
 
-public enum UKLatnTable : Int {{
+public enum UKLatnTable : Int, Sendable {{
 {tables_enum}
 }}
 
 
-private struct _UKLatnCodec {{
-    typealias Transform = ((String) throws -> String)
+private struct _UKLatnCodec : Sendable {{
+    typealias Transform = (@Sendable (String) throws -> String)
     let encode: Transform?
     let decode: Transform?
 }}
