@@ -44,9 +44,9 @@ public func decode(_ text: String, table: UKLatnTable = .DSTU_9112_A) throws -> 
 }
 
 
-private extension Range where Bound == String.UnicodeScalarView.Index {
+private extension Range where Bound == String.UTF16View.Index {
 
-    init?(_ range: NSRange, in view: String.UnicodeScalarView) {
+    init?(_ range: NSRange, in view: String.UTF16View) {
         self = view.index(view.startIndex, offsetBy: range.location) ..< view.index(view.startIndex, offsetBy: range.location + range.length)
     }
 }
@@ -61,9 +61,9 @@ private extension String {
                 for i in 1..<result.numberOfRanges {
                     let range = result.range(at: i)
                     if range.location != NSNotFound {
-                        if let range = Range(range, in: unicodeScalars) {
-                            let s = unicodeScalars[range]
-                            so += replacement(i, String(s))
+                        if let range = Range(range, in: utf16),
+                           let s = String(utf16[range]) {
+                            so += replacement(i, s)
                             return
                         }
                     }

@@ -82,6 +82,11 @@ static const struct _uklatn_test _cyr2lat2cyr_data[] = {
         UklatnTable_DSTU_9112_A,
     },
     {
+        u"об😎нап😘неп😭нєп🧐нїп😍нюп😀няп",
+        u"ob😎nap😘nep😭njep🧐nïp😍njup😀njap",
+        UklatnTable_DSTU_9112_A,
+    },
+    {
         u"Україна, Хмельницький",
         u"Ukrajina, Khmeljnycjkyj",
         UklatnTable_DSTU_9112_B,
@@ -159,6 +164,11 @@ static const struct _uklatn_test _cyr2lat2cyr_data[] = {
     {
         u"бод бод\tбод\nбод\rбод",
         u"bod bod\tbod\nbod\rbod",
+        UklatnTable_DSTU_9112_B,
+    },
+    {
+        u"об😎нап😘неп😭нєп🧐нїп😍нюп😀няп",
+        u"ob😎nap😘nep😭njep🧐njip😍njup😀njap",
         UklatnTable_DSTU_9112_B,
     },
 };
@@ -265,6 +275,11 @@ static const struct _uklatn_test _cyr2lat_data[] = {
     {
         u"бод бод\tбод\nбод\rбод",
         u"bod bod\tbod\nbod\rbod",
+        UklatnTable_KMU_55,
+    },
+    {
+        u"об😎нап😘неп😭нєп🧐нїп😍нюп😀няп",
+        u"ob😎nap😘nep😭niep🧐nip😍niup😀niap",
         UklatnTable_KMU_55,
     },
 };

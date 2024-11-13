@@ -36,7 +36,7 @@ def gen_tests(fns):
         print('', file=file)
         print(f'    func test_{kind}_{table}() throws {{', file=file)
         vs, ws = ' ' * 8, ' ' * 12
-        dump = '[\n' + ',\n'.join(f'{vs}(\n{ws}{_j(cyr)},\n{ws}{_j(lat)}\n{vs})' for cyr,lat in data) + '        ]\n'
+        dump = '[\n' + ''.join(f'{vs}(\n{ws}{_j(cyr)},\n{ws}{_j(lat)}\n{vs}),\n' for cyr,lat in data) + '        ]\n'
         print(f'        let data: [(String, String)] = {dump}', file=file)
         print('        for (cyr,lat) in data {', file=file)
         if kind[0] == 'c':
@@ -166,9 +166,9 @@ def gen_transforms(fns, default_table=None):
     context['default_table'] = default_table
     context['tables_enum'] = '\n'.join(f'    case {t} = {i}' for i,t in enumerate(tables, 1))
 
-    context['string_replacing'] = '''private extension Range where Bound == String.UnicodeScalarView.Index {
+    context['string_replacing'] = '''private extension Range where Bound == String.UTF16View.Index {
 
-    init?(_ range: NSRange, in view: String.UnicodeScalarView) {
+    init?(_ range: NSRange, in view: String.UTF16View) {
         self = view.index(view.startIndex, offsetBy: range.location) ..< view.index(view.startIndex, offsetBy: range.location + range.length)
     }
 }
@@ -183,9 +183,9 @@ private extension String {
                 for i in 1..<result.numberOfRanges {
                     let range = result.range(at: i)
                     if range.location != NSNotFound {
-                        if let range = Range(range, in: unicodeScalars) {
-                            let s = unicodeScalars[range]
-                            so += replacement(i, String(s))
+                        if let range = Range(range, in: utf16),
+                           let s = String(utf16[range]) {
+                            so += replacement(i, s)
                             return
                         }
                     }

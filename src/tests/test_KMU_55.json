@@ -78,6 +78,11 @@
     "test": "cyr > lat",
     "cyr": "бод бод\tбод\nбод\rбод",
     "lat": "bod bod\tbod\nbod\rbod"
+  },
+  {
+    "test": "cyr > lat",
+    "cyr": "об😎нап😘неп😭нєп🧐нїп😍нюп😀няп",
+    "lat": "ob😎nap😘nep😭niep🧐nip😍niup😀niap"
   }
 ]
 

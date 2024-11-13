@@ -70,6 +70,10 @@ test('DSTU_9112_A', async (t) => {
     [
         "бод бод\tбод\nбод\rбод",
         "bod bod\tbod\nbod\rbod"
+    ],
+    [
+        "об😎нап😘неп😭нєп🧐нїп😍нюп😀няп",
+        "ob😎nap😘nep😭njep🧐nïp😍njup😀njap"
     ]
 ];
         for (const [cyr,lat] of data) {
@@ -194,6 +198,10 @@ test('DSTU_9112_B', async (t) => {
     [
         "бод бод\tбод\nбод\rбод",
         "bod bod\tbod\nbod\rbod"
+    ],
+    [
+        "об😎нап😘неп😭нєп🧐нїп😍нюп😀няп",
+        "ob😎nap😘nep😭njep🧐njip😍njup😀njap"
     ]
 ];
         for (const [cyr,lat] of data) {
@@ -310,6 +318,10 @@ test('KMU_55', async (t) => {
     [
         "бод бод\tбод\nбод\rбод",
         "bod bod\tbod\nbod\rbod"
+    ],
+    [
+        "об😎нап😘неп😭нєп🧐нїп😍нюп😀няп",
+        "ob😎nap😘nep😭niep🧐nip😍niup😀niap"
     ]
 ];
         for (const [cyr,lat] of data) {

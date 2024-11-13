@@ -71,7 +71,12 @@ class Dstu9112ATests: XCTestCase {
         (
             "бод бод\tбод\nбод\rбод",
             "bod bod\tbod\nbod\rbod"
-        )        ]
+        ),
+        (
+            "об😎нап😘неп😭нєп🧐нїп😍нюп😀няп",
+            "ob😎nap😘nep😭njep🧐nïp😍njup😀njap"
+        ),
+        ]
 
         for (cyr,lat) in data {
             let enc = try encode(cyr, table: UKLatnTable.DSTU_9112_A)
@@ -90,7 +95,8 @@ class Dstu9112ATests: XCTestCase {
         (
             "Ї ї Й й Ё ё Ў ў",
             "Ï ï J j Ö ö Ŭ ŭ"
-        )        ]
+        ),
+        ]
 
         for (cyr,lat) in data {
             let enc = try encode(cyr, table: UKLatnTable.DSTU_9112_A)
@@ -119,7 +125,8 @@ class Dstu9112ATests: XCTestCase {
         (
             "Є́с сЄ́с є́с сє́с Ї́с сЇ́с ї́с сї́с Ю́с сЮ́с ю́с сю́с Я́с сЯ́с я́с ся́с",
             "Jés sJés jés sjés Ḯs sḮs ḯs sḯs Jús sJús jús sjús Jás sJás jás sjás"
-        )        ]
+        ),
+        ]
 
         for (cyr,lat) in data {
             let dec = try decode(lat, table: UKLatnTable.DSTU_9112_A)
@@ -196,7 +203,12 @@ class Dstu9112BTests: XCTestCase {
         (
             "бод бод\tбод\nбод\rбод",
             "bod bod\tbod\nbod\rbod"
-        )        ]
+        ),
+        (
+            "об😎нап😘неп😭нєп🧐нїп😍нюп😀няп",
+            "ob😎nap😘nep😭njep🧐njip😍njup😀njap"
+        ),
+        ]
 
         for (cyr,lat) in data {
             let enc = try encode(cyr, table: UKLatnTable.DSTU_9112_B)
@@ -215,7 +227,8 @@ class Dstu9112BTests: XCTestCase {
         (
             "Ї ї Й й Ё ё Ў ў",
             "JI ji J j JOW jow UH uh"
-        )        ]
+        ),
+        ]
 
         for (cyr,lat) in data {
             let enc = try encode(cyr, table: UKLatnTable.DSTU_9112_B)
@@ -236,7 +249,8 @@ class Dstu9112BTests: XCTestCase {
         (
             "Є́с сЄ́с є́с сє́с Ї́с сЇ́с ї́с сї́с Ю́с сЮ́с ю́с сю́с Я́с сЯ́с я́с ся́с",
             "Jés sJés jés sjés Jís sJís jís sjís Jús sJús jús sjús Jás sJás jás sjás"
-        )        ]
+        ),
+        ]
 
         for (cyr,lat) in data {
             let dec = try decode(lat, table: UKLatnTable.DSTU_9112_B)
@@ -313,7 +327,12 @@ class Kmu55Tests: XCTestCase {
         (
             "бод бод\tбод\nбод\rбод",
             "bod bod\tbod\nbod\rbod"
-        )        ]
+        ),
+        (
+            "об😎нап😘неп😭нєп🧐нїп😍нюп😀няп",
+            "ob😎nap😘nep😭niep🧐nip😍niup😀niap"
+        ),
+        ]
 
         for (cyr,lat) in data {
             let enc = try encode(cyr, table: UKLatnTable.KMU_55)

@@ -72,6 +72,10 @@ class TestDSTU_9112_A (unittest.TestCase):
                 "бод бод\tбод\nбод\rбод",
                 "bod bod\tbod\nbod\rbod",
             ),
+            (
+                "об😎нап😘неп😭нєп🧐нїп😍нюп😀няп",
+                "ob😎nap😘nep😭njep🧐nïp😍njup😀njap",
+            ),
         ]
 
         for cyr,lat in data:
@@ -193,6 +197,10 @@ class TestDSTU_9112_B (unittest.TestCase):
                 "бод бод\tбод\nбод\rбод",
                 "bod bod\tbod\nbod\rbod",
             ),
+            (
+                "об😎нап😘неп😭нєп🧐нїп😍нюп😀няп",
+                "ob😎nap😘nep😭njep🧐njip😍njup😀njap",
+            ),
         ]
 
         for cyr,lat in data:
@@ -305,6 +313,10 @@ class TestKMU_55 (unittest.TestCase):
             (
                 "бод бод\tбод\nбод\rбод",
                 "bod bod\tbod\nbod\rbod",
+            ),
+            (
+                "об😎нап😘неп😭нєп🧐нїп😍нюп😀няп",
+                "ob😎nap😘nep😭niep🧐nip😍niup😀niap",
             ),
         ]
 
