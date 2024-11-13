@@ -5,6 +5,7 @@ import UkrainianLatin
 @main
 struct MyApp {
 
+    /// main
     static func main() {
         var stderr = ErrorStream()
 
