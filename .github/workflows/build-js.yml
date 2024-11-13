@@ -1,0 +1,34 @@
+name: JavaScript
+
+on:
+  push:
+    tags: ['*']
+  pull_request:
+    branches: [main]
+    paths:
+    - 'js/**/*'
+    - 'package.json'
+    - 'jsr.json'
+
+jobs:
+
+  build-js:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Test
+      run: npm test
+
+    - name: Install
+      run: |
+        npm install --global
+
+    - name: Test CLI
+      run: |
+        sh -c '[ "$(npm exec -- uklatn -t DSTU_9112_B мрії мої)" = "mriji moji" ]'
+
+    - name: Test CLI pipe
+      run: |
+        sh -c '[ "$(echo мрії мої | npm exec -- uklatn -t DSTU_9112_B -f -)" = "mriji moji" ]'
