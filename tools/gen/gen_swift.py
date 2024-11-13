@@ -166,7 +166,15 @@ def gen_transforms(fns, default_table=None):
     context['default_table'] = default_table
     context['tables_enum'] = '\n'.join(f'    case {t} = {i}' for i,t in enumerate(tables, 1))
 
-    context['string_replacing'] = '''private extension String {
+    context['string_replacing'] = '''private extension Range where Bound == String.UnicodeScalarView.Index {
+
+    init?(_ range: NSRange, in view: String.UnicodeScalarView) {
+        self = view.index(view.startIndex, offsetBy: range.location) ..< view.index(view.startIndex, offsetBy: range.location + range.length)
+    }
+}
+
+
+private extension String {
 
     func replacing(_ rx: NSRegularExpression, with replacement: @escaping (Int,String) -> String) -> String {
         var so = ""
@@ -175,8 +183,8 @@ def gen_transforms(fns, default_table=None):
                 for i in 1..<result.numberOfRanges {
                     let range = result.range(at: i)
                     if range.location != NSNotFound {
-                        if let range = Range(range, in: self) {
-                            let s = self[range]
+                        if let range = Range(range, in: unicodeScalars) {
+                            let s = unicodeScalars[range]
                             so += replacement(i, String(s))
                             return
                         }
