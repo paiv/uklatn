@@ -18,6 +18,7 @@ public enum UKLatnError: Error, Equatable {
 ///     - `DSTU_9112_B`: DSTU 9112:2021 System B
 ///     - `KMU_55`: KMU 55:2010
 /// - Returns: The transliterated string.
+@Sendable
 public func encode(_ text: String, table: UKLatnTable = .DSTU_9112_A) throws -> String {
     guard let transform = _UklatnTables[table]?.encode
     else {
@@ -35,6 +36,7 @@ public func encode(_ text: String, table: UKLatnTable = .DSTU_9112_A) throws -> 
 ///     - `DSTU_9112_A`: DSTU 9112:2021 System A
 ///     - `DSTU_9112_B`: DSTU 9112:2021 System B
 /// - Returns: The transliterated string.
+@Sendable
 public func decode(_ text: String, table: UKLatnTable = .DSTU_9112_A) throws -> String {
     guard let transform = _UklatnTables[table]?.decode
     else {
