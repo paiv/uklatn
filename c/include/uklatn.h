@@ -26,7 +26,7 @@ extern "C" {
 #endif
 
 
-/* Cyrillic to Latin transiteration
+/** Cyrillic to Latin transiteration
   UTF-8 parameters.
 */
 int uklatn_encode(const char* restrict src, int table, char* restrict dest, int destsize);
