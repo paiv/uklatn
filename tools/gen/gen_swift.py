@@ -102,6 +102,14 @@ def gen_transforms(fns, default_table=None):
         ] for s in data]
 
     def _emit_tr(cname, rules, file):
+        # Why NSRegularExpression, and not Regex:
+        # - no backrefs
+        # When backrefs implemented in Regex, and updating this code,
+        # use .matchingSemantics(.unicodeScalar)
+        # since all other languages operate on code points, and transform tables
+        # are designed for it.
+        # SE-0448 Regex lookbehind assertions
+        # SE-NNNN Unicode Normalization
         rules = _load_rules(rules)
         norms = dict(zip('NFC NFD NFKC NFKD'.split(), '''
         precomposedStringWithCanonicalMapping
