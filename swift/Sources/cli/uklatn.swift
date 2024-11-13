@@ -124,6 +124,7 @@ private struct AppArgs {
         }
         printUsage(to: &output)
         print("error: \(message)", to: &output)
+        exit(1)
     }
     
     static func parse(_ argv: [String]) throws -> AppArgs {
