@@ -8,7 +8,28 @@
   <version>1.12.0</version>
 
   <name>uklatn</name>
+  <description>Ukrainian Cyrillic transliteration to Latin script</description>
   <url>https://github.com/paiv/uklatn</url>
+
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://opensource.org/license/mit</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>paiv</id>
+      <name>Pavlo Ivashkov</name>
+      <url>https://github.com/paiv</url>
+    </developer>
+  </developers>
+
+  <scm>
+    <url>https://github.com/paiv/uklatn</url>
+    <connection>scm:git:https://github.com/paiv/uklatn.git</connection>
+  </scm>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
