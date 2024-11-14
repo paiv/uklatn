@@ -1,0 +1,21 @@
+name: Java
+
+on:
+  push:
+    tags: ['*']
+  pull_request:
+    branches: [main]
+    paths:
+    - 'java/**/*'
+
+jobs:
+
+  build-java:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Test
+      working-directory: ${{github.workspace}}/java
+      run: mvn -q test
