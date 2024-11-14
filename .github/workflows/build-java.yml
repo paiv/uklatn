@@ -10,7 +10,7 @@ on:
 
 jobs:
 
-  build-js:
+  build-java:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,4 +18,4 @@ jobs:
 
     - name: Test
       working-directory: ${{github.workspace}}/java
-      run: mvn test
+      run: mvn -q test
