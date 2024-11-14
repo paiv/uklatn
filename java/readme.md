@@ -11,7 +11,7 @@ Usage
 --
 
 ```java
-import paiv.uklatn.UkrainianLatin;
+import io.github.paiv.uklatn.UkrainianLatin;
 
 UkrainianLatin tr = new UkrainianLatin();
 
@@ -24,7 +24,7 @@ System.out.println(t);
 
 Select a transliteration scheme:
 ```java
-import static paiv.uklatn.UkrainianLatin.UKLatnTable;
+import static io.github.paiv.uklatn.UkrainianLatin.UKLatnTable;
 tr.encode("Борщ", UKLatnTable.DSTU_9112_A);
 ```
 
