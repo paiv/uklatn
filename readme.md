@@ -5,7 +5,7 @@ Ukrainian Cyrillic transliteration to Latin script.
 [![standwithukraine](docs/StandWithUkraine.svg)](https://ukrainewar.carrd.co/)
 [![](https://github.com/paiv/uklatn/actions/workflows/test-builds.yml/badge.svg)](https://github.com/paiv/uklatn/actions)
 
-[JavaScript](#javascript-package) | [Python](#python-module) | [C](c/) | [Swift](#swift-package)
+[JavaScript](#javascript-package) | [Python](#python-module) | [C](c/) | [Java](#java-library) | [Swift](#swift-package)
 
 Supported transliteration schemes:
 - [DSTU 9112:2021](https://uk.wikipedia.org/wiki/ДСТУ_9112:2021)
@@ -43,6 +43,20 @@ Usage:
 import uklatn
 uklatn.encode("Доброго вечора!")
 uklatn.decode("Paljanycja")
+```
+
+
+Java library
+--
+- [uklatn Java library](java/)
+
+Add dependency to pom.xml:
+```pom.xml
+<dependency>
+    <groupId>io.github.paiv.uklatn</groupId>
+    <artifactId>uklatn</artifactId>
+    <version>1.12.0</version>
+</dependency>
 ```
 
 
