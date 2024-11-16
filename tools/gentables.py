@@ -73,6 +73,17 @@ def gen_py(src):
     logger.info('PY generator end')
 
 
+def gen_ruby(src):
+    logger.info('Ruby generator start')
+    from gen import gen_ruby
+
+    source = _basegen(args, 'src/regex', 'uk*.json', gen_ruby.gen_transforms)
+    for text in source:
+        print(text, end='')
+
+    logger.info('Ruby generator end')
+
+
 def gen_swift(src):
     logger.info('Swift generator start')
     from gen import gen_swift
@@ -101,6 +112,10 @@ if __name__ == '__main__':
     parse_py = subpar.add_parser('py', help='Python code generator')
     parse_py.add_argument('source', nargs='*', help='source directory')
     parse_py.set_defaults(func=gen_py)
+
+    parse_ruby = subpar.add_parser('ruby', help='Ruby code generator')
+    parse_ruby.add_argument('source', nargs='*', help='source directory')
+    parse_ruby.set_defaults(func=gen_ruby)
 
     parse_java = subpar.add_parser('java', help='Java code generator')
     parse_java.add_argument('source', nargs='*', help='source directory')
