@@ -6,6 +6,15 @@
 # - 'DSTU_9112_A': DSTU 9112:2021 System A
 # - 'DSTU_9112_B': DSTU 9112:2021 System B
 # - 'KMU_55': KMU 55:2010, not reversible
+#
+# Usage:
+#     tr = UkrainianLatin.new
+#     tr.encode('Доброго вечора!')
+#     tr.decode('Paljanycja')
+#
+# Select a transliteration scheme:
+#     tr.encode('Борщ', 'DSTU_9112_A')
+#
 class UkrainianLatin
 
     # Transliterates a string of Ukrainian Cyrillic to Latin script.

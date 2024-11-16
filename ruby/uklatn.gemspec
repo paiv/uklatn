@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
     s.name = 'uklatn'
-    s.version = '1.13.0'
+    s.version = '1.13.1'
     s.license = 'MIT'
     s.summary = 'Ukrainian Cyrillic transliteration to Latin script'
     s.description = <<~EOS
