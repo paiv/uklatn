@@ -83,6 +83,6 @@ gem 'uklatn'
 
 Notes
 --
-Input is assumed to be in Ukrainian (Cyrillic or Latin script), and will be processed fully.
+Input is assumed to be in Ukrainian (Cyrillic or Latin script), and will be processed in full.
 If your data has mixed languages, do preprocessing to extract Ukrainian chunks.
 
