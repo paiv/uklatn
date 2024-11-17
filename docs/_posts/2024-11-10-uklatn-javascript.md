@@ -1,8 +1,11 @@
 ---
 layout: post
-title:  "JavaScript Urainian Cyrillic to Latin script transliteration"
+title:  "JavaScript Ukrainian Cyrillic to Latin script transliteration"
 author: paiv
 ---
+
+- https://www.npmjs.com/package/uklatn
+
 
 Install
 --
