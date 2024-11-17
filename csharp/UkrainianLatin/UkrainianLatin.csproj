@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <Description>Ukrainian Cyrillic transliteration to Latin script. Ukraine national standards: DSTU 9112:2021, KMU 55:2010.</Description>
+    <Authors>Pavlo Ivashkov</Authors>
+    <Copyright>Copyright © 2024 Pavlo Ivashkov</Copyright>
+
+    <PackageId>UkrainianLatin</PackageId>
+    <PackageVersion>1.14.0</PackageVersion>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>ukraine;transliteration;romanization</PackageTags>
+    <PackageProjectUrl>https://github.com/paiv/uklatn</PackageProjectUrl>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <PackageIcon>icon128.png</PackageIcon>
+    <RepositoryUrl>https://github.com/paiv/uklatn.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../readme.md" Pack="true" PackagePath=""/>
+    <None Include="../icon128.png" Pack="true" PackagePath=""/>
+  </ItemGroup>
+</Project>

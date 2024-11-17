@@ -1,0 +1,5 @@
+.config
+bin/
+obj/
+_site/
+target/

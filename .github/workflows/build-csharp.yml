@@ -1,0 +1,21 @@
+name: .NET C#
+
+on:
+  push:
+    tags: ['*']
+  pull_request:
+    branches: [main]
+    paths:
+    - 'csharp/**/*'
+
+jobs:
+
+  build-csharp:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Test
+      working-directory: ${{github.workspace}}/csharp
+      run: dotnet test

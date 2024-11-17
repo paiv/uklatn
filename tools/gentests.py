@@ -70,6 +70,17 @@ def gen_py(args):
     logger.info('PY generator end')
 
 
+def gen_csharp(args):
+    logger.info('C# generator start')
+    from gen import gen_csharp
+
+    source = _basegen(args, 'src/tests', 'test*.json', gen_csharp.gen_tests)
+    for text in source:
+        print(text, end='')
+
+    logger.info('C# generator end')
+
+
 def gen_ruby(args):
     logger.info('Ruby generator start')
     from gen import gen_ruby
@@ -113,6 +124,10 @@ if __name__ == '__main__':
     parse_java = subpar.add_parser('java', help='Java code generator')
     parse_java.add_argument('source', nargs='*', help='source directory')
     parse_java.set_defaults(func=gen_java)
+
+    parse_csharp = subpar.add_parser('csharp', help='C# code generator')
+    parse_csharp.add_argument('source', nargs='*', help='source directory')
+    parse_csharp.set_defaults(func=gen_csharp)
 
     parse_ruby = subpar.add_parser('ruby', help='Ruby code generator')
     parse_ruby.add_argument('source', nargs='*', help='source directory')
