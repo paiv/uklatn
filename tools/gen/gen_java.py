@@ -78,14 +78,14 @@ def gen_tests(fns):
             _emit_testset(data, table, file=so)
         context['test_cases'] = so.getvalue()
 
-    template = '''package paiv.uklatn;
+    template = '''package io.github.paiv.uklatn;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static io.github.paiv.uklatn.UkrainianLatin.UKLatnTable;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import paiv.uklatn.UkrainianLatin;
-import paiv.uklatn.UkrainianLatin.UKLatnTable;
+import io.github.paiv.uklatn.UkrainianLatin;
 
 class UkrainianLatinTest {{
     private UkrainianLatin tr;
@@ -216,7 +216,7 @@ def gen_transforms(fns, default_table=None):
     context['global_tables'] = classdefs_tables + tabledef
     context['default_table'] = default_table
 
-    template = '''package paiv.uklatn;
+    template = '''package io.github.paiv.uklatn;
 
 import static java.util.Map.entry;
 
