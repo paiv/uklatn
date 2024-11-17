@@ -1,34 +1,36 @@
 ---
 layout: post
-title:  "JavaScript Ukrainian Cyrillic to Latin script transliteration"
+title:  "Swift Ukrainian Cyrillic to Latin script transliteration"
 author: paiv
 ---
 
-- [https://www.npmjs.com/package/uklatn](https://www.npmjs.com/package/uklatn)
+- [https://swiftpackageindex.com/paiv/uklatn](https://swiftpackageindex.com/paiv/uklatn)
 
 
 Install
 --
 
-Install with npm:
+Add package dependency:
 ```sh
-npm install uklatn
+swift package add-dependency 'https://github.com/paiv/uklatn.git' --from '1.0.0'
+swift package add-target-dependency --package uklatn UkrainianLatin <target-name>
 ```
 
-
-Usage:
+Usage
 --
 
-```js
-import * as uklatn from 'uklatn';
-let s = uklatn.encode('Доброго вечора!');
-let t = uklatn.decode('Paljanycja');
+```swift
+import UkrainianLatin
+let s = try! encode("Доброго вечора!")
+let t = try! decode("Paljanycja")
+print(s, t)
 ```
 
 Select a transliteration scheme:
-```js
-let s = uklatn.encode('Борщ', 'DSTU_9112_A');
+```swift
+try encode("Борщ", table: UKLatnTable.DSTU_9112_A)
 ```
+
 
 Notes
 --
@@ -38,8 +40,14 @@ If your data has mixed languages, do preprocessing to extract Ukrainian chunks.
 
 Command-line executable
 --
+
 ```sh
-npx uklatn 'моє щастя'
+uklatn 'моє щастя'
+```
+
+Running executable from a package:
+```sh
+swift run uklatn 'моє щастя'
 ```
 
 ```txt

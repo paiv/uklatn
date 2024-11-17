@@ -4,7 +4,7 @@ title:  "Python Ukrainian Cyrillic to Latin script transliteration"
 author: paiv
 ---
 
-- https://pypi.org/project/uklatn/
+- [https://pypi.org/project/uklatn/](https://pypi.org/project/uklatn/)
 
 
 Install
@@ -40,7 +40,7 @@ If your data has mixed languages, do preprocessing to extract Ukrainian chunks.
 Module command line
 --
 ```sh
-python -m uklatn 'Бери вершину'
+python -m uklatn 'моє щастя'
 ```
 
 ```txt
