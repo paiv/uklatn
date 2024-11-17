@@ -73,6 +73,17 @@ def gen_py(src):
     logger.info('PY generator end')
 
 
+def gen_csharp(src):
+    logger.info('C# generator start')
+    from gen import gen_csharp
+
+    source = _basegen(args, 'src/regex', 'uk*.json', gen_csharp.gen_transforms)
+    for text in source:
+        print(text, end='')
+
+    logger.info('C# generator end')
+
+
 def gen_ruby(src):
     logger.info('Ruby generator start')
     from gen import gen_ruby
@@ -113,13 +124,17 @@ if __name__ == '__main__':
     parse_py.add_argument('source', nargs='*', help='source directory')
     parse_py.set_defaults(func=gen_py)
 
-    parse_ruby = subpar.add_parser('ruby', help='Ruby code generator')
-    parse_ruby.add_argument('source', nargs='*', help='source directory')
-    parse_ruby.set_defaults(func=gen_ruby)
-
     parse_java = subpar.add_parser('java', help='Java code generator')
     parse_java.add_argument('source', nargs='*', help='source directory')
     parse_java.set_defaults(func=gen_java)
+
+    parse_csharp = subpar.add_parser('csharp', help='C# code generator')
+    parse_csharp.add_argument('source', nargs='*', help='source directory')
+    parse_csharp.set_defaults(func=gen_csharp)
+
+    parse_ruby = subpar.add_parser('ruby', help='Ruby code generator')
+    parse_ruby.add_argument('source', nargs='*', help='source directory')
+    parse_ruby.set_defaults(func=gen_ruby)
 
     parse_swift = subpar.add_parser('swift', help='Swift code generator')
     parse_swift.add_argument('source', nargs='*', help='source directory')
