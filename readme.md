@@ -38,13 +38,6 @@ Install with pip:
 pip install uklatn
 ```
 
-Usage:
-```py
-import uklatn
-uklatn.encode("Доброго вечора!")
-uklatn.decode("Paljanycja")
-```
-
 
 Java library
 --
