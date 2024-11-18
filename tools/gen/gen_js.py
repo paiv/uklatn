@@ -1,8 +1,8 @@
-import io
 import json
 import logging
 import re
 from pathlib import Path
+import template
 
 
 logger = logging.getLogger(Path(__file__).stem)
@@ -26,46 +26,89 @@ def gen_tests(fns):
         return re.sub(r'test_', '', s)
     def _j(s):
         return json.dumps(s, ensure_ascii=False)
-    def _emit_tests(kind, data, table, file):
-        data = [(cyr,lat) for k,cyr,lat in data if k == kind]
-        if not data: return
-        print(f'    await t.test({kind!r}, () => {{', file=so)
-        dump = json.dumps(data, indent=4, ensure_ascii=False)
-        print(f'       const data = {dump};', file=so)
-        print('        for (const [cyr,lat] of data) {', file=so)
+
+    def _emit_testdata(kind, data, table):
+        spl = '''\
+        [
+            &cyr,
+            &lat
+        ],
+        '''
+        for cyr, lat in data:
+            yield template.format(spl, cyr=_j(cyr), lat=_j(lat)+'\n')
+
+    def _emit_tests(kind, table):
         if kind[0] == 'c':
-            print(f'            const q = uklatn.encode(cyr, {table!r});', file=so)
-            print(f'            assert.equal(q, lat);', file=so)
+            yield f'const q = uklatn.encode(cyr, {table!r});\n'
+            yield 'assert.equal(q, lat);\n'
         else:
-            print(f'            const q = uklatn.decode(lat, {table!r});', file=so)
-            print(f'            assert.equal(q, cyr);', file=so)
+            yield f'const q = uklatn.decode(lat, {table!r});\n'
+            yield 'assert.equal(q, cyr);\n'
         if kind[-1] == 'r':
             if kind[0] == 'c':
-                print(f'            const t = uklatn.decode(lat, {table!r});', file=so)
-                print(f'            assert.equal(t, cyr);', file=so)
+                yield f'const t = uklatn.decode(lat, {table!r});\n'
+                yield 'assert.equal(t, cyr);\n'
             else:
-                print(f'            const t = uklatn.encode(cyr, {table!r});', file=so)
-                print(f'            assert.equal(t, lat);', file=so)
-        print('        }', file=so)
-        print('    });\n', file=so)
+                yield f'const t = uklatn.encode(cyr, {table!r});\n'
+                yield 'assert.equal(t, lat);\n'
 
-    with io.StringIO() as so:
-        print('import assert from "node:assert/strict";', file=so)
-        print('import test from "node:test";', file=so)
-        print('import * as uklatn from "./uklatn.js";\n', file=so)
+    def _emit_testset(data, table):
+        def _data():
+            spl = '''
+            const data_&kind = [
+            &data
+            ];
+            '''
+            for kind in ('c2lr', 'l2cr', 'c2l', 'l2c'):
+                xs = [(cyr,lat) for k,cyr,lat in data if k == kind]
+                if not xs: continue
+                ctx = dict(table=table, kind=kind)
+                ctx['data'] = _emit_testdata(kind, xs, table)
+                yield template.format(spl, ctx)
+
+        def _tests():
+            tpl = '''
+            await t.test(&skind, () => {
+                for (const [cyr,lat] of data_&kind) {
+                    &tests
+                }
+            });
+            '''
+            for kind in ('c2lr', 'l2cr', 'c2l', 'l2c'):
+                xs = [(cyr,lat) for k,cyr,lat in data if k == kind]
+                if not xs: continue
+                ctx = dict(table=table, kind=kind, skind=repr(kind))
+                ctx['tests'] = _emit_tests(kind, table)
+                yield template.format(tpl, ctx)
+
+        tpl = '''
+
+        test(&table, async (t) => {
+            &data
+            &tests
+        });
+        '''
+        yield template.format(tpl, table=repr(table), data=_data, tests=_tests)
+
+    def _test_cases():
         for fn in fns:
             logger.info(f'processing {fn!s}')
             name = fn.stem
             table = table_name(name)
             data = _parse_tests(fn)
-            print(f'test({table!r}, async (t) => {{', file=so)
-            _emit_tests('c2lr', data, table, file=so)
-            _emit_tests('l2cr', data, table, file=so)
-            _emit_tests('c2l', data, table, file=so)
-            _emit_tests('l2c', data, table, file=so)
-            print('});\n', file=so)
+            yield from _emit_testset(data, table)
 
-        return so.getvalue()
+    context = dict()
+    context['test_cases'] = _test_cases
+
+    tpl = '''\
+    import assert from "node:assert/strict";
+    import test from "node:test";
+    import * as uklatn from "./uklatn.js";
+    &{test_cases}
+    '''
+    text = template.format(tpl, context)
+    return text
 
 
 def gen_transforms(fns, default_table=None):
@@ -84,121 +127,155 @@ def gen_transforms(fns, default_table=None):
             [r['map'] for r in s]
         ] for s in data]
 
-    def _emit_tr(cname, rules, file):
-        rules = _load_rules(rules)
-        print(f'class {cname} {{', file=file)
-        print('    constructor() {', file=file)
+    def _emit_trrules(rules):
         for sid, section in enumerate(rules):
             if not isinstance(section, str):
                 rx, maps = section
                 gn = len(maps)
                 rx = patch_word_boundary(rx)
-                print(f'        this._rx{sid} = /{rx}/gu;', file=file)
-                print(f'        const _maps{sid} = [undefined, ', file=file)
-                for d in maps:
-                    ds = [[k,v] for k,v in d.items()]
-                    ds = json.dumps(ds, separators=',;', ensure_ascii=False)
-                    print(f'            new Map({ds}),', file=file)
-                print(f'        ];', file=file)
-                print(f'        this._tr{sid} = (match', end='', file=file)
-                for i in range(1, gn+1):
-                    print(f', g{i}', end='', file=file)
-                print(') => {', file=file)
-                print(f'            let value = undefined;', file=file)
-                print(f'            if (g{gn} !== undefined) {{', file=file)
-                print(f'                value = _maps{sid}[{gn}].get(g{gn});', file=file)
-                print(f'            }}', file=file)
-                for i in reversed(range(1, gn)):
-                    print(f'            else if (g{i} !== undefined) {{', file=file)
-                    print(f'                value = _maps{sid}[{i}].get(g{i});', file=file)
-                    print(f'            }}', file=file)
-                print(f'            return (value !== undefined) ? value : match;', file=file)
-                print(f'        }}', file=file)
-        print('    }\n', file=file)
-        print('    transform(text) {', file=file)
+                gargs = ', '.join(f'g{i}' for i in range(1, gn+1))
+
+                def _mappings():
+                    for d in maps:
+                        ds = [[k,v] for k,v in d.items()]
+                        ds = json.dumps(ds, separators=',;', ensure_ascii=False)
+                        yield f'new Map({ds}),\n'
+                def _queries():
+                    epl = '''\
+                    else if (g&gi !== undefined) {
+                        value = _maps&sid[&gi1].get(g&gi);
+                    }
+                    '''
+                    for i in reversed(range(1, gn)):
+                        yield template.format(epl, sid=sid, gi=i, gi1=i-1)
+
+                ctx = dict(sid=sid, gn=gn, gn1=gn-1, gargs=gargs, rx=rx)
+                ctx['mappings'] = _mappings
+                ctx['queries'] = _queries
+
+                tpl = '''\
+                this._rx&sid = /&rx/gu;
+                const _maps&sid = [
+                    &mappings
+                ];
+                this._tr&sid = (match, &gargs) => {
+                    let value = undefined;
+                    if (g&gn !== undefined) {
+                        value = _maps&sid[&gn1].get(g&gn);
+                    }
+                    &queries
+                    return (value !== undefined) ? value : match;
+                }
+                '''
+                yield template.format(tpl, ctx)
+
+    def _emit_trbody(rules):
         for sid, section in enumerate(rules):
             if isinstance(section, str):
                 if section not in ('NFC', 'NFD', 'NFKC', 'NFKD'):
                     raise Exception(f'invalid transform: {section!r}')
-                print(f'        text = text.normalize({section!r});', file=file)
+                yield f'text = text.normalize({section!r});\n'
             else:
-                print(f'        text = text.replaceAll(this._rx{sid}, this._tr{sid});', file=file)
-        print(f'        return text;', file=file)
-        print('    }', file=file)
-        print('}\n\n', file=file)
+                yield f'text = text.replaceAll(this._rx{sid}, this._tr{sid});\n'
+
+    def _emit_tr(cname, rules):
+        ctx = dict(cname=cname)
+        ctx['trrules'] = _emit_trrules(rules)
+        ctx['trbody'] = _emit_trbody(rules)
+        tpl = '''
+        class &cname {
+            constructor() {
+                &trrules
+            }
+
+            transform(text) {
+                &trbody
+                return text;
+            }
+        }
+
+        '''
+        return template.format(tpl, ctx)
+
+    tables = dict()
+    for fn in fns:
+        logger.info(f'processing {fn!s}')
+        with fn.open() as fp:
+            rules = json.load(fp)
+            rules = _load_rules(rules)
+        name = fn.stem
+        table = table_name(name)
+        cname = class_name(name)
+        if table not in tables:
+            tables[table] = [None, None]
+        tables[table][_isdec(name)] = (cname, rules)
+
+    def _emit_tables():
+        for ar in [0,1]:
+            for table, codec in tables.items():
+                if codec[ar] is not None:
+                    cname, rules = codec[ar]
+                    yield _emit_tr(cname, rules)
+
+        def _entries():
+            for tid, (table, (enc, dec)) in enumerate(tables.items(), 1):
+                enc = f'new {enc[0]}()' if enc else 'undefined'
+                dec = f'new {dec[0]}()' if dec else 'undefined'
+                yield f'[{table!r}, [{enc}, {dec}]],\n'
+        tpl = '''
+        const _UklatnTables = new Map([
+            &entries
+        ]);
+        '''
+        yield template.format(tpl, entries=_entries)
 
     context = dict()
-    tables = dict()
-    with io.StringIO() as so:
-        for fn in fns:
-            logger.info(f'processing {fn!s}')
-            with fn.open() as fp:
-                rules = json.load(fp)
-            name = fn.stem
-            table = table_name(name)
-            cname = class_name(name)
-            if table not in tables:
-                tables[table] = [None, None]
-            tables[table][_isdec(name)] = cname
-            _emit_tr(cname, rules, so)
-        classdefs_tables = so.getvalue()
+    context['global_tables'] = _emit_tables
+    context['default_table'] = repr(default_table)
 
-    with io.StringIO() as so:
-        print('const _UklatnTables = new Map([', file=so)
-        for tid, (table, (enc, dec)) in enumerate(tables.items(), 1):
-            enc = f'new {enc}()' if enc else 'undefined'
-            dec = f'new {dec}()' if dec else 'undefined'
-            print(f'    [{table!r}, [{enc}, {dec}]],', file=so)
-        print(']);', end='', file=so)
-        tabledef = so.getvalue()
-
-    context['global_tables'] = classdefs_tables + tabledef
-    context['default_table'] = default_table
-
-    template = '''/* uklatn.js - https://github.com/paiv/uklatn */
-
-{global_tables}
+    tpl = '''/* uklatn.js - https://github.com/paiv/uklatn */
+&{global_tables}
 
 
 /**
 * Transliterates a string of Ukrainian Cyrillic to Latin script.
 *
-* @param {{string}} text - the text to transliterate
-* @param {{string}} table - transliteration system, one of:
+* @param {string} text - the text to transliterate
+* @param {string} table - transliteration system, one of:
 *  - "DSTU_9112_A": DSTU 9112:2021 System A
 *  - "DSTU_9112_B": DSTU 9112:2021 System B
 *  - "KMU_55": KMU 55:2010
 */
-export function encode(text, table) {{
-    if (table === undefined) {{ table = {default_table!r}; }}
+export function encode(text, table) {
+    if (table === undefined) { table = &{default_table}; }
     const codecs = _UklatnTables.get(table);
     let tr = undefined;
-    if (codecs) {{ tr = codecs[0]; }}
-    if (tr === undefined) {{ throw new Error("unknown table " + JSON.stringify(table)); }}
+    if (codecs) { tr = codecs[0]; }
+    if (tr === undefined) { throw new Error("unknown table " + JSON.stringify(table)); }
     return tr.transform(text);
-}}
+}
 
 
 /**
 * Re-transliterates a string of Ukrainian Latin to Cyrillic script.
 *
-* @param {{string}} text - the text to transliterate
-* @param {{string}} table - transliteration system, one of:
+* @param {string} text - the text to transliterate
+* @param {string} table - transliteration system, one of:
 *  - "DSTU_9112_A": DSTU 9112:2021 System A
 *  - "DSTU_9112_B": DSTU 9112:2021 System B
 */
-export function decode(text, table) {{
-    if (table === undefined) {{ table = {default_table!r}; }}
+export function decode(text, table) {
+    if (table === undefined) { table = &{default_table}; }
     const codecs = _UklatnTables.get(table);
     let tr = undefined;
-    if (codecs) {{ tr = codecs[1]; }}
-    if (tr === undefined) {{ throw new Error("unknown table " + JSON.stringify(table)); }}
+    if (codecs) { tr = codecs[1]; }
+    if (tr === undefined) { throw new Error("unknown table " + JSON.stringify(table)); }
     return tr.transform(text);
-}}
+}
 
 
-export default {{ encode, decode }};
+export default { encode, decode };
 '''
-    text = template.format(**context)
+    text = template.format(tpl, context)
     return text
 

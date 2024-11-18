@@ -1,8 +1,8 @@
-import io
 import json
 import logging
 import re
 from pathlib import Path
+import template
 
 
 logger = logging.getLogger(Path(__file__).stem)
@@ -30,59 +30,97 @@ def gen_tests(fns):
         return json.dumps(s, ensure_ascii=False)
     def all_c2l(data):
         return all(k == 'c2l' for k,_,_ in data)
-    def _emit_tests(kind, data, table, file):
-        data = [(cyr,lat) for k,cyr,lat in data if k == kind]
-        if not data: return
-        print('', file=file)
-        print(f'    func test_{kind}_{table}() throws {{', file=file)
-        vs, ws = ' ' * 8, ' ' * 12
-        dump = '[\n' + ''.join(f'{vs}(\n{ws}{_j(cyr)},\n{ws}{_j(lat)}\n{vs}),\n' for cyr,lat in data) + '        ]\n'
-        print(f'        let data: [(String, String)] = {dump}', file=file)
-        print('        for (cyr,lat) in data {', file=file)
+
+    def _emit_tests(kind, table):
         if kind[0] == 'c':
-            print(f'            let enc = try encode(cyr, table: UKLatnTable.{table})', file=file)
-            print(f'            XCTAssertEqual(lat, enc)', file=file)
+            yield f'let enc = try encode(cyr, table: UKLatnTable.{table})\n'
+            yield 'XCTAssertEqual(lat, enc)\n'
         else:
-            print(f'            let dec = try decode(lat, table: UKLatnTable.{table})', file=file)
-            print(f'            XCTAssertEqual(cyr, dec)', file=file)
+            yield f'let dec = try decode(lat, table: UKLatnTable.{table})\n'
+            yield 'XCTAssertEqual(cyr, dec)\n'
         if kind[-1] == 'r':
             if kind[0] == 'c':
-                print(f'            let dec = try decode(lat, table: UKLatnTable.{table})', file=file)
-                print(f'            XCTAssertEqual(cyr, dec)', file=file)
+                yield f'let dec = try decode(lat, table: UKLatnTable.{table})\n'
+                yield 'XCTAssertEqual(cyr, dec)\n'
             else:
-                print(f'            let enc = try encode(cyr, table: UKLatnTable.{table})', file=file)
-                print(f'            XCTAssertEqual(lat, enc)', file=file)
-        print('        }', file=file)
-        print('    }', file=file)
-    def _emit_decode_throws(table, file):
-        print(f'''
-    func test_decode_{table}_throws() throws {{
-        XCTAssertThrowsError(
-            try decode("lat", table: UKLatnTable.{table})
-        ) {{ error in
-            XCTAssertEqual(error as? UKLatnError, UKLatnError.invalidTable(UKLatnTable.{table}.rawValue))
-        }}
-    }}''', file=file)
+                yield f'let enc = try encode(cyr, table: UKLatnTable.{table})\n'
+                yield 'XCTAssertEqual(lat, enc)\n'
 
-    with io.StringIO() as so:
-        print('import XCTest', file=so)
-        print('@testable import UkrainianLatin', file=so)
+    def _emit_decode_throws(table):
+        tpl = '''
+        func test_decode_&{table}_throws() throws {
+            XCTAssertThrowsError(
+                try decode("lat", table: UKLatnTable.&{table})
+            ) { error in
+                XCTAssertEqual(error as? UKLatnError, UKLatnError.invalidTable(UKLatnTable.&{table}.rawValue))
+            }
+        }
+        '''
+        return template.format(tpl, table=table)
+
+    def _emit_testset(data, table, cname):
+        def _dump(data):
+            tpl = '''\
+            (
+                &cyr,
+                &lat
+            ),
+            '''
+            for cyr, lat in data:
+                yield template.format(tpl, cyr=_j(cyr), lat=_j(lat)+'\n')
+
+        def _test_kind(kind, data, table):
+            tpl = '''
+            func test_&{kind}_&{table}() throws {
+                let data: [(String, String)] = [
+                &data
+                ]
+
+                for (cyr, lat) in data {
+                    &tests
+                }
+            }
+            '''
+            ctx = dict(kind=kind, table=table)
+            ctx['data'] = _dump(data)
+            ctx['tests'] = _emit_tests(kind, table)
+            return template.format(tpl, ctx)
+
+        def _tests():
+            for kind in ('c2lr', 'l2cr', 'c2l', 'l2c'):
+                xs = [(cyr,lat) for k,cyr,lat in data if k == kind]
+                if not xs: continue
+                yield _test_kind(kind, xs, table)
+            if all_c2l(data):
+                yield _emit_decode_throws(table)
+
+        tpl = '''
+
+        class &{cname}Tests: XCTestCase {
+            &tests
+        }
+        '''
+        return template.format(tpl, cname=cname, tests=_tests)
+
+    def _test_cases():
         for fn in fns:
             logger.info(f'processing {fn!s}')
             name = fn.stem
             table = table_name(name)
             cname = class_name(name)
             data = _parse_tests(fn)
-            print(f'\n\nclass {cname}Tests: XCTestCase {{', file=so)
-            _emit_tests('c2lr', data, table, file=so)
-            _emit_tests('l2cr', data, table, file=so)
-            _emit_tests('c2l', data, table, file=so)
-            _emit_tests('l2c', data, table, file=so)
-            if all_c2l(data):
-                _emit_decode_throws(table, file=so)
-            print('}', file=so)
+            yield from _emit_testset(data, table, cname)
 
-        return so.getvalue()
+    context = dict()
+    context['test_cases'] = _test_cases
+
+    tpl = '''\
+    import XCTest
+    @testable import UkrainianLatin
+    &{test_cases}
+    '''
+    text = template.format(tpl, context)
+    return text
 
 
 def gen_transforms(fns, default_table=None):
@@ -101,7 +139,7 @@ def gen_transforms(fns, default_table=None):
             [r['map'] for r in s] + [dict()]
         ] for s in data]
 
-    def _emit_tr(cname, rules, file):
+    def _emit_trdefs(rules):
         # Why NSRegularExpression, and not Regex:
         # - no backrefs
         # When backrefs implemented in Regex, and updating this code,
@@ -110,72 +148,157 @@ def gen_transforms(fns, default_table=None):
         # are designed for it.
         # SE-0448 Regex lookbehind assertions
         # SE-NNNN Unicode Normalization
-        rules = _load_rules(rules)
+        tpl = '''\
+        let _rx&sid = try! NSRegularExpression(pattern: #"&rx"#, options: [.dotMatchesLineSeparators, .useUnicodeWordBoundaries])
+        let _maps&sid:[[String:String]] = [
+            &mappings
+        ]
+        '''
+        mpl = '[&entries]'
+
+        def _ds(data):
+            return ','.join(f'{_j(k)}:{_j(v)}' for k,v in data.items()) if data else ':'
+
+        for sid, section in enumerate(rules):
+            if not isinstance(section, str):
+                rx, maps = section
+                data = ',\n'.join(template.format(mpl, entries=_ds(d)) for d in maps) + '\n'
+                yield template.format(tpl, sid=sid, rx=rx, mappings=data)
+
+    def _emit_trbody(rules):
         norms = dict(zip('NFC NFD NFKC NFKD'.split(), '''
         precomposedStringWithCanonicalMapping
         decomposedStringWithCanonicalMapping
         precomposedStringWithCompatibilityMapping
         decomposedStringWithCompatibilityMapping
         '''.split()))
-        print(f'private let {cname}: @Sendable () -> _UKLatnCodec.Transform = {{', file=file)
-        for sid, section in enumerate(rules):
-            if not isinstance(section, str):
-                rx, maps = section
-                gn = len(maps)
-                print(f'        let _rx{sid} = try! NSRegularExpression(pattern: #"{rx}"#, options: [.dotMatchesLineSeparators, .useUnicodeWordBoundaries])', file=file)
-                print(f'        let _maps{sid}:[[String:String]] = [[:], ', file=file)
-                for d in maps:
-                    ds = '[' + ','.join(f'{_j(k)}:{_j(v)}' for k,v in d.items()) + ']' if d else '[:]'
-                    print(f'            {ds},', file=file)
-                print(f'        ]', file=file)
-        print('    @Sendable', file=file)
-        print('    func transform(_ text: String) throws -> String {', file=file)
-        print('        var text = text', file=file)
         for sid, section in enumerate(rules):
             if isinstance(section, str):
+                if section not in ('NFC', 'NFD', 'NFKC', 'NFKD'):
+                    raise Exception(f'invalid transform: {section!r}')
                 norm = norms[section]
-                print(f'        text = text.{norm} // {section}', file=file)
+                yield f'text = text.{norm} // {section}\n'
             else:
                 rx, maps = section
-                print(f'        text = text.replacing(_rx{sid}) {{ (i, match) in', file=file)
-                print(f'            _maps{sid}[i][match] ?? match', file=file)
-                print(f'        }}', file=file)
-        print('''        return text
+                yield f'text = text.replacing(_rx{sid}) {{ (i, match) in\n'
+                yield f'    _maps{sid}[i-1][match, default: match]\n}}\n'
+
+    def _emit_tr(cname, rules):
+        context = dict(cname=cname)
+        context['trdefs'] = _emit_trdefs(rules)
+        context['trbody'] = _emit_trbody(rules)
+        tpl = '''
+        private let &cname: @Sendable () -> _UKLatnCodec.Transform = {
+            &trdefs
+
+            @Sendable
+            func transform(_ text: String) throws -> String {
+                var text = text
+                &trbody
+                return text
+            }
+            return transform
+        }
+        '''
+        return template.format(tpl, context)
+
+    tables = dict()
+    for fn in fns:
+        logger.info(f'processing {fn!s}')
+        with fn.open() as fp:
+            rules = json.load(fp)
+            rules = _load_rules(rules)
+        name = fn.stem
+        table = table_name(name)
+        cname = class_name(name)
+        if table not in tables:
+            tables[table] = [None, None]
+        tables[table][_isdec(name)] = (cname, rules)
+
+    def _emit_tables():
+        for ar in [0,1]:
+            for table,codec in tables.items():
+                if codec[ar] is not None:
+                    cname, rules = codec[ar]
+                    yield _emit_tr(cname, rules)
+
+        def _entries():
+            for table,codec in tables.items():
+                enc,dec = codec
+                enc = f'{enc[0]}()' if enc else 'nil'
+                dec = f'{dec[0]}()' if dec else 'nil'
+                yield f'.{table}: _UKLatnCodec(encode: {enc}, decode: {dec}),\n'
+
+        tpl = '''
+        private let _UklatnTables: [UKLatnTable:_UKLatnCodec] = [
+            &entries
+        ]
+        '''
+        yield template.format(tpl, entries=_entries)
+
+    tdoc = {
+        'DSTU_9112_A': 'DSTU 9112:2021 System A',
+        'DSTU_9112_B': 'DSTU 9112:2021 System B',
+        'KMU_55': 'KMU 55:2010, not reversible',
     }
-    return transform
-}
-''', file=file)
+    def _emit_tenum():
+        for i, t in enumerate(tables, 1):
+            if (doc := tdoc.get(t, '')):
+                doc = f'/// {doc}\n'
+            yield f'\n{doc}case {t} = {i}\n'
 
     context = dict()
-    tables = dict()
-    with io.StringIO() as so:
-        for fn in fns:
-            logger.info(f'processing {fn!s}')
-            with fn.open() as fp:
-                rules = json.load(fp)
-            name = fn.stem
-            table = table_name(name)
-            cname = class_name(name)
-            if table not in tables:
-                tables[table] = [None, None]
-            tables[table][_isdec(name)] = cname
-            _emit_tr(cname, rules, so)
-        classdefs_tables = so.getvalue()
-
-    with io.StringIO() as so:
-        print('private let _UklatnTables: [UKLatnTable:_UKLatnCodec] = [', file=so)
-        for tid, (table, (enc, dec)) in enumerate(tables.items(), 1):
-            enc = f'{enc}()' if enc else 'nil'
-            dec = f'{dec}()' if dec else 'nil'
-            print(f'    .{table}: _UKLatnCodec(encode: {enc}, decode: {dec}),', file=so)
-        print(']', end='', file=so)
-        tabledef = so.getvalue()
-
-    context['global_tables'] = classdefs_tables + tabledef
+    context['tables_enum'] = _emit_tenum
+    context['global_tables'] = _emit_tables
     context['default_table'] = default_table
-    context['tables_enum'] = '\n'.join(f'    case {t} = {i}' for i,t in enumerate(tables, 1))
 
-    context['string_replacing'] = '''private extension Range where Bound == String.UTF16View.Index {
+    tpl = '''/* uklatn - https://github.com/paiv/uklatn */
+import Foundation
+
+
+public enum UKLatnError: Error, Equatable {
+    case invalidTable(Int)
+}
+
+
+/// Transliterates a string of Ukrainian Cyrillic to Latin script.
+///
+/// - Parameters:
+///   - text: the text to transliterate
+///   - table: transliteration system, one of:
+///     - `DSTU_9112_A`: DSTU 9112:2021 System A
+///     - `DSTU_9112_B`: DSTU 9112:2021 System B
+///     - `KMU_55`: KMU 55:2010
+/// - Returns: The transliterated string.
+@Sendable
+public func encode(_ text: String, table: UKLatnTable = .&{default_table}) throws -> String {
+    guard let transform = _UklatnTables[table]?.encode
+    else {
+        throw UKLatnError.invalidTable(table.rawValue)
+    }
+    return try transform(text)
+}
+
+
+/// Re-transliterates a string of Ukrainian Latin to Cyrillic script.
+///
+/// - Parameters:
+///   - text: the text to transliterate
+///   - table: transliteration system, one of:
+///     - `DSTU_9112_A`: DSTU 9112:2021 System A
+///     - `DSTU_9112_B`: DSTU 9112:2021 System B
+/// - Returns: The transliterated string.
+@Sendable
+public func decode(_ text: String, table: UKLatnTable = .&{default_table}) throws -> String {
+    guard let transform = _UklatnTables[table]?.decode
+    else {
+        throw UKLatnError.invalidTable(table.rawValue)
+    }
+    return try transform(text)
+}
+
+
+private extension Range where Bound == String.UTF16View.Index {
 
     init?(_ range: NSRange, in view: String.UTF16View) {
         self = view.index(view.startIndex, offsetBy: range.location) ..< view.index(view.startIndex, offsetBy: range.location + range.length)
@@ -203,71 +326,22 @@ private extension String {
         }
         return so
     }
-}'''
-
-    template = '''/* uklatn - https://github.com/paiv/uklatn */
-import Foundation
+}
 
 
-public enum UKLatnError: Error, Equatable {{
-    case invalidTable(Int)
-}}
+public enum UKLatnTable : Int, Sendable {
+    &{tables_enum}
+}
 
 
-/// Transliterates a string of Ukrainian Cyrillic to Latin script.
-///
-/// - Parameters:
-///   - text: the text to transliterate
-///   - table: transliteration system, one of:
-///     - `DSTU_9112_A`: DSTU 9112:2021 System A
-///     - `DSTU_9112_B`: DSTU 9112:2021 System B
-///     - `KMU_55`: KMU 55:2010
-/// - Returns: The transliterated string.
-@Sendable
-public func encode(_ text: String, table: UKLatnTable = .{default_table}) throws -> String {{
-    guard let transform = _UklatnTables[table]?.encode
-    else {{
-        throw UKLatnError.invalidTable(table.rawValue)
-    }}
-    return try transform(text)
-}}
-
-
-/// Re-transliterates a string of Ukrainian Latin to Cyrillic script.
-///
-/// - Parameters:
-///   - text: the text to transliterate
-///   - table: transliteration system, one of:
-///     - `DSTU_9112_A`: DSTU 9112:2021 System A
-///     - `DSTU_9112_B`: DSTU 9112:2021 System B
-/// - Returns: The transliterated string.
-@Sendable
-public func decode(_ text: String, table: UKLatnTable = .{default_table}) throws -> String {{
-    guard let transform = _UklatnTables[table]?.decode
-    else {{
-        throw UKLatnError.invalidTable(table.rawValue)
-    }}
-    return try transform(text)
-}}
-
-
-{string_replacing}
-
-
-public enum UKLatnTable : Int, Sendable {{
-{tables_enum}
-}}
-
-
-private struct _UKLatnCodec : Sendable {{
+private struct _UKLatnCodec : Sendable {
     typealias Transform = (@Sendable (String) throws -> String)
     let encode: Transform?
     let decode: Transform?
-}}
+}
 
-
-{global_tables}
+&{global_tables}
 '''
-    text = template.format(**context)
+    text = template.format(tpl, context)
     return text
 

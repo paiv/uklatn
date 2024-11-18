@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-import io
 import json
 import logging
 import re
 from pathlib import Path
+import template
 
 
 logger = logging.getLogger(Path(__file__).stem)
@@ -44,21 +44,35 @@ def gen_tests(fns):
                 case 'l2c' : l2c.append((cyr, lat, table))
                 case _: raise Exception()
 
-    def gen_test_data(name, data, file):
-        print(f'static const struct _uklatn_test _{name}_data[] = {{', file=file)
-        for cyr, lat, table in data:
-            print('    {', file=file)
-            print(f'        u{_j(cyr)},', file=file)
-            print(f'        u{_j(lat)},', file=file)
-            print(f'        UklatnTable_{table},', file=file)
-            print('    },', file=file)
-        print('};\n', file=file)
-    with io.StringIO() as so:
-        gen_test_data('cyr2lat2cyr', c2lr, file=so)
-        gen_test_data('lat2cyr2lat', l2cr, file=so)
-        gen_test_data('cyr2lat', c2l, file=so)
-        gen_test_data('lat2cyr', l2c, file=so)
-        return so.getvalue()
+    tpl = '''
+    static const struct _uklatn_test _&{name}_data[] = {
+        &entries
+    };
+    '''
+
+    epl = '''\
+    {
+        u&{cyr},
+        u&{lat},
+        UklatnTable_&{table},
+    },
+    '''
+
+    def _data(name, data):
+        ctx = dict(name=name)
+        def _ds():
+            for cyr, lat, table in data:
+                yield template.format(epl, ctx, table=table, cyr=_j(cyr), lat=_j(lat))
+        return template.format(tpl, ctx, entries=_ds)
+
+    def _test_data():
+        yield _data('cyr2lat2cyr', c2lr)
+        yield _data('lat2cyr2lat', l2cr)
+        yield _data('cyr2lat', c2l)
+        yield _data('lat2cyr', l2c)
+
+    text = template.format('&data', data=_test_data)
+    return text
 
 
 def gen_transforms(fns, default_table):
@@ -75,33 +89,49 @@ def gen_transforms(fns, default_table):
         s = re.sub(r'\buk_Latn_|\b_uk', '', s, flags=re.I)
         s = s.replace('-', '_')
         return f'_Table_{s}'
-    names = list()
 
-    with io.StringIO() as so:
-        for fn in fns:
-            logger.info(f'processing {fn!s}')
-            name = fn.stem
-            tname = table_name(name)
-            vname = table_varname(name)
-            rname = var_name(name)
-            names.append((vname, rname))
-            text = fn.read_text()
-            print(f'static const UChar {vname}[] = u"{tname}";\n', file=so)
-            print(f'static char {rname}[] =', file=so)
-            for line in text.splitlines():
-                if line:
-                    s = json.dumps(line, ensure_ascii=False)
-                    print(f'    {s}', file=so)
-            print(f'    ;', file=so)
-            print('', file=so)
+    tables = list()
 
-        print('static int', file=so)
-        print('_uklatn_register_tables(void) {', file=so)
-        print('int err = 0;', file=so)
-        for tname, rname in names:
-            print(f'    err = _uklatn_register_table({tname}, {rname});', file=so)
-            print('    if (err != 0) { return err; }', file=so)
-        print('    return 0;', file=so)
-        print('}', file=so)
-        return so.getvalue()
+    for fn in fns:
+        logger.info(f'processing {fn!s}')
+        name = fn.stem
+        tname = table_name(name)
+        vname = table_varname(name)
+        rname = var_name(name)
+        text = fn.read_text()
+        tables.append((tname, vname, rname, text))
+
+    def _data():
+        for tname, vname, rname, text in tables:
+            ctx = dict(tname=tname, vname=vname, rname=rname)
+            data = '\n'.join(json.dumps(line, ensure_ascii=False)
+                for line in text.splitlines() if line)
+            yield template.format(dpl, ctx, data=data)
+
+    def _regs():
+        for tname, vname, rname, text in tables:
+            yield f'err = _uklatn_register_table({vname}, {rname});\n'
+            yield 'if (err != 0) { return err; }\n'
+
+    dpl = '''\
+    static const UChar &vname[] = u"&tname";
+
+    static char &rname[] =
+        &data
+        ;
+
+    '''
+
+    tpl = '''\
+    &data
+    static int
+    _uklatn_register_tables(void) {
+        int err = 0;
+        &regs
+        return 0;
+    }
+    '''
+
+    text = template.format(tpl, data=_data, regs=_regs)
+    return text
 

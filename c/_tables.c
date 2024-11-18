@@ -340,7 +340,7 @@ static char _Table_DSTU_9112_B_uk[] =
 
 static int
 _uklatn_register_tables(void) {
-int err = 0;
+    int err = 0;
     err = _uklatn_register_table(_TableName_uk_DSTU_9112_A, _Table_uk_DSTU_9112_A);
     if (err != 0) { return err; }
     err = _uklatn_register_table(_TableName_uk_DSTU_9112_B, _Table_uk_DSTU_9112_B);

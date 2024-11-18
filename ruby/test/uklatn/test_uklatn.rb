@@ -122,22 +122,28 @@ class TestUkrainianLatin # :nodoc:
             "Jés sJés jés sjés Ḯs sḮs ḯs sḯs Jús sJús jús sjús Jás sJás jás sjás"
         ],
         ]
+
         data_c2lr.each do |cyr,lat|
             q = @tr.encode(cyr, 'DSTU_9112_A')
             assert_equal(lat, q, cyr)
             t = @tr.decode(lat, 'DSTU_9112_A')
-            assert_equal(cyr, t, lat);
+            assert_equal(cyr, t, lat)
         end
+
         puts "DSTU_9112_A: c2lr #{data_c2lr.length} tests passed"
+
         data_c2l.each do |cyr,lat|
             q = @tr.encode(cyr, 'DSTU_9112_A')
             assert_equal(lat, q, cyr)
         end
+
         puts "DSTU_9112_A: c2l #{data_c2l.length} tests passed"
+
         data_l2c.each do |cyr,lat|
             q = @tr.decode(lat, 'DSTU_9112_A')
-            assert_equal(cyr, q, lat);
+            assert_equal(cyr, q, lat)
         end
+
         puts "DSTU_9112_A: l2c #{data_l2c.length} tests passed"
     end
 
@@ -239,22 +245,28 @@ class TestUkrainianLatin # :nodoc:
             "Jés sJés jés sjés Jís sJís jís sjís Jús sJús jús sjús Jás sJás jás sjás"
         ],
         ]
+
         data_c2lr.each do |cyr,lat|
             q = @tr.encode(cyr, 'DSTU_9112_B')
             assert_equal(lat, q, cyr)
             t = @tr.decode(lat, 'DSTU_9112_B')
-            assert_equal(cyr, t, lat);
+            assert_equal(cyr, t, lat)
         end
+
         puts "DSTU_9112_B: c2lr #{data_c2lr.length} tests passed"
+
         data_c2l.each do |cyr,lat|
             q = @tr.encode(cyr, 'DSTU_9112_B')
             assert_equal(lat, q, cyr)
         end
+
         puts "DSTU_9112_B: c2l #{data_c2l.length} tests passed"
+
         data_l2c.each do |cyr,lat|
             q = @tr.decode(lat, 'DSTU_9112_B')
-            assert_equal(cyr, q, lat);
+            assert_equal(cyr, q, lat)
         end
+
         puts "DSTU_9112_B: l2c #{data_l2c.length} tests passed"
     end
 
@@ -330,13 +342,14 @@ class TestUkrainianLatin # :nodoc:
             "ob😎nap😘nep😭niep🧐nip😍niup😀niap"
         ],
         ]
+
         data_c2l.each do |cyr,lat|
             q = @tr.encode(cyr, 'KMU_55')
             assert_equal(lat, q, cyr)
         end
+
         puts "KMU_55: c2l #{data_c2l.length} tests passed"
     end
-
 end
 
 test = TestUkrainianLatin.new

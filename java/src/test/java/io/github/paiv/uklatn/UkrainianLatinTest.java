@@ -333,5 +333,4 @@ class UkrainianLatinTest {
             assertEquals(pair[1], q);
         }
     }
-
 }
