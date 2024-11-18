@@ -131,15 +131,14 @@ this._tr&sid = (Match match) => {
         mpl = '''\
 new Dictionary<string,string> {
     &entries
-},
-'''
+}'''
         def _ds(data):
             return ','.join(f'{{{_j(k)},{_j(v)}}}' for k,v in data.items()) + '\n'
 
         for sid, section in enumerate(rules):
             if not isinstance(section, str):
                 rx, maps = section
-                data = (template.format(mpl, entries=_ds(d)) for d in maps)
+                data = ',\n'.join(template.format(mpl, entries=_ds(d)) for d in maps) + '\n'
                 yield template.format(tpl, sid=sid, rx=rx, mappings=data)
 
     def _emit_trbody(rules):

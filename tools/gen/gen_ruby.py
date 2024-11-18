@@ -82,7 +82,7 @@ def gen_tests(fns):
 
     template = '''require_relative '../../lib/uklatn.rb'
 
-class TestUkrainianLatin
+class TestUkrainianLatin # :nodoc:
 
     def initialize
         @tr = UkrainianLatin.new
@@ -203,9 +203,18 @@ def gen_transforms(fns, default_table=None):
 # Ukrainian Cyrillic transliteration to and from Latin script.
 #
 # Tables:
-# 'DSTU_9112_A': DSTU 9112:2021 System A
-# 'DSTU_9112_B': DSTU 9112:2021 System B
-# 'KMU_55': KMU 55:2010, not reversible
+# - 'DSTU_9112_A': DSTU 9112:2021 System A
+# - 'DSTU_9112_B': DSTU 9112:2021 System B
+# - 'KMU_55': KMU 55:2010, not reversible
+#
+# Usage:
+#     tr = UkrainianLatin.new
+#     tr.encode('Доброго вечора!')
+#     tr.decode('Paljanycja')
+#
+# Select a transliteration scheme:
+#     tr.encode('Борщ', 'DSTU_9112_A')
+#
 class UkrainianLatin
 
     # Transliterates a string of Ukrainian Cyrillic to Latin script.
