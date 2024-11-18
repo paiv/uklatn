@@ -78,7 +78,7 @@ class Dstu9112ATests: XCTestCase {
         ),
         ]
 
-        for (cyr,lat) in data {
+        for (cyr, lat) in data {
             let enc = try encode(cyr, table: UKLatnTable.DSTU_9112_A)
             XCTAssertEqual(lat, enc)
             let dec = try decode(lat, table: UKLatnTable.DSTU_9112_A)
@@ -98,7 +98,7 @@ class Dstu9112ATests: XCTestCase {
         ),
         ]
 
-        for (cyr,lat) in data {
+        for (cyr, lat) in data {
             let enc = try encode(cyr, table: UKLatnTable.DSTU_9112_A)
             XCTAssertEqual(lat, enc)
         }
@@ -128,7 +128,7 @@ class Dstu9112ATests: XCTestCase {
         ),
         ]
 
-        for (cyr,lat) in data {
+        for (cyr, lat) in data {
             let dec = try decode(lat, table: UKLatnTable.DSTU_9112_A)
             XCTAssertEqual(cyr, dec)
         }
@@ -210,7 +210,7 @@ class Dstu9112BTests: XCTestCase {
         ),
         ]
 
-        for (cyr,lat) in data {
+        for (cyr, lat) in data {
             let enc = try encode(cyr, table: UKLatnTable.DSTU_9112_B)
             XCTAssertEqual(lat, enc)
             let dec = try decode(lat, table: UKLatnTable.DSTU_9112_B)
@@ -230,7 +230,7 @@ class Dstu9112BTests: XCTestCase {
         ),
         ]
 
-        for (cyr,lat) in data {
+        for (cyr, lat) in data {
             let enc = try encode(cyr, table: UKLatnTable.DSTU_9112_B)
             XCTAssertEqual(lat, enc)
         }
@@ -252,7 +252,7 @@ class Dstu9112BTests: XCTestCase {
         ),
         ]
 
-        for (cyr,lat) in data {
+        for (cyr, lat) in data {
             let dec = try decode(lat, table: UKLatnTable.DSTU_9112_B)
             XCTAssertEqual(cyr, dec)
         }
@@ -334,7 +334,7 @@ class Kmu55Tests: XCTestCase {
         ),
         ]
 
-        for (cyr,lat) in data {
+        for (cyr, lat) in data {
             let enc = try encode(cyr, table: UKLatnTable.KMU_55)
             XCTAssertEqual(lat, enc)
         }

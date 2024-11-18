@@ -1,9 +1,8 @@
-import io
 import json
 import logging
 import re
-import textwrap
 from pathlib import Path
+import template
 
 
 logger = logging.getLogger(Path(__file__).stem)
@@ -28,83 +27,105 @@ def gen_tests(fns):
     def _j(s):
         return json.dumps(s, ensure_ascii=False)
 
-    def _emit_testdata(kind, data, table, file):
-        data = [(cyr,lat) for k,cyr,lat in data if k == kind]
-        if not data: return
-        dump = ''.join(f'\n[\n    {_j(cyr)},\n    {_j(lat)}\n],' for cyr,lat in data)
-        so = f'\ndata_{kind} = [{dump}\n]'
-        so = textwrap.indent(so, ' ' * 8)
-        print(so, file=file)
+    def _emit_testdata(kind, data, table):
+        spl = '''\
+        [
+            &cyr,
+            &lat
+        ],
+        '''
+        for cyr, lat in data:
+            yield template.format(spl, cyr=_j(cyr), lat=_j(lat)+'\n')
 
-    def _emit_tests(kind, data, table, file):
-        data = [(cyr,lat) for k,cyr,lat in data if k == kind]
-        if not data: return
-        print(f'        data_{kind}.each do |cyr,lat|', file=file)
+    def _emit_tests(kind, table):
         if kind[0] == 'c':
-            print(f'            q = @tr.encode(cyr, {table!r})', file=file)
-            print(f'            assert_equal(lat, q, cyr)', file=file)
+            yield f'q = @tr.encode(cyr, {table!r})\n'
+            yield 'assert_equal(lat, q, cyr)\n'
         else:
-            print(f'            q = @tr.decode(lat, {table!r})', file=file)
-            print(f'            assert_equal(cyr, q, lat);', file=file)
+            yield f'q = @tr.decode(lat, {table!r})\n'
+            yield 'assert_equal(cyr, q, lat)\n'
         if kind[-1] == 'r':
             if kind[0] == 'c':
-                print(f'            t = @tr.decode(lat, {table!r})', file=file)
-                print(f'            assert_equal(cyr, t, lat);', file=file)
+                yield f't = @tr.decode(lat, {table!r})\n'
+                yield 'assert_equal(cyr, t, lat)\n'
             else:
-                print(f'            t = @tr.encode(cyr, {table!r})', file=file)
-                print(f'            assert_equal(lat, t, cyr)', file=file)
-        print('        end', file=file)
-        print(f'        puts "{table}: {kind} #{{data_{kind}.length}} tests passed"', file=file)
+                yield f't = @tr.encode(cyr, {table!r})\n'
+                yield 'assert_equal(lat, t, cyr)\n'
 
-    def _emit_testset(data, table, file):
-        print(f'\n    def test_{table}()', file=file)
-        _emit_testdata('c2lr', data, table, file=file)
-        _emit_testdata('l2cr', data, table, file=file)
-        _emit_testdata('c2l', data, table, file=file)
-        _emit_testdata('l2c', data, table, file=file)
-        _emit_tests('c2lr', data, table, file=file)
-        _emit_tests('l2cr', data, table, file=file)
-        _emit_tests('c2l', data, table, file=file)
-        _emit_tests('l2c', data, table, file=file)
-        print('    end', file=file)
+    def _emit_testset(data, table):
+        def _data():
+            tpl = '''
+            data_&kind = [
+            &data
+            ]
+            '''
+            for kind in ('c2lr', 'l2cr', 'c2l', 'l2c'):
+                xs = [(cyr,lat) for k,cyr,lat in data if k == kind]
+                if not xs: continue
+                ctx = dict(kind=kind)
+                ctx['data'] = _emit_testdata(kind, xs, table)
+                yield template.format(tpl, ctx)
 
-    context = dict()
-    with io.StringIO() as so:
+        def _tests():
+            tpl = '''
+            data_&kind.each do |cyr,lat|
+                &tests
+            end
+
+            puts "&table: &kind #{data_&kind.length} tests passed"
+            '''
+            for kind in ('c2lr', 'l2cr', 'c2l', 'l2c'):
+                xs = [(cyr,lat) for k,cyr,lat in data if k == kind]
+                if not xs: continue
+                ctx = dict(table=table, kind=kind)
+                ctx['tests'] = _emit_tests(kind, table)
+                yield template.format(tpl, ctx)
+
+        tpl = '''
+        def test_&table()
+            &data
+            &tests
+        end
+        '''
+        yield template.format(tpl, table=table, data=_data, tests=_tests)
+
+    def _test_cases():
         for fn in fns:
             logger.info(f'processing {fn!s}')
             name = fn.stem
             table = table_name(name)
             data = _parse_tests(fn)
-            _emit_testset(data, table, file=so)
-        context['test_cases'] = so.getvalue()
+            yield from _emit_testset(data, table)
 
-    context['test_raise'] =  '"failed\\n input: #{input}\\nexpect: #{expect}\\nactual: #{actual}\\n        #{arr}"'
+    context = dict()
+    context['test_cases'] = _test_cases
 
-    template = '''require_relative '../../lib/uklatn.rb'
+    tpl = '''\
+    require_relative '../../lib/uklatn.rb'
 
-class TestUkrainianLatin
+    class TestUkrainianLatin # :nodoc:
 
-    def initialize
-        @tr = UkrainianLatin.new
-    end
-
-    def assert_equal(expect, actual, input)
-        if expect != actual
-            s = actual.chars
-            arr = expect.chars.map {{|c| c == s.shift ? ' ' : '^'}}.join
-            raise {test_raise}
+        def initialize
+            @tr = UkrainianLatin.new
         end
-    end
-{test_cases}
-end
 
-test = TestUkrainianLatin.new
-spec = TestUkrainianLatin.instance_methods(false).grep(/^test_/)
-spec.each do |name|
-    test.send(name)
-end
-'''
-    text = template.format(**context)
+        def assert_equal(expect, actual, input)
+            if expect != actual
+                s = actual.chars
+                arr = expect.chars.map {|c| c == s.shift ? ' ' : '^'}.join
+                raise "failed\\n input: #{input}\\nexpect: #{expect}\\nactual: #{actual}\\n        #{arr}"
+            end
+        end
+        &{test_cases}
+    end
+
+    test = TestUkrainianLatin.new
+    spec = TestUkrainianLatin.instance_methods(false).grep(/^test_/)
+    spec.each do |name|
+        test.send(name)
+    end
+    '''
+    text = template.format(tpl, context)
     return text
 
 
@@ -124,107 +145,123 @@ def gen_transforms(fns, default_table=None):
             [r['map'] for r in s]
         ] for s in data]
 
-    def _emit_trrules(rules, file):
-        so = ''
+    def _emit_trrules(rules):
         for sid, section in enumerate(rules):
             if not isinstance(section, str):
                 rx, maps = section
-                gn = len(maps)
-                so += f'@rx{sid} = /{rx}/\n'
+                so = f'@rx{sid} = /{rx}/\n'
                 so += f'@maps{sid} = [\n'
                 for d in maps:
                     m = ','.join((_j(k) + '=>' + _j(v)) for k,v in d.items())
                     so += f'    {{{m}}},\n'
                 so += ']\n'
-        print(textwrap.indent(so, ' ' * 8), end='', file=file)
+                yield so
 
-    def _emit_trbody(rules, file):
-        so = ''
+    def _emit_trbody(rules):
         for sid, section in enumerate(rules):
             if isinstance(section, str):
                 if section not in ('NFC', 'NFD', 'NFKC', 'NFKD'):
                     raise Exception(f'invalid transform: {section!r}')
-                so += f'text = text.unicode_normalize(:{section.lower()})\n'
+                yield f'text = text.unicode_normalize(:{section.lower()})\n'
             else:
                 rx, maps = section
                 gn = len(maps)
-                so += f'text = text.gsub(@rx{sid}) do |m|\n'
+                so = f'text = text.gsub(@rx{sid}) do |m|\n'
                 for mid in reversed(range(1, gn+1)):
                     so += f'    next @maps{sid}[{mid-1}].fetch(${mid}, ${mid}) unless ${mid}.nil?\n'
                 so += '    m\n'
                 so += 'end\n'
-        print(textwrap.indent(so, ' ' * 8), end='', file=file)
+                yield so
 
-    def _emit_tr(cname, rules, file):
-        rules = _load_rules(rules)
-        print(f'class {cname} # :nodoc:', file=file)
-        print('    def initialize()', file=file)
-        _emit_trrules(rules, file=file)
-        print('    end\n', file=file)
-        print('    def transform(text)', file=file)
-        _emit_trbody(rules, file=file)
-        print('    end', file=file)
-        print('end\n', file=file)
+    def _emit_tr(cname, rules):
+        ctx = dict(cname=cname)
+        ctx['trrules'] = _emit_trrules(rules)
+        ctx['trbody'] = _emit_trbody(rules)
+        tpl = '''
+        class &cname # :nodoc:
+            def initialize()
+                &trrules
+            end
+
+            def transform(text)
+                &trbody
+            end
+        end
+        '''
+        return template.format(tpl, ctx)
+
+    tables = dict()
+    for fn in fns:
+        logger.info(f'processing {fn!s}')
+        with fn.open() as fp:
+            rules = json.load(fp)
+            rules = _load_rules(rules)
+        name = fn.stem
+        table = table_name(name)
+        cname = class_name(name)
+        if table not in tables:
+            tables[table] = [None, None]
+        tables[table][_isdec(name)] = (cname, rules)
+
+    def _emit_tables():
+        for ar in [0,1]:
+            for table, codec in tables.items():
+                if codec[ar] is not None:
+                    cname, rules = codec[ar]
+                    yield _emit_tr(cname, rules)
+
+        def _entries():
+            for table, codec in tables.items():
+                dasht = table.replace('_', '-')
+                enc,dec = codec
+                enc = f'{enc[0]}.new()' if enc else 'nil'
+                dec = f'{dec[0]}.new()' if dec else 'nil'
+                yield f'TABLES[{table!r}] = [{enc}, {dec}]\n'
+                yield f'TABLES[{dasht!r}] = TABLES[{table!r}]\n'
+        tpl = '''
+        TABLES = Hash.new([nil, nil]) # :nodoc:
+        &entries
+        '''
+        yield template.format(tpl, entries=_entries)
 
     context = dict()
-    tables = dict()
-    with io.StringIO() as so:
-        for fn in fns:
-            logger.info(f'processing {fn!s}')
-            with fn.open() as fp:
-                rules = json.load(fp)
-            name = fn.stem
-            table = table_name(name)
-            cname = class_name(name)
-            if table not in tables:
-                tables[table] = [None, None]
-            tables[table][_isdec(name)] = cname
-            _emit_tr(cname, rules, so)
-        classdefs_tables = textwrap.indent(so.getvalue(), ' ' * 4)
+    context['global_tables'] = _emit_tables
+    context['default_table'] = repr(default_table)
 
-    def _emit_tabledef(tables):
-        so = ''
-        so += 'TABLES = Hash.new([nil, nil]) # :nodoc:'
-        for tid, (table, (enc, dec)) in enumerate(tables.items(), 1):
-            dasht = table.replace('_', '-')
-            enc = f'{enc}.new()' if enc else 'nil'
-            dec = f'{dec}.new()' if dec else 'nil'
-            so += f'\nTABLES[{table!r}] = [{enc}, {dec}]'
-            so += f'\nTABLES[{dasht!r}] = TABLES[{table!r}]'
-        so = textwrap.indent(so, ' ' * 4)
-        return so
-
-    tabledef = _emit_tabledef(tables)
-
-    context['global_tables'] = classdefs_tables + tabledef
-    context['default_table'] = default_table
-
-    template = '''\
+    tpl = '''\
 # Ukrainian Cyrillic transliteration to and from Latin script.
 #
 # Tables:
-# 'DSTU_9112_A': DSTU 9112:2021 System A
-# 'DSTU_9112_B': DSTU 9112:2021 System B
-# 'KMU_55': KMU 55:2010, not reversible
+# - 'DSTU_9112_A': DSTU 9112:2021 System A
+# - 'DSTU_9112_B': DSTU 9112:2021 System B
+# - 'KMU_55': KMU 55:2010, not reversible
+#
+# Usage:
+#     tr = UkrainianLatin.new
+#     tr.encode('Доброго вечора!')
+#     tr.decode('Paljanycja')
+#
+# Select a transliteration scheme:
+#     tr.encode('Борщ', 'DSTU_9112_A')
+#
 class UkrainianLatin
 
     # Transliterates a string of Ukrainian Cyrillic to Latin script.
-    def encode(text, table = {default_table!r})
+    def encode(text, table = &{default_table})
         tr = TABLES[table][0]
         return tr.transform(text) if tr
-        raise ArgumentError.new("invalid table #{{table}}")
+        raise ArgumentError.new("invalid table #{table}")
     end
 
     # Re-transliterates a string of Ukrainian Latin to Cyrillic script.
-    def decode(text, table = {default_table!r})
+    def decode(text, table = &{default_table})
         tr = TABLES[table][1]
         return tr.transform(text) if tr
-        raise ArgumentError.new("invalid table #{{table}}")
+        raise ArgumentError.new("invalid table #{table}")
     end
-
-{global_tables}
+    &{global_tables}
 end
 '''
-    text = template.format(**context)
+    text = template.format(tpl, context)
     return text
 

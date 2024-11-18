@@ -1,8 +1,8 @@
-import io
 import json
 import logging
 import re
 from pathlib import Path
+import template
 
 
 logger = logging.getLogger(Path(__file__).stem)
@@ -26,52 +26,82 @@ def gen_tests(fns):
         return re.sub(r'test_', '', s)
     def _j(s):
         return json.dumps(s, ensure_ascii=False)
-    def _emit_tests(kind, data, table, file):
-        data = [(cyr,lat) for k,cyr,lat in data if k == kind]
-        if not data: return
-        print(f'    def test_{kind}(self):', file=so)
-        print('        data = [', file=so)
-        for cyr,lat in data:
-            print('            (', file=so)
-            print(f'                {_j(cyr)},', file=so)
-            print(f'                {_j(lat)},', file=so)
-            print('            ),', file=so)
-        print('        ]\n', file=so)
-        print(f'        for cyr,lat in data:', file=so)
+
+    def _emit_tests(kind, table):
         if kind[0] == 'c':
-            print(f'            q = uklatn.encode(cyr, uklatn.{table})', file=so)
-            print(f'            self.assertEqual(q, lat)', file=so)
+            yield f'q = uklatn.encode(cyr, uklatn.{table})\n'
+            yield 'self.assertEqual(q, lat)\n'
         else:
-            print(f'            q = uklatn.decode(lat, uklatn.{table})', file=so)
-            print(f'            self.assertEqual(q, cyr)', file=so)
+            yield f'q = uklatn.decode(lat, uklatn.{table})\n'
+            yield 'self.assertEqual(q, cyr)\n'
         if kind[-1] == 'r':
             if kind[0] == 'c':
-                print(f'            q = uklatn.decode(lat, uklatn.{table})', file=so)
-                print(f'            self.assertEqual(q, cyr)', file=so)
+                yield f'q = uklatn.decode(lat, uklatn.{table})\n'
+                yield 'self.assertEqual(q, cyr)\n'
             else:
-                print(f'            q = uklatn.encode(cyr, uklatn.{table})', file=so)
-                print(f'            self.assertEqual(q, lat)', file=so)
-        print('', file=so)
+                yield f'q = uklatn.encode(cyr, uklatn.{table})\n'
+                yield 'self.assertEqual(q, lat)\n'
 
-    with io.StringIO() as so:
-        print('import uklatn', file=so)
-        print('import unittest\n\n', file=so)
+    def _emit_testset(data, table):
+        def _data(data):
+            spl = '''\
+            (
+                &cyr,
+                &lat,
+            ),
+            '''
+            for cyr,lat in data:
+                yield template.format(spl, cyr=_j(cyr), lat=_j(lat))
+
+        def _tests():
+            tpl = '''
+            def test_&kind(self):
+                data = [
+                    &data
+                ]
+
+                for cyr,lat in data:
+                    &tests
+            '''
+            ctx = dict(table=table)
+            for kind in ('c2lr', 'l2cr', 'c2l', 'l2c'):
+                xs = [(cyr,lat) for k,cyr,lat in data if k == kind]
+                if not xs: continue
+                ctx['kind'] = kind
+                ctx['data'] = _data(xs)
+                ctx['tests'] = _emit_tests(kind, table)
+                yield template.format(tpl, ctx)
+
+        tpl = '''
+
+        class Test&table (unittest.TestCase):
+            &tests
+        '''
+        return template.format(tpl, table=table, tests=_tests)
+
+    def _test_cases():
         for fn in fns:
             logger.info(f'processing {fn!s}')
             name = fn.stem
             table = table_name(name)
             data = _parse_tests(fn)
-            print(f'class Test{table} (unittest.TestCase):\n', file=so)
-            _emit_tests('c2lr', data, table, file=so)
-            _emit_tests('l2cr', data, table, file=so)
-            _emit_tests('c2l', data, table, file=so)
-            _emit_tests('l2c', data, table, file=so)
-            print('', file=so)
+            yield from _emit_testset(data, table)
 
-        print('if __name__ == "__main__":', file=so)
-        print('    unittest.main()', file=so)
-        print('', file=so)
-        return so.getvalue()
+    context = dict()
+    context['test_cases'] = _test_cases
+
+    tpl = '''\
+    import uklatn
+    import unittest
+    &{test_cases}
+
+
+    if __name__ == "__main__":
+        unittest.main()
+    '''
+
+    text = template.format(tpl, context)
+    return text
 
 
 def gen_transforms(fns, default_table=None):
@@ -88,73 +118,95 @@ def gen_transforms(fns, default_table=None):
             [r['map'] for r in s]
         ] for s in data]
 
-    def _emit_tr(cname, rules, file):
-        rules = _load_rules(rules)
-        print(f'class {cname}:', file=file)
-        print(f'    def __init__(self):', file=file)
+    def _emit_trrules(rules):
+        tpl = '''\
+        self._rx&sid = re.compile(r"&rx")
+        _maps&sid = &maps
+
+        def tr&sid(m):
+            value = None
+            if (i := m.lastindex) is not None:
+                value = _maps&sid[i-1].get(m.group(i))
+            return value if (value is not None) else m.group(0)
+        self._tr&sid = tr&sid
+
+        '''
         for sid, section in enumerate(rules):
             if not isinstance(section, str):
                 rx, maps = section
-                print(f'        self._rx{sid} = re.compile(r"{rx}")', file=file)
-                print(f'        _maps{sid} = {maps!r}', file=file)
-                print(f'        def tr{sid}(m):', file=file)
-                print(f'            value = None', file=file)
-                print(f'            if (i := m.lastindex) is not None:', file=file)
-                print(f'                value = _maps{sid}[i-1].get(m.group(i))', file=file)
-                print(f'            return value if (value is not None) else m.group(0)', file=file)
-                print(f'        self._tr{sid} = tr{sid}', file=file)
-        print('', file=file)
-        print(f'    def transform(self, text):', file=file)
+                yield template.format(tpl, sid=sid, rx=rx, maps=repr(maps))
+
+    def _emit_trbody(rules):
         for sid, section in enumerate(rules):
             if isinstance(section, str):
                 if section not in ('NFC', 'NFD', 'NFKC', 'NFKD'):
                     raise Exception(f'invalid transform: {section!r}')
-                print(f'        text = unicodedata.normalize({section!r}, text)', file=file)
+                yield f'text = unicodedata.normalize({section!r}, text)\n'
             else:
-                print(f'        text = self._rx{sid}.sub(self._tr{sid}, text)', file=file)
-        print(f'        return text', file=file)
-        print('\n', file=file)
+                yield f'text = self._rx{sid}.sub(self._tr{sid}, text)\n'
+
+    def _emit_tr(cname, rules):
+        ctx = dict(cname=cname)
+        ctx['trrules'] = _emit_trrules(rules)
+        ctx['trbody'] = _emit_trbody(rules)
+        tpl = '''
+
+        class &cname:
+            def __init__(self):
+                &trrules
+
+            def transform(self, text):
+                &trbody
+                return text
+        '''
+        return template.format(tpl, ctx)
+
+    tables = dict()
+    for fn in fns:
+        logger.info(f'processing {fn!s}')
+        with fn.open() as fp:
+            rules = json.load(fp)
+            rules = _load_rules(rules)
+        name = fn.stem
+        table = table_name(name)
+        cname = class_name(name)
+        if table not in tables:
+            tables[table] = [None, None]
+        tables[table][_isdec(name)] = (cname, rules)
+
+    def _emit_tables():
+        for ar in [0,1]:
+            for table, codec in tables.items():
+                if codec[ar] is not None:
+                    cname, rules = codec[ar]
+                    yield _emit_tr(cname, rules)
+
+        def _entries():
+            for table, codec in tables.items():
+                enc,dec = codec
+                enc = f'{enc[0]}()' if enc else None
+                dec = f'{dec[0]}()' if dec else None
+                yield f'[{enc}, {dec}],\n'
+        tpl = '''
+
+        _UklatnTables = [
+            [None, None],
+            &entries
+        ]
+        '''
+        yield template.format(tpl, entries=_entries)
 
     context = dict()
-    tables = dict()
-    with io.StringIO() as so:
-        for fn in fns:
-            logger.info(f'processing {fn!s}')
-            with fn.open() as fp:
-                rules = json.load(fp)
-            name = fn.stem
-            table = table_name(name)
-            cname = class_name(name)
-            if table not in tables:
-                tables[table] = [None, None]
-            tables[table][_isdec(name)] = cname
-            _emit_tr(cname, rules, so)
-        classdefs_tables = so.getvalue()
-
-    all_tables = ', '.join(f'{s!r}' for s in tables)
-    context['global_all'] = f"__all__ = [{all_tables}, 'decode', 'encode']"
-
-    context['doc_tables'] = '\n'.join((f' - {s}' + (' (default)' if s == default_table else '')) for s in tables)
+    context['doc_tables'] = '\n'.join((f' - {s}' + (' (default)' if s == default_table else '')) for s in tables) + '\n'
     context['global_tenum'] = '\n'.join(f'{table} = {tid}' for tid, table in enumerate(tables, 1))
-
-    with io.StringIO() as so:
-        print('_UklatnTables = [', file=so)
-        print('    [None, None],', file=so)
-        for tid, (table, (enc, dec)) in enumerate(tables.items(), 1):
-            if enc:
-                enc = f'{enc}()'
-            if dec:
-                dec = f'{dec}()'
-            print(f'    [{enc}, {dec}],', file=so)
-        print(']', end='', file=so)
-        tabledef = so.getvalue()
-
-    context['global_tables'] = classdefs_tables + tabledef
+    context['all_tables'] = ', '.join(f'{s!r}' for s in tables)
+    context['global_tables'] = _emit_tables
     context['default_table'] = default_table
-    context['table_list'] = list(tables)
-    context['table_names'] = {k:i for i,k in enumerate(tables, 1)}
+    context['sdefault_table'] = repr(default_table) + '\n'
+    context['table_list'] = repr(list(tables))
+    context['table_names'] = repr({k:i for i,k in enumerate(tables, 1)}) + '\n'
 
-    template = '''
+    tpl = '''
 """Ukrainian Cyrillic transliteration to Latin script
 
 https://github.com/paiv/uklatn
@@ -163,7 +215,7 @@ encode(...): tranliterate Cyrlllic to Latin script
 decode(...): re-transliterate Latin script back to Cyrillic
 
 Tranliteration schemes:
-{doc_tables}
+&{doc_tables}
 
 For example,
     >>> import uklatn
@@ -182,13 +234,12 @@ import re
 import unicodedata
 
 
-{global_all}
+__all__ = [&{all_tables}, 'decode', 'encode']
 
 
-{global_tenum}
+&{global_tenum}
 
-
-{global_tables}
+&{global_tables}
 
 
 def encode(text, table=None):
@@ -213,7 +264,7 @@ def encode(text, table=None):
         table = DSTU_9112_A
     enc, _ = _UklatnTables[table]
     if not enc:
-        raise ValueError(f'invalid table {{table!r}}')
+        raise ValueError(f'invalid table {table!r}')
     return enc.transform(text)
 
 
@@ -238,16 +289,16 @@ def decode(text, table=None):
         table = DSTU_9112_A
     _, dec = _UklatnTables[table]
     if not dec:
-        raise ValueError(f'invalid table {{table!r}}')
+        raise ValueError(f'invalid table {table!r}')
     return dec.transform(text)
 
 
 def main(args):
     table = args.table
     if table is None:
-        table = {default_table!r}
+        table = &{sdefault_table}
 
-    names = {table_names!r}
+    names = &{table_names}
     table = names[table]
 
     tr = encode
@@ -270,7 +321,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('text', nargs='*', help='text to transliterate')
     parser.add_argument('-f', '--file', type=argparse.FileType('r'), help='read text from file')
-    parser.add_argument('-t', '--table', choices={table_list!r}, help='transliteration system (default: {default_table})')
+    parser.add_argument('-t', '--table', choices=&{table_list}, help='transliteration system (default: &{default_table})')
     parser.add_argument('-l', '--latin', '--lat', action='store_true', help='convert to Latin script (default)')
     parser.add_argument('-c', '--cyrillic', '--cyr', action='store_true', help='convert to Cyrillic script')
 
@@ -280,6 +331,6 @@ if __name__ == '__main__':
 
     main(args)
 '''
-    text = template.format(**context)
+    text = template.format(tpl, context)
     return text
 

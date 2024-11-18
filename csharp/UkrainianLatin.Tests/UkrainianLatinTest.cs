@@ -118,5 +118,4 @@ public class UkrainianLatinTest {
         string q = tr.Encode(cyr, UkrainianLatin.Table.KMU_55);
         Assert.Equal(lat, q);
     }
-
 }

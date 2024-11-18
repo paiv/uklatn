@@ -4,9 +4,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import * as uklatn from "./uklatn.js";
 
+
 test('DSTU_9112_A', async (t) => {
-    await t.test('c2lr', () => {
-       const data = [
+
+    const data_c2lr = [
     [
         "Україна, Хмельницький",
         "Ukraïna, Xmeljnycjkyj"
@@ -74,18 +75,10 @@ test('DSTU_9112_A', async (t) => {
     [
         "об😎нап😘неп😭нєп🧐нїп😍нюп😀няп",
         "ob😎nap😘nep😭njep🧐nïp😍njup😀njap"
-    ]
-];
-        for (const [cyr,lat] of data) {
-            const q = uklatn.encode(cyr, 'DSTU_9112_A');
-            assert.equal(q, lat);
-            const t = uklatn.decode(lat, 'DSTU_9112_A');
-            assert.equal(t, cyr);
-        }
-    });
+    ],
+    ];
 
-    await t.test('c2l', () => {
-       const data = [
+    const data_c2l = [
     [
         "в’я в'я",
         "v'ja v'ja"
@@ -93,16 +86,10 @@ test('DSTU_9112_A', async (t) => {
     [
         "Ї ї Й й Ё ё Ў ў",
         "Ï ï J j Ö ö Ŭ ŭ"
-    ]
-];
-        for (const [cyr,lat] of data) {
-            const q = uklatn.encode(cyr, 'DSTU_9112_A');
-            assert.equal(q, lat);
-        }
-    });
+    ],
+    ];
 
-    await t.test('l2c', () => {
-       const data = [
+    const data_l2c = [
     [
         "я є ю",
         "jA jE jU"
@@ -122,19 +109,37 @@ test('DSTU_9112_A', async (t) => {
     [
         "Є́с сЄ́с є́с сє́с Ї́с сЇ́с ї́с сї́с Ю́с сЮ́с ю́с сю́с Я́с сЯ́с я́с ся́с",
         "Jés sJés jés sjés Ḯs sḮs ḯs sḯs Jús sJús jús sjús Jás sJás jás sjás"
-    ]
-];
-        for (const [cyr,lat] of data) {
+    ],
+    ];
+
+    await t.test('c2lr', () => {
+        for (const [cyr,lat] of data_c2lr) {
+            const q = uklatn.encode(cyr, 'DSTU_9112_A');
+            assert.equal(q, lat);
+            const t = uklatn.decode(lat, 'DSTU_9112_A');
+            assert.equal(t, cyr);
+        }
+    });
+
+    await t.test('c2l', () => {
+        for (const [cyr,lat] of data_c2l) {
+            const q = uklatn.encode(cyr, 'DSTU_9112_A');
+            assert.equal(q, lat);
+        }
+    });
+
+    await t.test('l2c', () => {
+        for (const [cyr,lat] of data_l2c) {
             const q = uklatn.decode(lat, 'DSTU_9112_A');
             assert.equal(q, cyr);
         }
     });
-
 });
 
+
 test('DSTU_9112_B', async (t) => {
-    await t.test('c2lr', () => {
-       const data = [
+
+    const data_c2lr = [
     [
         "Україна, Хмельницький",
         "Ukrajina, Khmeljnycjkyj"
@@ -202,18 +207,10 @@ test('DSTU_9112_B', async (t) => {
     [
         "об😎нап😘неп😭нєп🧐нїп😍нюп😀няп",
         "ob😎nap😘nep😭njep🧐njip😍njup😀njap"
-    ]
-];
-        for (const [cyr,lat] of data) {
-            const q = uklatn.encode(cyr, 'DSTU_9112_B');
-            assert.equal(q, lat);
-            const t = uklatn.decode(lat, 'DSTU_9112_B');
-            assert.equal(t, cyr);
-        }
-    });
+    ],
+    ];
 
-    await t.test('c2l', () => {
-       const data = [
+    const data_c2l = [
     [
         "в’я в'я",
         "v'ja v'ja"
@@ -221,16 +218,10 @@ test('DSTU_9112_B', async (t) => {
     [
         "Ї ї Й й Ё ё Ў ў",
         "JI ji J j JOW jow UH uh"
-    ]
-];
-        for (const [cyr,lat] of data) {
-            const q = uklatn.encode(cyr, 'DSTU_9112_B');
-            assert.equal(q, lat);
-        }
-    });
+    ],
+    ];
 
-    await t.test('l2c', () => {
-       const data = [
+    const data_l2c = [
     [
         "я ї є ю г ж х щ ш ч ь",
         "jA jI jE jU gH zH kH sHcH sH cH hJ"
@@ -242,19 +233,37 @@ test('DSTU_9112_B', async (t) => {
     [
         "Є́с сЄ́с є́с сє́с Ї́с сЇ́с ї́с сї́с Ю́с сЮ́с ю́с сю́с Я́с сЯ́с я́с ся́с",
         "Jés sJés jés sjés Jís sJís jís sjís Jús sJús jús sjús Jás sJás jás sjás"
-    ]
-];
-        for (const [cyr,lat] of data) {
+    ],
+    ];
+
+    await t.test('c2lr', () => {
+        for (const [cyr,lat] of data_c2lr) {
+            const q = uklatn.encode(cyr, 'DSTU_9112_B');
+            assert.equal(q, lat);
+            const t = uklatn.decode(lat, 'DSTU_9112_B');
+            assert.equal(t, cyr);
+        }
+    });
+
+    await t.test('c2l', () => {
+        for (const [cyr,lat] of data_c2l) {
+            const q = uklatn.encode(cyr, 'DSTU_9112_B');
+            assert.equal(q, lat);
+        }
+    });
+
+    await t.test('l2c', () => {
+        for (const [cyr,lat] of data_l2c) {
             const q = uklatn.decode(lat, 'DSTU_9112_B');
             assert.equal(q, cyr);
         }
     });
-
 });
 
+
 test('KMU_55', async (t) => {
-    await t.test('c2l', () => {
-       const data = [
+
+    const data_c2l = [
     [
         "Україна, Хмельницький",
         "Ukraina, Khmelnytskyi"
@@ -322,13 +331,13 @@ test('KMU_55', async (t) => {
     [
         "об😎нап😘неп😭нєп🧐нїп😍нюп😀няп",
         "ob😎nap😘nep😭niep🧐nip😍niup😀niap"
-    ]
-];
-        for (const [cyr,lat] of data) {
+    ],
+    ];
+
+    await t.test('c2l', () => {
+        for (const [cyr,lat] of data_c2l) {
             const q = uklatn.encode(cyr, 'KMU_55');
             assert.equal(q, lat);
         }
     });
-
 });
-
