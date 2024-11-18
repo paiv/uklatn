@@ -44,12 +44,12 @@ def gen_tests(fns):
 
     def _emit_testset(data, table):
         tpl = '''
-[Theory]
-&data
-public void test_&{kind}_&{table}(string cyr, string lat) {
-    &tests
-}
-'''
+        [Theory]
+        &data
+        public void test_&{kind}_&{table}(string cyr, string lat) {
+            &tests
+        }
+        '''
         ctx = dict(table=table)
         for kind in ('c2lr', 'l2cr', 'c2l', 'l2c'):
             xs = [(cyr,lat) for k,cyr,lat in data if k == kind]
@@ -70,18 +70,19 @@ public void test_&{kind}_&{table}(string cyr, string lat) {
     context = dict()
     context['test_cases'] = _test_cases
 
-    tpl = '''namespace paiv.uklatn.tests;
+    tpl = '''\
+    namespace paiv.uklatn.tests;
 
-/// <exclude/>
-public class UkrainianLatinTest {
-    private UkrainianLatin tr;
+    /// <exclude/>
+    public class UkrainianLatinTest {
+        private UkrainianLatin tr;
 
-    public UkrainianLatinTest() {
-        tr = new UkrainianLatin();
+        public UkrainianLatinTest() {
+            tr = new UkrainianLatin();
+        }
+        &{test_cases}
     }
-    &{test_cases}
-}
-'''
+    '''
     text = template.format(tpl, context)
     return text
 
@@ -110,28 +111,30 @@ def gen_transforms(fns, default_table=None):
 
     def _emit_trrules(rules):
         tpl = '''\
-this._rx&sid = new Regex(@"&rx",
-    RegexOptions.Compiled | RegexOptions.CultureInvariant);
-var _maps&sid = new List<Dictionary<string,string>> {
-    &mappings
-};
-this._tr&sid = (Match match) => {
-    for (int i = match.Groups.Count; i > 0; i -= 1) {
-        Group group = match.Groups[i];
-        if (!group.Success) { continue; }
-        string key = group.Value;
-        if (_maps&sid[i-1].TryGetValue(key, out string? value)) {
-            return value;
-        }
-        return key;
-    }
-    return match.Groups[0].Value;
-};
-'''
+        this._rx&sid = new Regex(@"&rx",
+            RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        var _maps&sid = new List<Dictionary<string,string>> {
+            &mappings
+        };
+        this._tr&sid = (Match match) => {
+            for (int i = match.Groups.Count; i > 0; i -= 1) {
+                Group group = match.Groups[i];
+                if (!group.Success) { continue; }
+                string key = group.Value;
+                if (_maps&sid[i-1].TryGetValue(key, out string? value)) {
+                    return value;
+                }
+                return key;
+            }
+            return match.Groups[0].Value;
+        };
+        '''
+
         mpl = '''\
-new Dictionary<string,string> {
-    &entries
-}'''
+        new Dictionary<string,string> {
+            &entries
+        }'''
+
         def _ds(data):
             return ','.join(f'{{{_j(k)},{_j(v)}}}' for k,v in data.items()) + '\n'
 
@@ -156,19 +159,19 @@ new Dictionary<string,string> {
         context['trrules'] = _emit_trrules(rules)
         context['trbody'] = _emit_trbody(rules)
         tpl = '''
-private sealed class &cname : _UKLatnTransformer {
-    &trdefs
+        private sealed class &cname : _UKLatnTransformer {
+            &trdefs
 
-    internal &cname() {
-        &trrules
-    }
+            internal &cname() {
+                &trrules
+            }
 
-    public string Transform(string text) {
-        &trbody
-        return text;
-    }
-}
-'''
+            public string Transform(string text) {
+                &trbody
+                return text;
+            }
+        }
+        '''
         return template.format(tpl, context)
 
     tables = dict()
@@ -199,11 +202,11 @@ private sealed class &cname : _UKLatnTransformer {
                 yield f'new _UKLatnTransformer?[2] {{{enc}, {dec}}},\n'
 
         tpl = '''
-private static readonly _UKLatnTransformer?[][] _UklatnTables = {
-    new _UKLatnTransformer?[2] {null, null},
-    &entries
-};
-'''
+        private static readonly _UKLatnTransformer?[][] _UklatnTables = {
+            new _UKLatnTransformer?[2] {null, null},
+            &entries
+        };
+        '''
         yield template.format(tpl, entries=_entries)
 
     tdoc = {
@@ -222,7 +225,8 @@ private static readonly _UKLatnTransformer?[][] _UklatnTables = {
     context['global_tables'] = _emit_tables
     context['default_table'] = default_table
 
-    tpl = '''namespace paiv.uklatn;
+    tpl = '''\
+namespace paiv.uklatn;
 
 using System.Text;
 using System.Text.RegularExpressions;

@@ -29,11 +29,11 @@ def gen_tests(fns):
 
     def _emit_testdata(kind, data, table):
         spl = '''\
-{
-    &cyr,
-    &lat
-},
-'''
+        {
+            &cyr,
+            &lat
+        },
+        '''
         for cyr, lat in data:
             yield template.format(spl, cyr=_j(cyr), lat=_j(lat)+'\n')
 
@@ -54,10 +54,10 @@ def gen_tests(fns):
 
     def _emit_testset(data, table):
         tpl = '''
-private String[][] data_&{table}_&{kind} = {
-&data
-};
-'''
+        private String[][] data_&{table}_&{kind} = {
+        &data
+        };
+        '''
         for kind in ('c2lr', 'l2cr', 'c2l', 'l2c'):
             xs = [(cyr,lat) for k,cyr,lat in data if k == kind]
             if not xs: continue
@@ -67,10 +67,10 @@ private String[][] data_&{table}_&{kind} = {
 
         def _tests():
             tpl = '''\
-for (String[] pair : data_&{table}_&{kind}) {
-    &tests
-}
-'''
+            for (String[] pair : data_&{table}_&{kind}) {
+                &tests
+            }
+            '''
             for kind in ('c2lr', 'l2cr', 'c2l', 'l2c'):
                 xs = [(cyr,lat) for k,cyr,lat in data if k == kind]
                 if not xs: continue
@@ -79,11 +79,11 @@ for (String[] pair : data_&{table}_&{kind}) {
                 yield template.format(tpl, ctx)
 
         tpl = '''
-@Test
-void test_&table() {
-    &tests
-}
-'''
+        @Test
+        void test_&table() {
+            &tests
+        }
+        '''
         yield template.format(tpl, table=table, tests=_tests)
 
     def _test_cases():
@@ -98,25 +98,25 @@ void test_&table() {
     context['test_cases'] = _test_cases
 
     tpl = '''\
-package io.github.paiv.uklatn;
+    package io.github.paiv.uklatn;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static io.github.paiv.uklatn.UkrainianLatin.UKLatnTable;
+    import static org.junit.jupiter.api.Assertions.assertEquals;
+    import static io.github.paiv.uklatn.UkrainianLatin.UKLatnTable;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import io.github.paiv.uklatn.UkrainianLatin;
+    import org.junit.jupiter.api.BeforeEach;
+    import org.junit.jupiter.api.Test;
+    import io.github.paiv.uklatn.UkrainianLatin;
 
-class UkrainianLatinTest {
-    private UkrainianLatin tr;
+    class UkrainianLatinTest {
+        private UkrainianLatin tr;
 
-    @BeforeEach
-    void setUp() {
-        tr = new UkrainianLatin();
+        @BeforeEach
+        void setUp() {
+            tr = new UkrainianLatin();
+        }
+        &test_cases
     }
-    &test_cases
-}
-'''
+    '''
     text = template.format(tpl, context)
     return text
 
@@ -145,24 +145,25 @@ def gen_transforms(fns, default_table=None):
 
     def _emit_trrules(rules):
         tpl = '''\
-this._rx&sid = Pattern.compile(&rx);
-List<Map<String,String>> _maps&sid = List.of(
-    &mappings
-);
-this._tr&sid = (match) -> {
-    for (int i = match.groupCount(); i > 0; i -= 1) {
-        String value = match.group(i);
-        if (value != null) {
-            return _maps&sid.get(i-1).getOrDefault(value, value);
-        }
-    }
-    return match.group();
-};
-'''
+        this._rx&sid = Pattern.compile(&rx);
+        List<Map<String,String>> _maps&sid = List.of(
+            &mappings
+        );
+        this._tr&sid = (match) -> {
+            for (int i = match.groupCount(); i > 0; i -= 1) {
+                String value = match.group(i);
+                if (value != null) {
+                    return _maps&sid.get(i-1).getOrDefault(value, value);
+                }
+            }
+            return match.group();
+        };
+        '''
         mpl = '''\
-Map.ofEntries(
-    &entries
-)'''
+        Map.ofEntries(
+            &entries
+        )'''
+
         def _ds(data):
             return ','.join(f'entry({_j(k)},{_j(v)})' for k,v in data.items()) + '\n'
 
@@ -187,20 +188,20 @@ Map.ofEntries(
         context['trrules'] = _emit_trrules(rules)
         context['trbody'] = _emit_trbody(rules)
         tpl = '''
-private static class &cname implements _UKLatnTransformer {
-    &trdefs
+        private static class &cname implements _UKLatnTransformer {
+            &trdefs
 
-    &cname() {
-        &trrules
-    }
+            &cname() {
+                &trrules
+            }
 
-    @Override
-    public String transform(String text) {
-        &trbody
-        return text;
-    }
-}
-'''
+            @Override
+            public String transform(String text) {
+                &trbody
+                return text;
+            }
+        }
+        '''
         return template.format(tpl, context)
 
     tables = dict()
@@ -231,11 +232,11 @@ private static class &cname implements _UKLatnTransformer {
                 yield f'{{{enc}, {dec}}},\n'
 
         tpl = '''
-private static _UKLatnTransformer[][] _UklatnTables = {
-    {null, null},
-    &entries
-};
-'''
+        private static _UKLatnTransformer[][] _UklatnTables = {
+            {null, null},
+            &entries
+        };
+        '''
         yield template.format(tpl, entries=_entries)
 
     tdoc = {

@@ -45,17 +45,19 @@ def gen_tests(fns):
                 case _: raise Exception()
 
     tpl = '''
-static const struct _uklatn_test _&{name}_data[] = {
-    &entries
-};
-'''
+    static const struct _uklatn_test _&{name}_data[] = {
+        &entries
+    };
+    '''
+
     epl = '''\
-{
-    u&{cyr},
-    u&{lat},
-    UklatnTable_&{table},
-},
-'''
+    {
+        u&{cyr},
+        u&{lat},
+        UklatnTable_&{table},
+    },
+    '''
+
     def _data(name, data):
         ctx = dict(name=name)
         def _ds():
@@ -112,23 +114,24 @@ def gen_transforms(fns, default_table):
             yield 'if (err != 0) { return err; }\n'
 
     dpl = '''\
-static const UChar &vname[] = u"&tname";
+    static const UChar &vname[] = u"&tname";
 
-static char &rname[] =
-    &data
-    ;
+    static char &rname[] =
+        &data
+        ;
 
-'''
+    '''
 
     tpl = '''\
-&data
-static int
-_uklatn_register_tables(void) {
-    int err = 0;
-    &regs
-    return 0;
-}
-'''
+    &data
+    static int
+    _uklatn_register_tables(void) {
+        int err = 0;
+        &regs
+        return 0;
+    }
+    '''
+
     text = template.format(tpl, data=_data, regs=_regs)
     return text
 

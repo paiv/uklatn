@@ -21,6 +21,8 @@ def print(text, context=None, file=None):
         context = dict()
     if file is None:
         file = sys.stdout
+    text = textwrap.dedent(text)
+
     write = file.buffer.write if hasattr(file, 'buffer') else file.write
     parser = _Parser()
 
