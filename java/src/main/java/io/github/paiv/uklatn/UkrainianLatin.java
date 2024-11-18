@@ -106,7 +106,7 @@ public final class UkrainianLatin {
                 ),
                 Map.ofEntries(
                     entry("А","A"),entry("а","a"),entry("Б","B"),entry("б","b"),entry("В","V"),entry("в","v"),entry("Г","Ğ"),entry("г","ğ"),entry("Ґ","G"),entry("ґ","g"),entry("Д","D"),entry("д","d"),entry("Е","E"),entry("е","e"),entry("Є","JE"),entry("є","je"),entry("Ж","Ž"),entry("ж","ž"),entry("З","Z"),entry("з","z"),entry("И","Y"),entry("и","y"),entry("І","I"),entry("і","i"),entry("Ї","Ï"),entry("ї","ï"),entry("К","K"),entry("к","k"),entry("Л","L"),entry("л","l"),entry("М","M"),entry("м","m"),entry("Н","N"),entry("н","n"),entry("О","O"),entry("о","o"),entry("П","P"),entry("п","p"),entry("Р","R"),entry("р","r"),entry("С","S"),entry("с","s"),entry("Т","T"),entry("т","t"),entry("У","U"),entry("у","u"),entry("Ф","F"),entry("ф","f"),entry("Х","X"),entry("х","x"),entry("Ц","C"),entry("ц","c"),entry("Ч","Č"),entry("ч","č"),entry("Ш","Š"),entry("ш","š"),entry("Щ","Ŝ"),entry("щ","ŝ"),entry("Ю","JU"),entry("ю","ju"),entry("Я","JA"),entry("я","ja"),entry("Ь","J"),entry("ь","j"),entry("Й","J"),entry("й","j"),entry("’","'"),entry("Ё","Ö"),entry("ё","ö"),entry("Ў","Ŭ"),entry("ў","ŭ"),entry("Ъ","Ǒ"),entry("ъ","ǒ"),entry("Ы","Ȳ"),entry("ы","ȳ"),entry("Э","Ē"),entry("э","ē")
-                )
+                ),
             );
             this._tr1 = (match) -> {
                 for (int i = match.groupCount(); i > 0; i -= 1) {
@@ -143,7 +143,7 @@ public final class UkrainianLatin {
                 ),
                 Map.ofEntries(
                     entry("А","A"),entry("а","a"),entry("Б","B"),entry("б","b"),entry("В","V"),entry("в","v"),entry("Г","GH"),entry("г","gh"),entry("Ґ","G"),entry("ґ","g"),entry("Д","D"),entry("д","d"),entry("Е","E"),entry("е","e"),entry("Є","JE"),entry("є","je"),entry("Ж","ZH"),entry("ж","zh"),entry("З","Z"),entry("з","z"),entry("И","Y"),entry("и","y"),entry("І","I"),entry("і","i"),entry("Ї","JI"),entry("ї","ji"),entry("Х","KH"),entry("х","kh"),entry("К","K"),entry("к","k"),entry("Л","L"),entry("л","l"),entry("М","M"),entry("м","m"),entry("Н","N"),entry("н","n"),entry("О","O"),entry("о","o"),entry("П","P"),entry("п","p"),entry("Р","R"),entry("р","r"),entry("Щ","SHCH"),entry("щ","shch"),entry("Ш","SH"),entry("ш","sh"),entry("С","S"),entry("с","s"),entry("Т","T"),entry("т","t"),entry("У","U"),entry("у","u"),entry("Ф","F"),entry("ф","f"),entry("Ч","CH"),entry("ч","ch"),entry("Ц","C"),entry("ц","c"),entry("Ю","JU"),entry("ю","ju"),entry("Я","JA"),entry("я","ja"),entry("Й","J"),entry("й","j"),entry("Ь","J"),entry("ь","j"),entry("’","'"),entry("Ё","JOW"),entry("ё","jow"),entry("Ў","UH"),entry("ў","uh"),entry("Ъ","OH"),entry("ъ","oh"),entry("Ы","YW"),entry("ы","yw"),entry("Э","EHW"),entry("э","ehw")
-                )
+                ),
             );
             this._tr1 = (match) -> {
                 for (int i = match.groupCount(); i > 0; i -= 1) {
@@ -176,7 +176,7 @@ public final class UkrainianLatin {
             List<Map<String,String>> _maps1 = List.of(
                 Map.ofEntries(
                     entry("’",""),entry("'","")
-                )
+                ),
             );
             this._tr1 = (match) -> {
                 for (int i = match.groupCount(); i > 0; i -= 1) {
@@ -200,7 +200,7 @@ public final class UkrainianLatin {
                 ),
                 Map.ofEntries(
                     entry("ЗГ","ZGH"),entry("Зг","Zgh"),entry("зГ","zGH"),entry("зг","zgh"),entry("А","A"),entry("а","a"),entry("Б","B"),entry("б","b"),entry("В","V"),entry("в","v"),entry("Г","H"),entry("г","h"),entry("Ґ","G"),entry("ґ","g"),entry("Д","D"),entry("д","d"),entry("Е","E"),entry("е","e"),entry("Є","IE"),entry("є","ie"),entry("Ж","ZH"),entry("ж","zh"),entry("З","Z"),entry("з","z"),entry("И","Y"),entry("и","y"),entry("І","I"),entry("і","i"),entry("Ї","I"),entry("ї","i"),entry("Х","KH"),entry("х","kh"),entry("К","K"),entry("к","k"),entry("Л","L"),entry("л","l"),entry("М","M"),entry("м","m"),entry("Н","N"),entry("н","n"),entry("О","O"),entry("о","o"),entry("П","P"),entry("п","p"),entry("Р","R"),entry("р","r"),entry("Щ","SHCH"),entry("щ","shch"),entry("Ш","SH"),entry("ш","sh"),entry("С","S"),entry("с","s"),entry("Т","T"),entry("т","t"),entry("У","U"),entry("у","u"),entry("Ф","F"),entry("ф","f"),entry("Ч","CH"),entry("ч","ch"),entry("Ц","TS"),entry("ц","ts"),entry("Ю","IU"),entry("ю","iu"),entry("Я","IA"),entry("я","ia"),entry("Й","I"),entry("й","i"),entry("Ь",""),entry("ь",""),entry("’","")
-                )
+                ),
             );
             this._tr2 = (match) -> {
                 for (int i = match.groupCount(); i > 0; i -= 1) {
@@ -234,7 +234,7 @@ public final class UkrainianLatin {
             List<Map<String,String>> _maps1 = List.of(
                 Map.ofEntries(
                     entry("Á","Á"),entry("á","á"),entry("É","É"),entry("é","é"),entry("Í","Í"),entry("í","í"),entry("Ó","Ó"),entry("ó","ó"),entry("Ú","Ú"),entry("ú","ú"),entry("Ý","Ý"),entry("ý","ý"),entry("Ḯ","Ḯ"),entry("ḯ","ḯ")
-                )
+                ),
             );
             this._tr1 = (match) -> {
                 for (int i = match.groupCount(); i > 0; i -= 1) {
@@ -255,7 +255,7 @@ public final class UkrainianLatin {
                 ),
                 Map.ofEntries(
                     entry("'J","Й"),entry("'j","й"),entry("'","’"),entry("J","Й"),entry("j","й")
-                )
+                ),
             );
             this._tr2 = (match) -> {
                 for (int i = match.groupCount(); i > 0; i -= 1) {
@@ -289,7 +289,7 @@ public final class UkrainianLatin {
             List<Map<String,String>> _maps1 = List.of(
                 Map.ofEntries(
                     entry("Á","Á"),entry("á","á"),entry("É","É"),entry("é","é"),entry("Í","Í"),entry("í","í"),entry("Ó","Ó"),entry("ó","ó"),entry("Ú","Ú"),entry("ú","ú"),entry("Ý","Ý"),entry("ý","ý")
-                )
+                ),
             );
             this._tr1 = (match) -> {
                 for (int i = match.groupCount(); i > 0; i -= 1) {
@@ -316,7 +316,7 @@ public final class UkrainianLatin {
                 ),
                 Map.ofEntries(
                     entry("'J","Й"),entry("'j","й"),entry("'","’"),entry("J","Й"),entry("j","й")
-                )
+                ),
             );
             this._tr2 = (match) -> {
                 for (int i = match.groupCount(); i > 0; i -= 1) {

@@ -1,9 +1,8 @@
-import io
 import json
 import logging
 import re
-import textwrap
 from pathlib import Path
+import template
 
 
 logger = logging.getLogger(Path(__file__).stem)
@@ -28,64 +27,62 @@ def gen_tests(fns):
     def _j(s):
         return json.dumps(s, ensure_ascii=False)
 
-    def _emit_testdata(kind, data, table, file):
-        data = [(cyr,lat) for k,cyr,lat in data if k == kind]
-        if not data: return
-        dump = ''.join(f'\n{{\n    {_j(cyr)},\n    {_j(lat)}\n}},' for cyr,lat in data)
-        so = f'\nprivate String[][] data_{table}_{kind} = {{{dump}\n}};'
-        so = textwrap.indent(so, ' ' * 4)
-        print(so, file=file)
-
-    def _emit_tests(kind, table, file):
+    def _emit_tests(kind, table):
         if kind[0] == 'c':
-            print(f'        string q = tr.Encode(cyr, UkrainianLatin.Table.{table});', file=file)
-            print(f'        Assert.Equal(lat, q);', file=file)
+            yield f'string q = tr.Encode(cyr, UkrainianLatin.Table.{table});\n'
+            yield f'Assert.Equal(lat, q);\n'
         else:
-            print(f'        string q = tr.Decode(lat, UkrainianLatin.Table.{table});', file=file)
-            print(f'        Assert.Equal(cyr, q);', file=file)
+            yield f'string q = tr.Decode(lat, UkrainianLatin.Table.{table});\n'
+            yield f'Assert.Equal(cyr, q);\n'
         if kind[-1] == 'r':
             if kind[0] == 'c':
-                print(f'        string t = tr.Decode(lat, UkrainianLatin.Table.{table});', file=file)
-                print(f'        Assert.Equal(cyr, t);', file=file)
+                yield f'string t = tr.Decode(lat, UkrainianLatin.Table.{table});\n'
+                yield f'Assert.Equal(cyr, t);\n'
             else:
-                print(f'        string t = tr.Encode(cyr, UkrainianLatin.Table.{table});', file=file)
-                print(f'        Assert.Equal(lat, t);', file=file)
+                yield f'string t = tr.Encode(cyr, UkrainianLatin.Table.{table});\n'
+                yield f'Assert.Equal(lat, t);\n'
 
-    def _emit_testset(data, table, file):
+    def _emit_testset(data, table):
+        tpl = '''
+[Theory]
+&data
+public void test_&{kind}_&{table}(string cyr, string lat) {
+    &tests
+}
+'''
+        ctx = dict(table=table)
         for kind in ('c2lr', 'l2cr', 'c2l', 'l2c'):
             xs = [(cyr,lat) for k,cyr,lat in data if k == kind]
             if not xs: continue
-            print('', file=file)
-            print('    [Theory]', file=file)
-            for cyr,lat in xs:
-                print(f'    [InlineData({_j(cyr)}, {_j(lat)})]', file=file)
-            print(f'    public void test_{kind}_{table}(string cyr, string lat) {{', file=file)
-            _emit_tests(kind, table, file=file)
-            print('    }', file=file)
+            ctx['kind'] = kind
+            ctx['data'] = (f'[InlineData({_j(cyr)}, {_j(lat)})]\n' for cyr, lat in xs)
+            ctx['tests'] = lambda: _emit_tests(kind, table)
+            yield template.format(tpl, ctx)
 
-    context = dict()
-    with io.StringIO() as so:
+    def _test_cases():
         for fn in fns:
             logger.info(f'processing {fn!s}')
             name = fn.stem
             table = table_name(name)
             data = _parse_tests(fn)
-            _emit_testset(data, table, file=so)
-        context['test_cases'] = so.getvalue()
+            yield from _emit_testset(data, table)
 
-    template = '''namespace paiv.uklatn.tests;
+    context = dict()
+    context['test_cases'] = _test_cases
+
+    tpl = '''namespace paiv.uklatn.tests;
 
 /// <exclude/>
-public class UkrainianLatinTest {{
+public class UkrainianLatinTest {
     private UkrainianLatin tr;
 
-    public UkrainianLatinTest() {{
+    public UkrainianLatinTest() {
         tr = new UkrainianLatin();
-    }}
-{test_cases}
-}}
+    }
+    &{test_cases}
+}
 '''
-    text = template.format(**context)
+    text = template.format(tpl, context)
     return text
 
 
@@ -105,106 +102,128 @@ def gen_transforms(fns, default_table=None):
             [r['map'] for r in s]
         ] for s in data]
 
-    def _emit_trdefs(rules, file):
-        so = ''
+    def _emit_trdefs(rules):
         for sid, section in enumerate(rules):
             if not isinstance(section, str):
-                so += f'private Regex _rx{sid};\n';
-                so += f'private MatchEvaluator _tr{sid};\n';
-        print(textwrap.indent(so, ' ' * 4), file=file)
+                yield f'private Regex _rx{sid};\n';
+                yield f'private MatchEvaluator _tr{sid};\n';
 
-    def _emit_trrules(rules, file):
-        so = ''
+    def _emit_trrules(rules):
+        tpl = '''\
+this._rx&sid = new Regex(@"&rx",
+    RegexOptions.Compiled | RegexOptions.CultureInvariant);
+var _maps&sid = new List<Dictionary<string,string>> {
+    &mappings
+};
+this._tr&sid = (Match match) => {
+    for (int i = match.Groups.Count; i > 0; i -= 1) {
+        Group group = match.Groups[i];
+        if (!group.Success) { continue; }
+        string key = group.Value;
+        if (_maps&sid[i-1].TryGetValue(key, out string? value)) {
+            return value;
+        }
+        return key;
+    }
+    return match.Groups[0].Value;
+};
+'''
+        mpl = '''\
+new Dictionary<string,string> {
+    &entries
+},
+'''
+        def _ds(data):
+            return ','.join(f'{{{_j(k)},{_j(v)}}}' for k,v in data.items()) + '\n'
+
         for sid, section in enumerate(rules):
             if not isinstance(section, str):
                 rx, maps = section
-                gn = len(maps)
-                so += f'this._rx{sid} = new Regex(@"{rx}",\n'
-                so += '    RegexOptions.Compiled | RegexOptions.CultureInvariant);\n'
-                so += f'var _maps{sid} = new List<Dictionary<string,string>> {{\n'
-                sm = ''
-                for d in maps:
-                    sm += '    new Dictionary<string,string> {\n        '
-                    sm += ','.join(f'{{{_j(k)},{_j(v)}}}' for k,v in d.items())
-                    sm += '\n    },\n'
-                so += sm[:-2] + '\n};\n'
-                so += f'this._tr{sid} = (Match match) => {{\n'
-                so += '    for (int i = match.Groups.Count; i > 0; i -= 1) {\n'
-                so += '        Group group = match.Groups[i];\n'
-                so += '        if (!group.Success) { continue; }\n'
-                so += '        string key = group.Value;\n'
-                so +=f'        if (_maps{sid}[i-1].TryGetValue(key, out string? value)) {{\n'
-                so += '            return value;\n'
-                so += '        }\n'
-                so += '        return key;\n'
-                so += '    }\n'
-                so += '    return match.Groups[0].Value;\n'
-                so += '};\n'
-        print(textwrap.indent(so, ' ' * 8), end='', file=file)
+                data = (template.format(mpl, entries=_ds(d)) for d in maps)
+                yield template.format(tpl, sid=sid, rx=rx, mappings=data)
 
-    def _emit_trbody(rules, file):
-        so = ''
+    def _emit_trbody(rules):
         for sid, section in enumerate(rules):
             if isinstance(section, str):
                 if section not in ('NFC', 'NFD', 'NFKC', 'NFKD'):
                     raise Exception(f'invalid transform: {section!r}')
-                so += f'text = text.Normalize(NormalizationForm.Form{section[2:]});\n'
+                yield f'text = text.Normalize(NormalizationForm.Form{section[2:]});\n'
             else:
-                so += f'text = this._rx{sid}.Replace(text, this._tr{sid});\n'
-        so += 'return text;'
-        print(textwrap.indent(so, ' ' * 8), file=file)
+                yield f'text = this._rx{sid}.Replace(text, this._tr{sid});\n'
 
-    def _emit_tr(cname, rules, file):
-        rules = _load_rules(rules)
-        print(f'private sealed class {cname} : _UKLatnTransformer {{', file=file)
-        _emit_trdefs(rules, file=file)
-        print(f'    internal {cname}() {{', file=file)
-        _emit_trrules(rules, file=file)
-        print('    }\n', file=file)
-        print('    public string Transform(string text) {', file=file)
-        _emit_trbody(rules, file=file)
-        print('    }', file=file)
-        print('}\n', file=file)
+    def _emit_tr(cname, rules):
+        context = dict(cname=cname)
+        context['trdefs'] = _emit_trdefs(rules)
+        context['trrules'] = _emit_trrules(rules)
+        context['trbody'] = _emit_trbody(rules)
+        tpl = '''
+private sealed class &cname : _UKLatnTransformer {
+    &trdefs
 
-    context = dict()
+    internal &cname() {
+        &trrules
+    }
+
+    public string Transform(string text) {
+        &trbody
+        return text;
+    }
+}
+'''
+        return template.format(tpl, context)
+
     tables = dict()
-    with io.StringIO() as so:
-        for fn in fns:
-            logger.info(f'processing {fn!s}')
-            with fn.open() as fp:
-                rules = json.load(fp)
-            name = fn.stem
-            table = table_name(name)
-            cname = class_name(name)
-            if table not in tables:
-                tables[table] = [None, None]
-            tables[table][_isdec(name)] = cname
-            _emit_tr(cname, rules, so)
-        classdefs_tables = textwrap.indent(so.getvalue(), ' ' * 4)
+    for fn in fns:
+        logger.info(f'processing {fn!s}')
+        with fn.open() as fp:
+            data = json.load(fp)
+            rules = _load_rules(data)
+        name = fn.stem
+        table = table_name(name)
+        cname = class_name(name)
+        if table not in tables:
+            tables[table] = [None, None]
+        tables[table][_isdec(name)] = (cname, rules)
+
+    def _emit_tables():
+        for ar in [0,1]:
+            for table,codec in tables.items():
+                if codec[ar] is not None:
+                    cname, rules = codec[ar]
+                    yield _emit_tr(cname, rules)
+
+        def _entries():
+            for table,codec in tables.items():
+                enc,dec = codec
+                enc = f'new {enc[0]}()' if enc else 'null'
+                dec = f'new {dec[0]}()' if dec else 'null'
+                yield f'new _UKLatnTransformer?[2] {{{enc}, {dec}}},\n'
+
+        tpl = '''
+private static readonly _UKLatnTransformer?[][] _UklatnTables = {
+    new _UKLatnTransformer?[2] {null, null},
+    &entries
+};
+'''
+        yield template.format(tpl, entries=_entries)
 
     tdoc = {
-        'DSTU_9112_A': '\n/// <summary>DSTU 9112:2021 System A</summary>',
-        'DSTU_9112_B': '\n/// <summary>DSTU 9112:2021 System B</summary>',
-        'KMU_55': '\n/// <summary>KMU 55:2010, not reversible</summary>',
+        'DSTU_9112_A': 'DSTU 9112:2021 System A',
+        'DSTU_9112_B': 'DSTU 9112:2021 System B',
+        'KMU_55': 'KMU 55:2010, not reversible',
     }
-    tenum = [(t, i+1, tdoc.get(t,'')) for i,t in enumerate(tables)]
-    tenum = '\n'.join(f'{s}\n{t} = {i},' for t,i,s in tenum)
-    context['table_enum'] = textwrap.indent(tenum, ' ' * 8)
+    def _emit_tenum():
+        for i, t in enumerate(tables, 1):
+            if (doc := tdoc.get(t, '')):
+                doc = f'/// <summary>{doc}</summary>\n'
+            yield f'\n{doc}{t} = {i},\n'
 
-    with io.StringIO() as so:
-        print('private static readonly _UKLatnTransformer?[][] _UklatnTables = {', file=so)
-        print('    new _UKLatnTransformer?[2] {null, null},', file=so)
-        for tid, (table, (enc, dec)) in enumerate(tables.items(), 1):
-            enc = f'new {enc}()' if enc else 'null'
-            dec = f'new {dec}()' if dec else 'null'
-            print(f'    new _UKLatnTransformer?[2] {{{enc}, {dec}}},', file=so)
-        print('};', end='', file=so)
-        tabledef = textwrap.indent(so.getvalue(), ' ' * 4)
-
-    context['global_tables'] = classdefs_tables + tabledef
+    context = dict()
+    context['table_enum'] = _emit_tenum
+    context['global_tables'] = _emit_tables
     context['default_table'] = default_table
 
-    template = '''namespace paiv.uklatn;
+    tpl = '''namespace paiv.uklatn;
 
 using System.Text;
 using System.Text.RegularExpressions;
@@ -212,12 +231,12 @@ using System.Text.RegularExpressions;
 /// <summary>
 /// Ukrainian Cyrillic transliteration to and from Latin script.
 /// </summary>
-public sealed class UkrainianLatin {{
+public sealed class UkrainianLatin {
 
     /// Transliteration system
-    public enum Table {{
-{table_enum}
-    }}
+    public enum Table {
+        &{table_enum}
+    }
 
     /// <summary>
     /// Transliterates a string of Ukrainian Cyrillic to Latin script.
@@ -225,17 +244,17 @@ public sealed class UkrainianLatin {{
     /// <param name="text">The text to transliterate.</param>
     /// <param name="table">The transliteration system.</param>
     /// <returns>The transliterated text.</returns>
-    public string Encode(string text, Table table = Table.{default_table}) {{
+    public string Encode(string text, Table table = Table.&{default_table}) {
         _UKLatnTransformer? ntr = null;
         int ti = (int) table;
-        if (ti >= 0 && ti < _UklatnTables.Length) {{
+        if (ti >= 0 && ti < _UklatnTables.Length) {
             ntr = _UklatnTables[ti][0];
-        }}
-        if (ntr is _UKLatnTransformer tr) {{
+        }
+        if (ntr is _UKLatnTransformer tr) {
             return tr.Transform(text);
-        }}
-        throw new ArgumentException(String.Format("invalid table {{0}}", table), "table");
-    }}
+        }
+        throw new ArgumentException(String.Format("invalid table {0}", table), "table");
+    }
 
     /// <summary>
     /// Re-transliterates a string of Ukrainian Latin to Cyrillic script.
@@ -243,25 +262,24 @@ public sealed class UkrainianLatin {{
     /// <param name="text">The text to transliterate.</param>
     /// <param name="table">The transliteration system.</param>
     /// <returns>The transliterated text.</returns>
-    public string Decode(string text, Table table = Table.{default_table}) {{
+    public string Decode(string text, Table table = Table.&{default_table}) {
         _UKLatnTransformer? ntr = null;
         int ti = (int) table;
-        if (ti >= 0 && ti < _UklatnTables.Length) {{
+        if (ti >= 0 && ti < _UklatnTables.Length) {
             ntr = _UklatnTables[ti][1];
-        }}
-        if (ntr is _UKLatnTransformer tr) {{
+        }
+        if (ntr is _UKLatnTransformer tr) {
             return tr.Transform(text);
-        }}
-        throw new ArgumentException(String.Format("invalid table {{0}}", table), "table");
-    }}
+        }
+        throw new ArgumentException(String.Format("invalid table {0}", table), "table");
+    }
 
-    private interface _UKLatnTransformer {{
+    private interface _UKLatnTransformer {
         string Transform(string text);
-    }}
-
-{global_tables}
-}}
+    }
+    &{global_tables}
+}
 '''
-    text = template.format(**context)
+    text = template.format(tpl, context)
     return text
 
