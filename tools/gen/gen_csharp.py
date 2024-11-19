@@ -56,7 +56,7 @@ def gen_tests(fns):
             if not xs: continue
             ctx['kind'] = kind
             ctx['data'] = (f'[InlineData({_j(cyr)}, {_j(lat)})]\n' for cyr, lat in xs)
-            ctx['tests'] = lambda: _emit_tests(kind, table)
+            ctx['tests'] = _emit_tests(kind, table)
             yield template.format(tpl, ctx)
 
     def _test_cases():
