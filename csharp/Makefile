@@ -1,5 +1,6 @@
 .PHONY: all
 .PHONY: clean
+.PHONY: docs
 .PHONY: package
 .PHONY: test
 
@@ -8,9 +9,13 @@ all: package
 clean:
 	@dotnet clean
 	@find . -type d -name target -or -name bin -or -name obj | xargs rm -r
+	@find . -type d -name _site | xargs rm -r
 
 test:
 	@dotnet test
+
+docs:
+	@dotnet tool run docfx docfx.json
 
 package:
 	@dotnet pack --output target --configuration Release \
