@@ -155,8 +155,14 @@ class _Parser:
                         match c:
                             case '}':
                                 state = 6
-                            case _:
+                            case _ if c.isalpha() or c == '_':
                                 name += c
+                            case _:
+                                if self.indent:
+                                    yield _Token(_Token.CHR, value=self.indent)
+                                    self.indent = ''
+                                yield _Token(_Token.CHR, value='&{'+name)
+                                state = 0
 
                     case 6:
                         match c:
