@@ -1,6 +1,5 @@
 import inspect
 import itertools
-import logging
 import template
 import unittest
 
@@ -221,5 +220,4 @@ class DataGen:
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
     unittest.main()

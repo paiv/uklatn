@@ -1,4 +1,3 @@
-import builtins
 import io
 import logging
 import re
@@ -207,8 +206,3 @@ class _Parser:
                 case _:
                     raise Exception(f'state {state}')
 
-
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    s = format('\n&a\n', a='x\n')
-    builtins.print(repr(s))
