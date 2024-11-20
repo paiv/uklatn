@@ -1,0 +1,24 @@
+name: Go
+
+on:
+  push:
+    tags: ['go/*']
+  pull_request:
+    branches: [main]
+    paths:
+    - 'go/**/*.go'
+    - 'go/**/go.mod'
+    - 'go/**/go.sum'
+
+jobs:
+
+  build-go:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Test
+      working-directory: ${{github.workspace}}/go/uklatn
+      run: go test
+
