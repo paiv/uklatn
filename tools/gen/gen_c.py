@@ -104,7 +104,7 @@ def gen_transforms(fns, default_table):
     def _data():
         for tname, vname, rname, text in tables:
             ctx = dict(tname=tname, vname=vname, rname=rname)
-            data = ''.join(json.dumps(line, ensure_ascii=False) + '\n'
+            data = '\n'.join(json.dumps(line, ensure_ascii=False)
                 for line in text.splitlines() if line)
             yield template.format(dpl, ctx, data=data)
 

@@ -1,3 +1,4 @@
+import builtins
 import io
 import logging
 import re
@@ -21,17 +22,16 @@ def print(text, context=None, file=None):
         context = dict()
     if file is None:
         file = sys.stdout
-    text = textwrap.dedent(text)
+    if '\n' in text:
+        text = textwrap.dedent(text)
 
     write = file.buffer.write if hasattr(file, 'buffer') else file.write
     parser = _Parser()
 
     def _s(v): return v if isinstance(v, str) else str(v)
 
-    def _resolve(name):
-        if (value := context.get(name)) is None:
-            yield '&' + name
-        else:
+    def _resolve(tok):
+        if (value := context.get(tok.name)) is not None:
             if callable(value):
                 value = value()
             if hasattr(value, '__next__'):
@@ -39,41 +39,68 @@ def print(text, context=None, file=None):
                     yield _s(v)
             else:
                 yield _s(value)
+        elif tok.name in context:
+            yield ''
+        else:
+            yield tok.value
 
-    def _expand(name):
-        indent = parser.indent
-        for i,s in enumerate(_resolve(name)):
+    def _expand(tok, indent):
+        for i,s in enumerate(_resolve(tok)):
             yield textwrap.indent(s, indent) if indent else s
 
+    indent = None
+    last_expand_count = None
+    last_expand_nl = False
     for tok in parser.tokenize(text):
+        logger.debug(tok)
         match tok.kind:
             case _Token.CHR:
-                write(tok.value)
+                if indent:
+                    write(indent)
+                    indent = None
+                if tok.value == '\n':
+                    if last_expand_nl or last_expand_count == 0:
+                        pass
+                    else:
+                        write(tok.value)
+                else:
+                    write(tok.value)
+                last_expand_count = None
+                last_expand_nl = False
+            case _Token.NDT:
+                indent = tok.value
             case _Token.REF:
-                for s in _expand(tok.name):
+                last_expand_count = 0
+                for last_expand_count, s in enumerate(_expand(tok, indent), 1):
                     write(s)
+                    last_expand_nl = bool(s) and s[-1] == '\n'
+                indent = None
 
 
 class _Token:
-    CHR = 1
-    REF = 2
+    CHR = 'CHR'
+    NDT = 'NDT'
+    REF = 'REF'
 
     def __init__(self, kind, value=None, name=None):
         self.kind = kind
         self.value = value
         self.name = name
 
+    def __repr__(self):
+        return f'Token({self.kind} {self.name!r}, {self.value!r})'
+
 
 class _Parser:
-    def __init__(self):
-        self.indent = ''
 
     def tokenize(self, text):
         name = None
+        indent = None
         state = 0
         col = 0
         line = 1
         for c in text:
+            logger.debug(repr(c))
             if c == '\n':
                 line += 1
                 col = 0
@@ -94,7 +121,7 @@ class _Parser:
                                 name = ''
                                 state = 2
                             case _ if col == 1 and c in ' \t':
-                                self.indent = c
+                                indent = c
                                 state = 9
                             case _:
                                 yield _Token(_Token.CHR, value=c)
@@ -116,9 +143,6 @@ class _Parser:
                                 name += c
                                 state = 3
                             case _:
-                                if self.indent:
-                                    yield _Token(_Token.CHR, value=self.indent)
-                                    self.indent = ''
                                 yield _Token(_Token.CHR, value='&')
                                 consumed = False
                                 state = 0
@@ -127,13 +151,8 @@ class _Parser:
                         match c:
                             case _ if c.isalnum() or c == '_':
                                 name += c
-                            case '\n':
-                                yield _Token(_Token.REF, name=name)
-                                self.indent = ''
-                                name = None
-                                state = 0
                             case _:
-                                yield _Token(_Token.REF, name=name)
+                                yield _Token(_Token.REF, name=name, value=f'&{name}')
                                 name = None
                                 consumed = False
                                 state = 0
@@ -144,9 +163,6 @@ class _Parser:
                                 name += c
                                 state = 5
                             case _:
-                                if self.indent:
-                                    yield _Token(_Token.CHR, value=self.indent)
-                                    self.indent = ''
                                 yield _Token(_Token.CHR, value='&{')
                                 consumed = False
                                 state = 0
@@ -154,39 +170,22 @@ class _Parser:
                     case 5:
                         match c:
                             case '}':
-                                state = 6
+                                yield _Token(_Token.REF, name=name, value=f'&{{{name}}}')
+                                name = None
+                                state = 0
                             case _ if c.isalpha() or c == '_':
                                 name += c
                             case _:
-                                if self.indent:
-                                    yield _Token(_Token.CHR, value=self.indent)
-                                    self.indent = ''
                                 yield _Token(_Token.CHR, value='&{'+name)
-                                state = 0
-
-                    case 6:
-                        match c:
-                            case '\n':
-                                yield _Token(_Token.REF, name=name)
-                                self.indent = ''
-                                name = None
-                                state = 0
-                            case _:
-                                yield _Token(_Token.REF, name=name)
-                                name = None
-                                consumed = False
                                 state = 0
 
                     case 9:
                         match c:
                             case _ if c in ' \t':
-                                self.indent += c
-                            case '&':
-                                consumed = False
-                                state = 0
+                                indent += c
                             case _:
-                                yield _Token(_Token.CHR, value=self.indent)
-                                self.indent = ''
+                                yield _Token(_Token.NDT, value=indent)
+                                indent = None
                                 consumed = False
                                 state = 0
         else:
@@ -198,15 +197,18 @@ class _Parser:
                 case 2:
                     yield _Token(_Token.CHR, value='&')
                 case 3:
-                    yield _Token(_Token.REF, name=name)
+                    yield _Token(_Token.REF, name=name, value=f'&{name}')
                 case 4:
                     yield _Token(_Token.CHR, value='&{')
                 case 5:
                     yield _Token(_Token.CHR, value='&{'+name)
-                case 6:
-                    yield _Token(_Token.REF, name=name)
                 case 9:
-                    yield _Token(_Token.CHR, value=self.indent)
+                    yield _Token(_Token.NDT, value=indent)
                 case _:
                     raise Exception(f'state {state}')
 
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
+    s = format('\n&a\n', a='x\n')
+    builtins.print(repr(s))

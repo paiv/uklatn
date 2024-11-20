@@ -122,14 +122,12 @@ def gen_transforms(fns, default_table=None):
         tpl = '''\
         self._rx&sid = re.compile(r"&rx")
         _maps&sid = &maps
-
         def tr&sid(m):
             value = None
             if (i := m.lastindex) is not None:
                 value = _maps&sid[i-1].get(m.group(i))
             return value if (value is not None) else m.group(0)
         self._tr&sid = tr&sid
-
         '''
         for sid, section in enumerate(rules):
             if not isinstance(section, str):
@@ -238,7 +236,6 @@ __all__ = [&{all_tables}, 'decode', 'encode']
 
 
 &{global_tenum}
-
 &{global_tables}
 
 
