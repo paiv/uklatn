@@ -5,7 +5,7 @@ Ukrainian Cyrillic transliteration to Latin script.
 [![standwithukraine](docs/StandWithUkraine.svg)](https://ukrainewar.carrd.co/)
 [![](https://github.com/paiv/uklatn/actions/workflows/test-builds.yml/badge.svg)](https://github.com/paiv/uklatn/actions)
 
-[JavaScript](#javascript-package) | [Python](#python-module) | [C](c/) | [Java](#java-library) | [.NET](#net-package) | [Swift](#swift-package) | [Ruby](#ruby-gem)
+[JavaScript](#javascript-package) | [Python](#python-module) | [C](c/) | [Java](#java-library) | [.NET](#net-package) | [Go](#go-package) | [Swift](#swift-package) | [Ruby](#ruby-gem)
 
 Supported transliteration schemes:
 - [DSTU 9112:2021](https://uk.wikipedia.org/wiki/ДСТУ_9112:2021)
@@ -60,6 +60,16 @@ Add dependency to pom.xml:
 Add package dependency:
 ```sh
 dotnet add package UkrainianLatin
+```
+
+
+Go package
+--
+- [uklatn Go package](go/)
+
+Add package dependency:
+```sh
+go get github.com/paiv/uklatn/go/uklatn
 ```
 
 

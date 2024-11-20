@@ -81,6 +81,17 @@ def gen_csharp(args):
     logger.info('C# generator end')
 
 
+def gen_go(args):
+    logger.info('Go generator start')
+    from gen import gen_go
+
+    source = _basegen(args, 'src/tests', 'test*.json', gen_go.gen_tests)
+    for text in source:
+        print(text, end='')
+
+    logger.info('Go generator end')
+
+
 def gen_ruby(args):
     logger.info('Ruby generator start')
     from gen import gen_ruby
@@ -128,6 +139,10 @@ if __name__ == '__main__':
     parse_csharp = subpar.add_parser('csharp', help='C# code generator')
     parse_csharp.add_argument('source', nargs='*', help='source directory')
     parse_csharp.set_defaults(func=gen_csharp)
+
+    parse_go = subpar.add_parser('go', help='Go code generator')
+    parse_go.add_argument('source', nargs='*', help='source directory')
+    parse_go.set_defaults(func=gen_go)
 
     parse_ruby = subpar.add_parser('ruby', help='Ruby code generator')
     parse_ruby.add_argument('source', nargs='*', help='source directory')
