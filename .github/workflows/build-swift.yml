@@ -2,7 +2,9 @@ name: Swift
 
 on:
   push:
-    tags: ['*']
+    tags:
+    - '*'
+    - '!go/*'
   pull_request:
     branches: [main]
     paths:

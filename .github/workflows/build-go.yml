@@ -2,7 +2,9 @@ name: Go
 
 on:
   push:
-    tags: ['go/*']
+    tags:
+    - '!*'
+    - 'go/*'
   pull_request:
     branches: [main]
     paths:

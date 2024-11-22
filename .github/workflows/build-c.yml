@@ -2,7 +2,9 @@ name: C library
 
 on:
   push:
-    tags: ['*']
+    tags:
+    - '*'
+    - '!go/*'
   pull_request:
     branches: [main]
     paths:
