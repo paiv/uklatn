@@ -3,8 +3,8 @@ name: Java
 on:
   push:
     tags:
-    - '*'
-    - '!go/*'
+    - '!**'
+    - '[0-9]**'
   pull_request:
     branches: [main]
     paths:

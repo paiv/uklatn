@@ -3,8 +3,8 @@ name: Go
 on:
   push:
     tags:
-    - '!*'
-    - 'go/*'
+    - '!**'
+    - 'v**'
   pull_request:
     branches: [main]
     paths:
