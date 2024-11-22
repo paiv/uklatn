@@ -8,7 +8,7 @@ import template
 logger = logging.getLogger(Path(__file__).stem)
 
 
-def gen_tests(fns):
+def gen_tests(fns, default_table):
     def _parse_tests(fn):
         def parse_kind(s):
             match s.lower().split():
@@ -30,17 +30,32 @@ def gen_tests(fns):
     def _emit_tests(kind, table):
         if kind[0] == 'c':
             yield f'string q = tr.Encode(cyr, UkrainianLatin.Table.{table});\n'
-            yield f'Assert.Equal(lat, q);\n'
+            yield 'Assert.Equal(lat, q);\n'
         else:
             yield f'string q = tr.Decode(lat, UkrainianLatin.Table.{table});\n'
-            yield f'Assert.Equal(cyr, q);\n'
+            yield 'Assert.Equal(cyr, q);\n'
         if kind[-1] == 'r':
             if kind[0] == 'c':
                 yield f'string t = tr.Decode(lat, UkrainianLatin.Table.{table});\n'
-                yield f'Assert.Equal(cyr, t);\n'
+                yield 'Assert.Equal(cyr, t);\n'
             else:
                 yield f'string t = tr.Encode(cyr, UkrainianLatin.Table.{table});\n'
-                yield f'Assert.Equal(lat, t);\n'
+                yield 'Assert.Equal(lat, t);\n'
+
+    def _emit_tests_default(kind):
+        if kind[0] == 'c':
+            yield 'string d = tr.Encode(cyr);\n'
+            yield 'Assert.Equal(lat, d);\n'
+        else:
+            yield 'string d = tr.Decode(lat);\n'
+            yield 'Assert.Equal(cyr, d);\n'
+        if kind[-1] == 'r':
+            if kind[0] == 'c':
+                yield 'string f = tr.Decode(lat);\n'
+                yield 'Assert.Equal(cyr, f);\n'
+            else:
+                yield 'string f = tr.Encode(cyr);\n'
+                yield 'Assert.Equal(lat, f);\n'
 
     def _emit_testset(data, table):
         tpl = '''
@@ -48,6 +63,7 @@ def gen_tests(fns):
         &data
         public void test_&{kind}_&{table}(string cyr, string lat) {
             &tests
+            &dtests
         }
         '''
         ctx = dict(table=table)
@@ -57,6 +73,9 @@ def gen_tests(fns):
             ctx['kind'] = kind
             ctx['data'] = (f'[InlineData({_j(cyr)}, {_j(lat)})]\n' for cyr, lat in xs)
             ctx['tests'] = _emit_tests(kind, table)
+            ctx['dtests'] = iter('')
+            if table == default_table:
+                ctx['dtests'] = _emit_tests_default(kind)
             yield template.format(tpl, ctx)
 
     def _test_cases():

@@ -8,7 +8,7 @@ import template
 logger = logging.getLogger(Path(__file__).stem)
 
 
-def gen_tests(fns):
+def gen_tests(fns, default_table):
     def _parse_tests(fn):
         def parse_kind(s):
             match s.lower().split():
@@ -46,6 +46,28 @@ def gen_tests(fns):
                 yield f'let enc = try encode(cyr, table: UKLatnTable.{table})\n'
                 yield 'XCTAssertEqual(lat, enc)\n'
 
+    def _emit_tests_default(kind):
+        def _tests():
+            if kind[0] == 'c':
+                yield 'let enc = try encode(cyr)\n'
+                yield 'XCTAssertEqual(lat, enc)\n'
+            else:
+                yield 'let dec = try decode(lat)\n'
+                yield 'XCTAssertEqual(cyr, dec)\n'
+            if kind[-1] == 'r':
+                if kind[0] == 'c':
+                    yield 'let dec = try decode(lat)\n'
+                    yield 'XCTAssertEqual(cyr, dec)\n'
+                else:
+                    yield 'let enc = try encode(cyr)\n'
+                    yield 'XCTAssertEqual(lat, enc)\n'
+        tpl = '''
+        for (cyr, lat) in data {
+            &tests
+        }
+        '''
+        return template.format(tpl, tests=_tests)
+
     def _emit_decode_throws(table):
         tpl = '''
         func test_decode_&{table}_throws() throws {
@@ -79,11 +101,15 @@ def gen_tests(fns):
                 for (cyr, lat) in data {
                     &tests
                 }
+                &dtests
             }
             '''
             ctx = dict(kind=kind, table=table)
             ctx['data'] = _dump(data)
             ctx['tests'] = _emit_tests(kind, table)
+            ctx['dtests'] = iter('')
+            if table == default_table:
+                ctx['dtests'] = _emit_tests_default(kind)
             return template.format(tpl, ctx)
 
         def _tests():

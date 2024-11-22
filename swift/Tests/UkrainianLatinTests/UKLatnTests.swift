@@ -84,6 +84,13 @@ class Dstu9112ATests: XCTestCase {
             let dec = try decode(lat, table: UKLatnTable.DSTU_9112_A)
             XCTAssertEqual(cyr, dec)
         }
+
+        for (cyr, lat) in data {
+            let enc = try encode(cyr)
+            XCTAssertEqual(lat, enc)
+            let dec = try decode(lat)
+            XCTAssertEqual(cyr, dec)
+        }
     }
 
     func test_c2l_DSTU_9112_A() throws {
@@ -100,6 +107,11 @@ class Dstu9112ATests: XCTestCase {
 
         for (cyr, lat) in data {
             let enc = try encode(cyr, table: UKLatnTable.DSTU_9112_A)
+            XCTAssertEqual(lat, enc)
+        }
+
+        for (cyr, lat) in data {
+            let enc = try encode(cyr)
             XCTAssertEqual(lat, enc)
         }
     }
@@ -130,6 +142,11 @@ class Dstu9112ATests: XCTestCase {
 
         for (cyr, lat) in data {
             let dec = try decode(lat, table: UKLatnTable.DSTU_9112_A)
+            XCTAssertEqual(cyr, dec)
+        }
+
+        for (cyr, lat) in data {
+            let dec = try decode(lat)
             XCTAssertEqual(cyr, dec)
         }
     }

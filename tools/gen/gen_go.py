@@ -8,7 +8,7 @@ import template
 logger = logging.getLogger(Path(__file__).stem)
 
 
-def gen_tests(fns):
+def gen_tests(fns, default_table):
     def _parse_tests(fn):
         def parse_kind(s):
             match s.lower().split():
@@ -81,6 +81,8 @@ def gen_tests(fns):
                 xs = [(cyr,lat) for k,cyr,lat in data if k == kind]
                 if not xs: continue
                 yield _test_kind(kind, xs, table)
+                if table == default_table:
+                    yield _test_kind(kind, xs, 'DefaultTable')
 
         tpl = '''
 
@@ -101,7 +103,7 @@ def gen_tests(fns):
             '''
             yield template.format(tpl, table=table, cname=cname)
 
-        if any(k == 'c2lr' for k,_,_ in data):
+        if any(k in ('c2lr','l2cr','l2c') for k,_,_ in data):
             tpl = r'''
 
             func Fuzz&{cname}Decode(f *testing.F) {
@@ -115,6 +117,11 @@ def gen_tests(fns):
                     DecodeString(in, &table)
                 })
             }
+            '''
+            yield template.format(tpl, table=table, cname=cname)
+
+        if any(k in ('c2lr','l2cr','c2l') for k,_,_ in data):
+            tpl = r'''
 
             func Fuzz&{cname}Encode(f *testing.F) {
                 for _, seed := range [...]string { "", "А", "я"} {

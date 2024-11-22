@@ -83,6 +83,10 @@ class TestDSTU_9112_A (unittest.TestCase):
             self.assertEqual(q, lat)
             q = uklatn.decode(lat, uklatn.DSTU_9112_A)
             self.assertEqual(q, cyr)
+            q = uklatn.encode(cyr)
+            self.assertEqual(q, lat)
+            q = uklatn.decode(lat)
+            self.assertEqual(q, cyr)
 
     def test_c2l(self):
         data = [
@@ -98,6 +102,8 @@ class TestDSTU_9112_A (unittest.TestCase):
 
         for cyr,lat in data:
             q = uklatn.encode(cyr, uklatn.DSTU_9112_A)
+            self.assertEqual(q, lat)
+            q = uklatn.encode(cyr)
             self.assertEqual(q, lat)
 
     def test_l2c(self):
@@ -126,6 +132,8 @@ class TestDSTU_9112_A (unittest.TestCase):
 
         for cyr,lat in data:
             q = uklatn.decode(lat, uklatn.DSTU_9112_A)
+            self.assertEqual(q, cyr)
+            q = uklatn.decode(lat)
             self.assertEqual(q, cyr)
 
 

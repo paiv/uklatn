@@ -1,15 +1,18 @@
 import io
-import logging
-import re
 import sys
 import textwrap
-from pathlib import Path
 
 
-logger = logging.getLogger(Path(__file__).stem)
+__all__ = ['format', 'print']
 
 
 def format(text, context=None, **kwargs):
+    """
+    Formats text template, substituting `&`-variables:
+        >>> import template
+        >>> template.format('&v &{v}', v='hello')
+        'hello hello'
+    """
     context = (context or dict()) | kwargs
     with io.StringIO() as so:
         print(text, context, file=so)
@@ -51,7 +54,6 @@ def print(text, context=None, file=None):
     last_expand_count = None
     last_expand_nl = False
     for tok in parser.tokenize(text):
-        logger.debug(tok)
         match tok.kind:
             case _Token.CHR:
                 if indent:
@@ -99,7 +101,6 @@ class _Parser:
         col = 0
         line = 1
         for c in text:
-            logger.debug(repr(c))
             if c == '\n':
                 line += 1
                 col = 0

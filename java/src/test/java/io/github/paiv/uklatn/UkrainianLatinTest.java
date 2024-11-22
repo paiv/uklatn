@@ -130,12 +130,26 @@ class UkrainianLatinTest {
             String t = tr.decode(pair[1], UKLatnTable.DSTU_9112_A);
             assertEquals(pair[0], t);
         }
+        for (String[] pair : data_DSTU_9112_A_c2lr) {
+            String q = tr.encode(pair[0]);
+            assertEquals(pair[1], q);
+            String t = tr.decode(pair[1]);
+            assertEquals(pair[0], t);
+        }
         for (String[] pair : data_DSTU_9112_A_c2l) {
             String q = tr.encode(pair[0], UKLatnTable.DSTU_9112_A);
             assertEquals(pair[1], q);
         }
+        for (String[] pair : data_DSTU_9112_A_c2l) {
+            String q = tr.encode(pair[0]);
+            assertEquals(pair[1], q);
+        }
         for (String[] pair : data_DSTU_9112_A_l2c) {
             String q = tr.decode(pair[1], UKLatnTable.DSTU_9112_A);
+            assertEquals(pair[0], q);
+        }
+        for (String[] pair : data_DSTU_9112_A_l2c) {
+            String q = tr.decode(pair[1]);
             assertEquals(pair[0], q);
         }
     }

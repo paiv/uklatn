@@ -8,7 +8,7 @@ import template
 logger = logging.getLogger(Path(__file__).stem)
 
 
-def gen_tests(fns):
+def gen_tests(fns, default_table):
     def _parse_tests(fn):
         def parse_kind(s):
             match s.lower().split():
@@ -52,6 +52,21 @@ def gen_tests(fns):
                 yield f't = @tr.encode(cyr, {table!r})\n'
                 yield 'assert_equal(lat, t, cyr)\n'
 
+    def _emit_tests_default(kind):
+        if kind[0] == 'c':
+            yield 'q = @tr.encode(cyr)\n'
+            yield 'assert_equal(lat, q, cyr)\n'
+        else:
+            yield 'q = @tr.decode(lat)\n'
+            yield 'assert_equal(cyr, q, lat)\n'
+        if kind[-1] == 'r':
+            if kind[0] == 'c':
+                yield 't = @tr.decode(lat)\n'
+                yield 'assert_equal(cyr, t, lat)\n'
+            else:
+                yield 't = @tr.encode(cyr)\n'
+                yield 'assert_equal(lat, t, cyr)\n'
+
     def _emit_testset(data, table):
         def _data():
             tpl = '''
@@ -70,6 +85,7 @@ def gen_tests(fns):
             tpl = '''
             data_&kind.each do |cyr,lat|
                 &tests
+                &dtests
             end
 
             puts "&table: &kind #{data_&kind.length} tests passed"
@@ -79,6 +95,9 @@ def gen_tests(fns):
                 if not xs: continue
                 ctx = dict(table=table, kind=kind)
                 ctx['tests'] = _emit_tests(kind, table)
+                ctx['dtests'] = iter('')
+                if table == default_table:
+                    ctx['dtests'] = _emit_tests_default(kind)
                 yield template.format(tpl, ctx)
 
         tpl = '''

@@ -8,7 +8,7 @@ import template
 logger = logging.getLogger(Path(__file__).stem)
 
 
-def gen_tests(fns):
+def gen_tests(fns, default_table):
     def _parse_tests(fn):
         def parse_kind(s):
             match s.lower().split():
@@ -52,6 +52,21 @@ def gen_tests(fns):
                 yield f'const t = uklatn.encode(cyr, {table!r});\n'
                 yield 'assert.equal(t, lat);\n'
 
+    def _emit_tests_default(kind):
+        if kind[0] == 'c':
+            yield 'const q = uklatn.encode(cyr);\n'
+            yield 'assert.equal(q, lat);\n'
+        else:
+            yield 'const q = uklatn.decode(lat);\n'
+            yield 'assert.equal(q, cyr);\n'
+        if kind[-1] == 'r':
+            if kind[0] == 'c':
+                yield 'const t = uklatn.decode(lat);\n'
+                yield 'assert.equal(t, cyr);\n'
+            else:
+                yield 'const t = uklatn.encode(cyr);\n'
+                yield 'assert.equal(t, lat);\n'
+
     def _emit_testset(data, table):
         def _data():
             spl = '''
@@ -80,6 +95,9 @@ def gen_tests(fns):
                 ctx = dict(table=table, kind=kind, skind=repr(kind))
                 ctx['tests'] = _emit_tests(kind, table)
                 yield template.format(tpl, ctx)
+                if table == default_table:
+                    ctx['tests'] = _emit_tests_default(kind)
+                    yield template.format(tpl, ctx)
 
         tpl = '''
 

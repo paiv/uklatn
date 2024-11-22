@@ -8,7 +8,7 @@ import template
 logger = logging.getLogger(Path(__file__).stem)
 
 
-def gen_tests(fns):
+def gen_tests(fns, default_table):
     def _parse_tests(fn):
         def parse_kind(s):
             match s.lower().split():
@@ -42,6 +42,21 @@ def gen_tests(fns):
                 yield f'q = uklatn.encode(cyr, uklatn.{table})\n'
                 yield 'self.assertEqual(q, lat)\n'
 
+    def _emit_tests_default(kind):
+        if kind[0] == 'c':
+            yield 'q = uklatn.encode(cyr)\n'
+            yield 'self.assertEqual(q, lat)\n'
+        else:
+            yield 'q = uklatn.decode(lat)\n'
+            yield 'self.assertEqual(q, cyr)\n'
+        if kind[-1] == 'r':
+            if kind[0] == 'c':
+                yield 'q = uklatn.decode(lat)\n'
+                yield 'self.assertEqual(q, cyr)\n'
+            else:
+                yield 'q = uklatn.encode(cyr)\n'
+                yield 'self.assertEqual(q, lat)\n'
+
     def _emit_testset(data, table):
         def _data(data):
             spl = '''\
@@ -62,6 +77,7 @@ def gen_tests(fns):
 
                 for cyr,lat in data:
                     &tests
+                    &dtests
             '''
             ctx = dict(table=table)
             for kind in ('c2lr', 'l2cr', 'c2l', 'l2c'):
@@ -70,6 +86,9 @@ def gen_tests(fns):
                 ctx['kind'] = kind
                 ctx['data'] = _data(xs)
                 ctx['tests'] = _emit_tests(kind, table)
+                ctx['dtests'] = iter('')
+                if table == default_table:
+                    ctx['dtests'] = _emit_tests_default(kind)
                 yield template.format(tpl, ctx)
 
         tpl = '''

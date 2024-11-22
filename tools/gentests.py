@@ -6,6 +6,9 @@ from pathlib import Path
 logger = logging.getLogger(Path(__file__).stem)
 
 
+_DefaultTable = 'DSTU_9112_A'
+
+
 def _basegen(args, default_path, glob, generator):
     cwd = Path.cwd()
     source = args.source
@@ -22,7 +25,7 @@ def _basegen(args, default_path, glob, generator):
         fns = sorted(src.glob(glob))
         if not fns:
             logger.warning(f'empty source: {str(src)!r}')
-        text = generator(fns)
+        text = generator(fns, _DefaultTable)
         yield text
 
 

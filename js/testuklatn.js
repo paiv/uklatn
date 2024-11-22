@@ -121,6 +121,15 @@ test('DSTU_9112_A', async (t) => {
         }
     });
 
+    await t.test('c2lr', () => {
+        for (const [cyr,lat] of data_c2lr) {
+            const q = uklatn.encode(cyr);
+            assert.equal(q, lat);
+            const t = uklatn.decode(lat);
+            assert.equal(t, cyr);
+        }
+    });
+
     await t.test('c2l', () => {
         for (const [cyr,lat] of data_c2l) {
             const q = uklatn.encode(cyr, 'DSTU_9112_A');
@@ -128,9 +137,23 @@ test('DSTU_9112_A', async (t) => {
         }
     });
 
+    await t.test('c2l', () => {
+        for (const [cyr,lat] of data_c2l) {
+            const q = uklatn.encode(cyr);
+            assert.equal(q, lat);
+        }
+    });
+
     await t.test('l2c', () => {
         for (const [cyr,lat] of data_l2c) {
             const q = uklatn.decode(lat, 'DSTU_9112_A');
+            assert.equal(q, cyr);
+        }
+    });
+
+    await t.test('l2c', () => {
+        for (const [cyr,lat] of data_l2c) {
+            const q = uklatn.decode(lat);
             assert.equal(q, cyr);
         }
     });

@@ -139,13 +139,30 @@ func TestDstu9112A(t *testing.T) {
 		assertEqual(t, cyrlat[0], dec, "\n"+cyrlat[1])
 	}
 
+	for _, cyrlat := range data_c2lr {
+		enc := EncodeString(cyrlat[0], DefaultTable)
+		assertEqual(t, cyrlat[1], enc, "\n"+cyrlat[0])
+		dec := DecodeString(cyrlat[1], DefaultTable)
+		assertEqual(t, cyrlat[0], dec, "\n"+cyrlat[1])
+	}
+
 	for _, cyrlat := range data_c2l {
 		enc := EncodeString(cyrlat[0], DSTU_9112_A)
 		assertEqual(t, cyrlat[1], enc, "\n"+cyrlat[0])
 	}
 
+	for _, cyrlat := range data_c2l {
+		enc := EncodeString(cyrlat[0], DefaultTable)
+		assertEqual(t, cyrlat[1], enc, "\n"+cyrlat[0])
+	}
+
 	for _, cyrlat := range data_l2c {
 		dec := DecodeString(cyrlat[1], DSTU_9112_A)
+		assertEqual(t, cyrlat[0], dec, "\n"+cyrlat[1])
+	}
+
+	for _, cyrlat := range data_l2c {
+		dec := DecodeString(cyrlat[1], DefaultTable)
 		assertEqual(t, cyrlat[0], dec, "\n"+cyrlat[1])
 	}
 }
@@ -394,4 +411,16 @@ func TestKmu55DecodePanic(t *testing.T) {
 	defer func() { _ = recover() }()
 	DecodeString("lat", KMU_55)
 	t.Errorf("DecodeString did not panic")
+}
+
+func FuzzKmu55Encode(f *testing.F) {
+	for _, seed := range [...]string{"", "А", "я"} {
+		f.Add(seed)
+	}
+	f.Fuzz(func(t *testing.T, in string) {
+		if !utf8.ValidString(in) {
+			t.Skip()
+		}
+		EncodeString(in, KMU_55)
+	})
 }

@@ -8,7 +8,7 @@ import template
 logger = logging.getLogger(Path(__file__).stem)
 
 
-def gen_tests(fns):
+def gen_tests(fns, default_table):
     def _parse_tests(fn):
         def parse_kind(s):
             match s.lower().split():
@@ -52,6 +52,21 @@ def gen_tests(fns):
                 yield f'String t = tr.encode(pair[0], UKLatnTable.{table});\n'
                 yield 'assertEquals(pair[1], t);\n'
 
+    def _emit_tests_default(kind):
+        if kind[0] == 'c':
+            yield f'String q = tr.encode(pair[0]);\n'
+            yield 'assertEquals(pair[1], q);\n'
+        else:
+            yield f'String q = tr.decode(pair[1]);\n'
+            yield 'assertEquals(pair[0], q);\n'
+        if kind[-1] == 'r':
+            if kind[0] == 'c':
+                yield f'String t = tr.decode(pair[1]);\n'
+                yield 'assertEquals(pair[0], t);\n'
+            else:
+                yield f'String t = tr.encode(pair[0]);\n'
+                yield 'assertEquals(pair[1], t);\n'
+
     def _emit_testset(data, table):
         tpl = '''
         private String[][] data_&{table}_&{kind} = {
@@ -77,6 +92,9 @@ def gen_tests(fns):
                 ctx = dict(table=table, kind=kind)
                 ctx['tests'] = _emit_tests(kind, table)
                 yield template.format(tpl, ctx)
+                if table == default_table:
+                    ctx['tests'] = _emit_tests_default(kind)
+                    yield template.format(tpl, ctx)
 
         tpl = '''
         @Test

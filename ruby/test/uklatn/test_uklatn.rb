@@ -128,6 +128,10 @@ class TestUkrainianLatin # :nodoc:
             assert_equal(lat, q, cyr)
             t = @tr.decode(lat, 'DSTU_9112_A')
             assert_equal(cyr, t, lat)
+            q = @tr.encode(cyr)
+            assert_equal(lat, q, cyr)
+            t = @tr.decode(lat)
+            assert_equal(cyr, t, lat)
         end
 
         puts "DSTU_9112_A: c2lr #{data_c2lr.length} tests passed"
@@ -135,12 +139,16 @@ class TestUkrainianLatin # :nodoc:
         data_c2l.each do |cyr,lat|
             q = @tr.encode(cyr, 'DSTU_9112_A')
             assert_equal(lat, q, cyr)
+            q = @tr.encode(cyr)
+            assert_equal(lat, q, cyr)
         end
 
         puts "DSTU_9112_A: c2l #{data_c2l.length} tests passed"
 
         data_l2c.each do |cyr,lat|
             q = @tr.decode(lat, 'DSTU_9112_A')
+            assert_equal(cyr, q, lat)
+            q = @tr.decode(lat)
             assert_equal(cyr, q, lat)
         end
 

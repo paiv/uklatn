@@ -33,6 +33,10 @@ public class UkrainianLatinTest {
         Assert.Equal(lat, q);
         string t = tr.Decode(lat, UkrainianLatin.Table.DSTU_9112_A);
         Assert.Equal(cyr, t);
+        string d = tr.Encode(cyr);
+        Assert.Equal(lat, d);
+        string f = tr.Decode(lat);
+        Assert.Equal(cyr, f);
     }
 
     [Theory]
@@ -41,6 +45,8 @@ public class UkrainianLatinTest {
     public void test_c2l_DSTU_9112_A(string cyr, string lat) {
         string q = tr.Encode(cyr, UkrainianLatin.Table.DSTU_9112_A);
         Assert.Equal(lat, q);
+        string d = tr.Encode(cyr);
+        Assert.Equal(lat, d);
     }
 
     [Theory]
@@ -52,6 +58,8 @@ public class UkrainianLatinTest {
     public void test_l2c_DSTU_9112_A(string cyr, string lat) {
         string q = tr.Decode(lat, UkrainianLatin.Table.DSTU_9112_A);
         Assert.Equal(cyr, q);
+        string d = tr.Decode(lat);
+        Assert.Equal(cyr, d);
     }
 
     [Theory]
