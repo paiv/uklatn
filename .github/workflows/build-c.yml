@@ -3,7 +3,6 @@ name: C library
 on:
   push:
     tags:
-    - '!**'
     - '[0-9]**'
   pull_request:
     branches: [main]
