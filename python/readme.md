@@ -30,7 +30,7 @@ If your data has mixed languages, do preprocessing to extract Ukrainian chunks.
 Module command line
 --
 ```sh
-python -m uklatn 'Бери вершину'
+python -m uklatn 'моє щастя'
 ```
 
 ```txt
