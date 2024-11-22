@@ -65,7 +65,7 @@ dotnet add package UkrainianLatin
 
 Go package
 --
-- [uklatn Go package](go/)
+- [uklatn Go package](go/uklatn/)
 
 Add package dependency:
 ```sh
