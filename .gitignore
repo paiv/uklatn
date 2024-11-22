@@ -4,6 +4,8 @@ build/
 dist/
 node_modules/
 package-lock.json
+vendor/
+composer.lock
 __pycache__/
 *.py[cdo]
 *.egg-info/

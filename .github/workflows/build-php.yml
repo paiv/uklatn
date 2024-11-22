@@ -1,0 +1,24 @@
+name: PHP
+
+on:
+  push:
+    tags:
+    - '[0-9]**'
+  pull_request:
+    branches: [main]
+    paths:
+    - 'php/**'
+
+jobs:
+
+  build-php:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install
+      run: composer update --no-progress
+
+    - name: Test
+      run: php vendor/bin/phpunit ./php

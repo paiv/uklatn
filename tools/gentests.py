@@ -62,6 +62,17 @@ def gen_js(args):
     logger.info('JS generator end')
 
 
+def gen_php(args):
+    logger.info('PHP generator start')
+    from gen import gen_php
+
+    source = _basegen(args, 'src/tests', 'test*.json', gen_php.gen_tests)
+    for text in source:
+        print(text, end='')
+
+    logger.info('PHP generator end')
+
+
 def gen_py(args):
     logger.info('PY generator start')
     from gen import gen_py
@@ -146,6 +157,10 @@ if __name__ == '__main__':
     parse_go = subpar.add_parser('go', help='Go code generator')
     parse_go.add_argument('source', nargs='*', help='source directory')
     parse_go.set_defaults(func=gen_go)
+
+    parse_php = subpar.add_parser('php', help='PHP code generator')
+    parse_php.add_argument('source', nargs='*', help='source directory')
+    parse_php.set_defaults(func=gen_php)
 
     parse_ruby = subpar.add_parser('ruby', help='Ruby code generator')
     parse_ruby.add_argument('source', nargs='*', help='source directory')

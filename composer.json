@@ -1,0 +1,42 @@
+{
+    "name": "paiv/uklatn",
+    "description": "Ukrainian Cyrillic transliteration to Latin script",
+    "license": "MIT",
+    "homepage": "https://github.com/paiv/uklatn",
+    "authors": [
+        {
+            "name": "Pavlo Ivashkov"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Paiv\\": "php/src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Paiv\\Tests\\": "php/test"
+        }
+    },
+    "keywords": [
+        "ukraine",
+        "transliteration",
+        "romanization"
+    ],
+    "funding": [
+        {
+            "type": "patreon",
+            "url": "https://patreon.com/paiv"
+        },
+        {
+            "type": "other",
+            "url": "https://www.paypal.com/donate/?hosted_button_id=4BQ2Y97YUMM7L"
+        }
+    ]
+}
