@@ -18,8 +18,8 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install
-      run: composer install --no-progress
+      run: composer update --no-progress
 
     - name: Test
-      working-directory: ${{github.workspace}}
+      working-directory: ${{github.workspace}}/php
       run: phpunit .
