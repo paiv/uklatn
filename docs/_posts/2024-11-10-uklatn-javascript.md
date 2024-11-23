@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "JavaScript Ukrainian Cyrillic to Latin script transliteration"
+title:  "JavaScript package for Ukrainian Cyrillic to Latin script transliteration"
 author: paiv
 ---
 

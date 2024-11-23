@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Swift Ukrainian Cyrillic to Latin script transliteration"
+title:  "Swift package for Ukrainian Cyrillic to Latin script transliteration"
 author: paiv
 ---
 

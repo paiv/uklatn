@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Python Ukrainian Cyrillic to Latin script transliteration"
+title:  "Python package for Ukrainian Cyrillic to Latin script transliteration"
 author: paiv
 ---
 

@@ -4,7 +4,7 @@ title:  "PHP package for Ukrainian Cyrillic to Latin script transliteration"
 author: paiv
 ---
 
-- [https://github.com/paiv/uklatn/tree/php](https://github.com/paiv/uklatn/tree/php)
+- [https://packagist.org/packages/paiv/uklatn](https://packagist.org/packages/paiv/uklatn)
 
 
 Install

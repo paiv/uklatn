@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Ruby Ukrainian Cyrillic to Latin script transliteration"
+title:  "Ruby gem for Ukrainian Cyrillic to Latin script transliteration"
 author: paiv
 ---
 

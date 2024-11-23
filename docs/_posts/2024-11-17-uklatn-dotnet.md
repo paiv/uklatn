@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  ".NET Ukrainian Cyrillic to Latin script transliteration"
+title:  ".NET package for Ukrainian Cyrillic to Latin script transliteration"
 author: paiv
 ---
 
