@@ -17,6 +17,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Install
+      run: composer install --no-progress
+
     - name: Test
-      working-directory: ${{github.workspace}}/php
+      working-directory: ${{github.workspace}}
       run: phpunit .
