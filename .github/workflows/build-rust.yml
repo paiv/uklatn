@@ -1,0 +1,22 @@
+name: Rust
+
+on:
+  push:
+    tags:
+    - '[0-9]**'
+  pull_request:
+    branches: [main]
+    paths:
+    - 'rust/**'
+
+jobs:
+
+  build-rust:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Test
+      working-directory: ${{github.workspace}}/rust
+      run: cargo test -q

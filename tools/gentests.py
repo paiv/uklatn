@@ -128,6 +128,17 @@ def gen_ruby(args):
     logger.info('Ruby generator end')
 
 
+def gen_rust(args):
+    logger.info('Rust generator start')
+    from gen import gen_rust
+
+    source = _basegen(args, 'src/tests', 'test*.json', gen_rust.gen_tests)
+    for text in source:
+        print(text, end='')
+
+    logger.info('Rust generator end')
+
+
 def gen_swift(args):
     logger.info('Swift generator start')
     from gen import gen_swift
@@ -180,6 +191,10 @@ if __name__ == '__main__':
     parse_ruby = subpar.add_parser('ruby', help='Ruby code generator')
     parse_ruby.add_argument('source', nargs='*', help='source directory')
     parse_ruby.set_defaults(func=gen_ruby)
+
+    parse_rust = subpar.add_parser('rust', help='Rust code generator')
+    parse_rust.add_argument('source', nargs='*', help='source directory')
+    parse_rust.set_defaults(func=gen_rust)
 
     parse_swift = subpar.add_parser('swift', help='Swfit code generator')
     parse_swift.add_argument('source', nargs='*', help='source directory')
