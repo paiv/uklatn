@@ -25,7 +25,8 @@ def gen_tests(fns, default_table):
     def table_name(s):
         return re.sub(r'test_', '', s)
     def _j(s):
-        return json.dumps(s, ensure_ascii=False)
+        s = json.dumps(s, ensure_ascii=False)
+        return s.replace('$', '\\$')
 
     def _emit_testdata(kind, data, table):
         spl = '''\
@@ -145,7 +146,7 @@ def gen_transforms(fns, default_table=None):
     def _j(s):
         return json.dumps(s, ensure_ascii=False)
     def _srx(s):
-        s = re.sub(r'\\u([0-9A-Fa-f]{4})', r'\\x{\1}', s.replace("'", "\\'"))
+        s = re.sub(r'\\u([0-9A-Fa-f]{4})', r'\\x{\1}', s)
         return f"'#{s}#u'"
     def _load_rules(data):
         return [s if isinstance(s, str) else [

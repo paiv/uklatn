@@ -126,8 +126,8 @@ final class UkrainianLatinTest extends TestCase {
             "Sonce svitytj majže bilym svitlom, odnak čerez syljniše rozsijuvannja i poğlynannja korotkoxvyljovoï častyny spektra atmosferoju Zemli prjame svitlo Soncja bilja poverxni našoï planety nabuvaje pevnoğo žovtoğo vidtinku. Jakŝo nebo jasne, to blakytnyj vidtinok rozsijanoğo svitla skladajetjsja z žovtuvatym prjamym sonjačnym svitlom i zağaljne osvitlennja ob'jektiv na Zemli staje bilym."
         ],
         [
-            "дуб!дуб\"дуб#дуб$дуб%дуб&дуб'дуб(дуб)дуб*дуб+дуб,дуб-дуб.дуб/дуб:дуб;дуб<дуб=дуб>дуб?дуб@дуб[дуб\\дуб]дуб^дуб_дуб`дуб{дуб|дуб}дуб~дуб",
-            "dub!dub\"dub#dub$dub%dub&dub'dub(dub)dub*dub+dub,dub-dub.dub/dub:dub;dub<dub=dub>dub?dub@dub[dub\\dub]dub^dub_dub`dub{dub|dub}dub~dub"
+            "дуб!дуб\"дуб#дуб\$дуб%дуб&дуб'дуб(дуб)дуб*дуб+дуб,дуб-дуб.дуб/дуб:дуб;дуб<дуб=дуб>дуб?дуб@дуб[дуб\\дуб]дуб^дуб_дуб`дуб{дуб|дуб}дуб~дуб",
+            "dub!dub\"dub#dub\$dub%dub&dub'dub(dub)dub*dub+dub,dub-dub.dub/dub:dub;dub<dub=dub>dub?dub@dub[dub\\dub]dub^dub_dub`dub{dub|dub}dub~dub"
         ],
         [
             "бод бод\tбод\nбод\rбод",
@@ -263,8 +263,8 @@ final class UkrainianLatinTest extends TestCase {
             "Sonce svitytj majzhe bilym svitlom, odnak cherez syljnishe rozsijuvannja i poghlynannja korotkokhvyljovoji chastyny spektra atmosferoju Zemli prjame svitlo Soncja bilja poverkhni nashoji planety nabuvaje pevnogho zhovtogho vidtinku. Jakshcho nebo jasne, to blakytnyj vidtinok rozsijanogho svitla skladajetjsja z zhovtuvatym prjamym sonjachnym svitlom i zaghaljne osvitlennja ob'jektiv na Zemli staje bilym."
         ],
         [
-            "дуб!дуб\"дуб#дуб$дуб%дуб&дуб'дуб(дуб)дуб*дуб+дуб,дуб-дуб.дуб/дуб:дуб;дуб<дуб=дуб>дуб?дуб@дуб[дуб\\дуб]дуб^дуб_дуб`дуб{дуб|дуб}дуб~дуб",
-            "dub!dub\"dub#dub$dub%dub&dub'dub(dub)dub*dub+dub,dub-dub.dub/dub:dub;dub<dub=dub>dub?dub@dub[dub\\dub]dub^dub_dub`dub{dub|dub}dub~dub"
+            "дуб!дуб\"дуб#дуб\$дуб%дуб&дуб'дуб(дуб)дуб*дуб+дуб,дуб-дуб.дуб/дуб:дуб;дуб<дуб=дуб>дуб?дуб@дуб[дуб\\дуб]дуб^дуб_дуб`дуб{дуб|дуб}дуб~дуб",
+            "dub!dub\"dub#dub\$dub%dub&dub'dub(dub)dub*dub+dub,dub-dub.dub/dub:dub;dub<dub=dub>dub?dub@dub[dub\\dub]dub^dub_dub`dub{dub|dub}dub~dub"
         ],
         [
             "бод бод\tбод\nбод\rбод",
@@ -374,8 +374,8 @@ final class UkrainianLatinTest extends TestCase {
             "via via"
         ],
         [
-            "дуб!дуб\"дуб#дуб$дуб%дуб&дуб'дуб(дуб)дуб*дуб+дуб,дуб-дуб.дуб/дуб:дуб;дуб<дуб=дуб>дуб?дуб@дуб[дуб\\дуб]дуб^дуб_дуб`дуб{дуб|дуб}дуб~дуб",
-            "dub!dub\"dub#dub$dub%dub&dubdub(dub)dub*dub+dub,dub-dub.dub/dub:dub;dub<dub=dub>dub?dub@dub[dub\\dub]dub^dub_dub`dub{dub|dub}dub~dub"
+            "дуб!дуб\"дуб#дуб\$дуб%дуб&дуб'дуб(дуб)дуб*дуб+дуб,дуб-дуб.дуб/дуб:дуб;дуб<дуб=дуб>дуб?дуб@дуб[дуб\\дуб]дуб^дуб_дуб`дуб{дуб|дуб}дуб~дуб",
+            "dub!dub\"dub#dub\$dub%dub&dubdub(dub)dub*dub+dub,dub-dub.dub/dub:dub;dub<dub=dub>dub?dub@dub[dub\\dub]dub^dub_dub`dub{dub|dub}dub~dub"
         ],
         [
             "бод бод\tбод\nбод\rбод",
