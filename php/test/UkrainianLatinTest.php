@@ -2,6 +2,8 @@
 
 /* Note: generated code, do not edit. */
 
+namespace Paiv\Tests;
+
 use PHPUnit\Framework\TestCase;
 use Paiv\UkrainianLatin;
 

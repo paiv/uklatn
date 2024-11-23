@@ -116,6 +116,8 @@ def gen_tests(fns, default_table):
 
 /* Note: generated code, do not edit. */
 
+namespace Paiv\Tests;
+
 use PHPUnit\Framework\TestCase;
 use Paiv\UkrainianLatin;
 

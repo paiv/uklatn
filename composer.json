@@ -19,6 +19,11 @@
             "Paiv\\": "php/src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Paiv\\Tests\\": "php/test"
+        }
+    },
     "keywords": [
         "ukraine",
         "transliteration",
