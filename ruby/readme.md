@@ -22,6 +22,7 @@ Select a transliteration scheme:
 
 ```ruby
 tr.encode('Борщ', 'DSTU_9112_A')
+tr.encode('Шевченко', 'KMU_55')
 ```
 
 Notes

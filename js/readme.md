@@ -12,7 +12,8 @@ let t = uklatn.decode('Paljanycja');
 
 Select a transliteration scheme:
 ```js
-let s = uklatn.encode('Борщ', 'DSTU_9112_A');
+uklatn.encode('Борщ', 'DSTU_9112_A');
+uklatn.encode('Шевченко', 'KMU_55');
 ```
 
 Notes

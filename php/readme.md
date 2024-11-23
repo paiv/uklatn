@@ -22,6 +22,7 @@ $t = $tr->decode('Paljanycja');
 Select a transliteration scheme:
 ```php
 $tr->encode('Доброго вечора!', UkrainianLatin::DSTU_9112_A);
+$tr->encode('Шевченко', UkrainianLatin::KMU_55);
 ```
 
 
