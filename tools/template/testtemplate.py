@@ -146,10 +146,6 @@ class TemplateTest (unittest.TestCase):
         '\nb\n  x x\nc\n'
     ),
     (
-        r'\&a', dict(a='x'),
-        '&a'
-    ),
-    (
         '''
         b
           &a
@@ -162,6 +158,10 @@ class TemplateTest (unittest.TestCase):
           &a
         ''', dict(a=('x\n' for _ in range(0))),
         '\nb\n'
+    ),
+    (
+        r'\n \t \& \\ \&a',
+        r'\n \t \& \\ \&a'
     ),
     ]
 

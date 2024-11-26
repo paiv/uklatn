@@ -115,8 +115,6 @@ class _Parser:
 
                     case 0:
                         match c:
-                            case '\\':
-                                state = 1
                             case '&':
                                 name = ''
                                 state = 2
@@ -125,15 +123,6 @@ class _Parser:
                                 state = 9
                             case _:
                                 yield _Token(_Token.CHR, value=c)
-
-                    case 1:
-                        match c:
-                            case '&':
-                                yield _Token(_Token.CHR, value='&')
-                            case _:
-                                yield _Token(_Token.CHR, value='\\')
-                                consumed = False
-                        state = 0
 
                     case 2:
                         match c:
@@ -192,8 +181,6 @@ class _Parser:
             match state:
                 case 0:
                     pass
-                case 1:
-                    yield _Token(_Token.CHR, value='\\')
                 case 2:
                     yield _Token(_Token.CHR, value='&')
                 case 3:
