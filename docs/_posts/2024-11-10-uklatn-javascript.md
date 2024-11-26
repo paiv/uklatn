@@ -5,6 +5,7 @@ author: paiv
 ---
 
 - [https://www.npmjs.com/package/uklatn](https://www.npmjs.com/package/uklatn)
+- [https://jsr.io/@paiv/uklatn](https://jsr.io/@paiv/uklatn)
 
 
 Install
