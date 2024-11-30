@@ -1,0 +1,2 @@
+[{*.ex,*.exs}]
+indent_size = 2
