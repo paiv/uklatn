@@ -236,9 +236,9 @@ def gen_transforms(fns, default_table=None):
   Ukrainian Cyrillic transliteration to and from Latin script.
 
   Tables:
-  - :DSTU_9112_A DSTU 9112:2021 System A
-  - :DSTU_9112_B DSTU 9112:2021 System B
-  - :KMU_55 KMU 55:2010, not reversible
+  - `:DSTU_9112_A` DSTU 9112:2021 System A
+  - `:DSTU_9112_B` DSTU 9112:2021 System B
+  - `:KMU_55` KMU 55:2010, not reversible
 
   ## Examples
       iex> Paiv.UkrainianLatin.encode("Доброго вечора!")
