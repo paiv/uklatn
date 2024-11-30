@@ -1,0 +1,36 @@
+name: Elixir
+
+on:
+  push:
+    tags:
+    - '[0-9]**'
+  pull_request:
+    branches: [main]
+    paths:
+    - 'elixir/**'
+
+jobs:
+
+  build-elixir:
+    strategy:
+      matrix:
+        include:
+          - pair:
+              elixir: '1.12'
+              otp: '24'
+          - pair:
+              elixir: latest
+              otp: latest
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: erlef/setup-beam@v1
+      with:
+        otp-version: ${{matrix.pair.otp}}
+        elixir-version: ${{matrix.pair.elixir}}
+
+    - name: Test
+      working-directory: ${{github.workspace}}/elixir
+      run: mix test

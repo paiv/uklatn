@@ -106,6 +106,17 @@ def gen_go(args):
     logger.info('Go generator end')
 
 
+def gen_elixir(args):
+    logger.info('Elixir generator start')
+    from gen import gen_elixir
+
+    source = _basegen(args, 'src/tests', 'test*.json', gen_elixir.gen_tests)
+    for text in source:
+        print(text, end='')
+
+    logger.info('Elixir generator end')
+
+
 def gen_ruby(args):
     logger.info('Ruby generator start')
     from gen import gen_ruby
@@ -161,6 +172,10 @@ if __name__ == '__main__':
     parse_php = subpar.add_parser('php', help='PHP code generator')
     parse_php.add_argument('source', nargs='*', help='source directory')
     parse_php.set_defaults(func=gen_php)
+
+    parse_elixir = subpar.add_parser('elixir', help='Elixir code generator')
+    parse_elixir.add_argument('source', nargs='*', help='source directory')
+    parse_elixir.set_defaults(func=gen_elixir)
 
     parse_ruby = subpar.add_parser('ruby', help='Ruby code generator')
     parse_ruby.add_argument('source', nargs='*', help='source directory')
