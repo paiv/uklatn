@@ -6,6 +6,7 @@ homepage = "https://github.com/paiv/uklatn"
 repository = "https://github.com/paiv/uklatn"
 description = "Ukrainian Cyrillic transliteration to Latin script"
 keywords = ["ukraine", "transliteration", "romanization"]
+categories = ["text-processing"]
 authors = ["Pavlo Ivashkov"]
 edition = "2021"
 
