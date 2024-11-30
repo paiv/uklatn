@@ -7,7 +7,7 @@ on:
   pull_request:
     branches: [main]
     paths:
-    - 'ruby/**/*'
+    - 'ruby/**'
     - 'uklatn.gemspec'
 
 jobs:

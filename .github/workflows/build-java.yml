@@ -7,7 +7,7 @@ on:
   pull_request:
     branches: [main]
     paths:
-    - 'java/**/*'
+    - 'java/**'
 
 jobs:
 

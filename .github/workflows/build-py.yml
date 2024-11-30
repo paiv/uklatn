@@ -7,7 +7,7 @@ on:
   pull_request:
     branches: [main]
     paths:
-    - 'python/**/*'
+    - 'python/**'
     - 'pyproject.toml'
     - 'MANIFEST.in'
 

@@ -7,7 +7,7 @@ on:
   pull_request:
     branches: [main]
     paths:
-    - 'swift/**/*.swift'
+    - 'swift/**'
     - 'Package.swift'
 
 jobs:

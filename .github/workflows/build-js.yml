@@ -7,7 +7,7 @@ on:
   pull_request:
     branches: [main]
     paths:
-    - 'js/**/*'
+    - 'js/**'
     - 'package.json'
     - 'jsr.json'
 
