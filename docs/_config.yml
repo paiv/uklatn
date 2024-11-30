@@ -22,6 +22,7 @@ twitter_username: pavelivashkov
 github_username:  paiv
 
 # Build settings
+future: true
 markdown: kramdown
 remote_theme: jekyll/minima
 minima:
