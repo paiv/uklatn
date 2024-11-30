@@ -9,7 +9,6 @@ defmodule Paiv.UkrainianLatin.MixProject do
       description: "Ukrainian Cyrillic transliteration to Latin script",
       homepage_url: "https://github.com/paiv/uklatn",
       package: %{
-        name: "Paiv.UkrainianLatin",
         licenses: ["MIT"],
         links: %{
           "GitHub" => "https://github.com/paiv/uklatn",
