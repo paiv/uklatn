@@ -5,7 +5,7 @@ Ukrainian Cyrillic transliteration to Latin script.
 [![standwithukraine](docs/StandWithUkraine.svg)](https://ukrainewar.carrd.co/)
 [![](https://github.com/paiv/uklatn/actions/workflows/test-builds.yml/badge.svg)](https://github.com/paiv/uklatn/actions)
 
-[JavaScript](#javascript-package) | [Python](#python-module) | [C](c/) | [Java](#java-library) | [.NET](#net-package) | [Go](#go-package) | [PHP](#php-package) | [Swift](#swift-package) | [Ruby](#ruby-gem)
+[JavaScript](#javascript-package) | [Python](#python-module) | [C](c/) | [Java](#java-library) | [.NET](#net-package) | [Go](#go-package) | [PHP](#php-package) | [Elixir](#elixir-package) | [Swift](#swift-package) | [Ruby](#ruby-gem)
 
 Supported transliteration schemes:
 - [DSTU 9112:2021](https://uk.wikipedia.org/wiki/ДСТУ_9112:2021)
@@ -80,6 +80,16 @@ PHP package
 Add package dependency:
 ```sh
 php composer.phar require 'paiv/uklatn'
+```
+
+
+Elixir package
+--
+- [uklatn Elixir package](elixir/)
+
+Add package dependency:
+```elixir
+{:uklatn, "~> 1.17"}
 ```
 
 
