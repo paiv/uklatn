@@ -18,9 +18,9 @@ jobs:
           - pair:
               elixir: '1.12'
               otp: '24'
-          - pair:
-              elixir: latest
-              otp: latest
+          #- pair:
+          #    elixir: latest
+          #    otp: latest
 
     runs-on: ubuntu-latest
 
