@@ -96,7 +96,7 @@ public final class UkrainianLatin {
         private Function<MatchResult,String> _tr1;
 
         _Uklatn_uk_uk_Latn_DSTU_9112_A() {
-            this._rx1 = Pattern.compile("\\b([Ьь])|([Ьь](?=[АаЕеУу])|[ЄЮЯ](?=\\u0301?[а-щьюяєіїґ’])|(?<=[Б-ДЖЗК-НП-ТФ-Щб-джзк-нп-тф-щҐґ])[Йй])|([ЁЄІЇЎА-яёєіїўҐґ’])");
+            this._rx1 = Pattern.compile("\\b([Ьь])|([Ьь](?=[АаЕеУу])|[ЄЮЯ](?=\\u0301?[а-щьюяєіїґ’])|(?<=[Б-ДЖЗК-НП-ТФ-Щб-джзк-нп-тф-щҐґ])[Йй])|([ЁЄІЇЎА-яёєіїўҐґ’])", Pattern.UNICODE_CHARACTER_CLASS);
             List<Map<String,String>> _maps1 = List.of(
                 Map.ofEntries(
                     entry("Ь","Ĵ"),entry("ь","ĵ")
@@ -133,7 +133,7 @@ public final class UkrainianLatin {
         private Function<MatchResult,String> _tr1;
 
         _Uklatn_uk_uk_Latn_DSTU_9112_B() {
-            this._rx1 = Pattern.compile("([Ьь](?=[АаЕеІіУу])|(?<=[Б-ДЖЗК-НП-ТФ-Щб-джзк-нп-тф-щҐґ])[Йй])|([ГЄЖЇХЩШЧЮЯЁЎЪЫЭ](?=\\u0301?[а-яёєіїўґ’])|\\b[Ьь])|([ЁЄІЇЎА-яёєіїўҐґ’])");
+            this._rx1 = Pattern.compile("([Ьь](?=[АаЕеІіУу])|(?<=[Б-ДЖЗК-НП-ТФ-Щб-джзк-нп-тф-щҐґ])[Йй])|([ГЄЖЇХЩШЧЮЯЁЎЪЫЭ](?=\\u0301?[а-яёєіїўґ’])|\\b[Ьь])|([ЁЄІЇЎА-яёєіїўҐґ’])", Pattern.UNICODE_CHARACTER_CLASS);
             List<Map<String,String>> _maps1 = List.of(
                 Map.ofEntries(
                     entry("Ь","J'"),entry("ь","j'"),entry("Й","'J"),entry("й","'j")
@@ -172,7 +172,7 @@ public final class UkrainianLatin {
         private Function<MatchResult,String> _tr2;
 
         _Uklatn_uk_uk_Latn_KMU_55() {
-            this._rx1 = Pattern.compile("(?<=[ЁЄІЇЎА-яёєіїўҐґ])([’\\u0027])(?=[ЁЄІЇЎА-яёєіїўҐґ])");
+            this._rx1 = Pattern.compile("(?<=[ЁЄІЇЎА-яёєіїўҐґ])([’\\u0027])(?=[ЁЄІЇЎА-яёєіїўҐґ])", Pattern.UNICODE_CHARACTER_CLASS);
             List<Map<String,String>> _maps1 = List.of(
                 Map.ofEntries(
                     entry("’",""),entry("'","")
@@ -187,7 +187,7 @@ public final class UkrainianLatin {
                 }
                 return match.group();
             };
-            this._rx2 = Pattern.compile("\\b([ЄЇЮЯ])(?=\\u0301?[а-яёєіїўґ’])|\\b([ЙйЄЇЮЯєїюя])|([Зз]Г|[ЖХЦЩШЧЄЇЮЯ])(?=\\u0301?[а-яёєіїўґ’])|([Зз][Гг]|[ЄІЇА-ЩЬЮ-щьюяєіїҐґ’])");
+            this._rx2 = Pattern.compile("\\b([ЄЇЮЯ])(?=\\u0301?[а-яёєіїўґ’])|\\b([ЙйЄЇЮЯєїюя])|([Зз]Г|[ЖХЦЩШЧЄЇЮЯ])(?=\\u0301?[а-яёєіїўґ’])|([Зз][Гг]|[ЄІЇА-ЩЬЮ-щьюяєіїҐґ’])", Pattern.UNICODE_CHARACTER_CLASS);
             List<Map<String,String>> _maps2 = List.of(
                 Map.ofEntries(
                     entry("Є","Ye"),entry("Ї","Yi"),entry("Ю","Yu"),entry("Я","Ya")
@@ -230,7 +230,7 @@ public final class UkrainianLatin {
         private Function<MatchResult,String> _tr2;
 
         _Uklatn_uk_Latn_DSTU_9112_A_uk() {
-            this._rx1 = Pattern.compile("([ÁáÉéÍíÓóÚúÝýḮḯ])");
+            this._rx1 = Pattern.compile("([ÁáÉéÍíÓóÚúÝýḮḯ])", Pattern.UNICODE_CHARACTER_CLASS);
             List<Map<String,String>> _maps1 = List.of(
                 Map.ofEntries(
                     entry("Á","Á"),entry("á","á"),entry("É","É"),entry("é","é"),entry("Í","Í"),entry("í","í"),entry("Ó","Ó"),entry("ó","ó"),entry("Ú","Ú"),entry("ú","ú"),entry("Ý","Ý"),entry("ý","ý"),entry("Ḯ","Ḯ"),entry("ḯ","ḯ")
@@ -245,7 +245,7 @@ public final class UkrainianLatin {
                 }
                 return match.group();
             };
-            this._rx2 = Pattern.compile("(J[Ee]|j[Ee]|J[Uu]|j[Uu]|J[Aa]|j[Aa]|[A-GIK-PR-VXYZa-gik-pr-vxyzÏÖïöČčĒēĞğĴĵŜŝŠšŬŭŽžǑǒȲȳ])|(?<=[BbCcDdFfGgKkLlMmNnPpRrSsTtVvXxZzČčĞğŜŝŠšŽž])([Jj]\\u0027(?=[AaEeUu])|[Jj])|(\\u0027[Jj](?![AaEeIiUu])|\\u0027(?=[Jj])|[Jj])");
+            this._rx2 = Pattern.compile("(J[Ee]|j[Ee]|J[Uu]|j[Uu]|J[Aa]|j[Aa]|[A-GIK-PR-VXYZa-gik-pr-vxyzÏÖïöČčĒēĞğĴĵŜŝŠšŬŭŽžǑǒȲȳ])|(?<=[BbCcDdFfGgKkLlMmNnPpRrSsTtVvXxZzČčĞğŜŝŠšŽž])([Jj]\\u0027(?=[AaEeUu])|[Jj])|(\\u0027[Jj](?![AaEeIiUu])|\\u0027(?=[Jj])|[Jj])", Pattern.UNICODE_CHARACTER_CLASS);
             List<Map<String,String>> _maps2 = List.of(
                 Map.ofEntries(
                     entry("A","А"),entry("a","а"),entry("B","Б"),entry("b","б"),entry("V","В"),entry("v","в"),entry("Ğ","Г"),entry("ğ","г"),entry("G","Ґ"),entry("g","ґ"),entry("D","Д"),entry("d","д"),entry("E","Е"),entry("e","е"),entry("JE","Є"),entry("Je","Є"),entry("jE","є"),entry("je","є"),entry("Ž","Ж"),entry("ž","ж"),entry("Z","З"),entry("z","з"),entry("Y","И"),entry("y","и"),entry("I","І"),entry("i","і"),entry("Ï","Ї"),entry("ï","ї"),entry("K","К"),entry("k","к"),entry("L","Л"),entry("l","л"),entry("M","М"),entry("m","м"),entry("N","Н"),entry("n","н"),entry("O","О"),entry("o","о"),entry("P","П"),entry("p","п"),entry("R","Р"),entry("r","р"),entry("S","С"),entry("s","с"),entry("T","Т"),entry("t","т"),entry("U","У"),entry("u","у"),entry("F","Ф"),entry("f","ф"),entry("X","Х"),entry("x","х"),entry("C","Ц"),entry("c","ц"),entry("Č","Ч"),entry("č","ч"),entry("Š","Ш"),entry("š","ш"),entry("Ŝ","Щ"),entry("ŝ","щ"),entry("JU","Ю"),entry("Ju","Ю"),entry("jU","ю"),entry("ju","ю"),entry("JA","Я"),entry("Ja","Я"),entry("jA","я"),entry("ja","я"),entry("Ĵ","Ь"),entry("ĵ","ь"),entry("Ö","Ё"),entry("ö","ё"),entry("Ŭ","Ў"),entry("ŭ","ў"),entry("Ǒ","Ъ"),entry("ǒ","ъ"),entry("Ȳ","Ы"),entry("ȳ","ы"),entry("Ē","Э"),entry("ē","э")
@@ -285,7 +285,7 @@ public final class UkrainianLatin {
         private Function<MatchResult,String> _tr2;
 
         _Uklatn_uk_Latn_DSTU_9112_B_uk() {
-            this._rx1 = Pattern.compile("([ÁáÉéÍíÓóÚúÝý])");
+            this._rx1 = Pattern.compile("([ÁáÉéÍíÓóÚúÝý])", Pattern.UNICODE_CHARACTER_CLASS);
             List<Map<String,String>> _maps1 = List.of(
                 Map.ofEntries(
                     entry("Á","Á"),entry("á","á"),entry("É","É"),entry("é","é"),entry("Í","Í"),entry("í","í"),entry("Ó","Ó"),entry("ó","ó"),entry("Ú","Ú"),entry("ú","ú"),entry("Ý","Ý"),entry("ý","ý")
@@ -300,7 +300,7 @@ public final class UkrainianLatin {
                 }
                 return match.group();
             };
-            this._rx2 = Pattern.compile("([Jj][Oo][Ww]|[Ss][Hh][Cc][Hh]|[CcGgKkSsZzUuOo][Hh]|[Yy][Ww]|[Ee][Hh][Ww]|[Jj][EeIiUuAa]|[Hh][Jj]|[A-GIK-PR-VYZa-gik-pr-vyz])|(?<=[Ss][Hh][Cc][Hh])([Jj]\\u0027(?=[AaEeIiUu])|[Jj])|(?<=[CcGgKkSsZz][Hh])([Jj]\\u0027(?=[AaEeIiUu])|[Jj])|(?<=[BCDFGKLMNPRSTVZbcdfgklmnprstvzv])([Jj]\\u0027(?=[AaEeIiUu])|[Jj])|(\\u0027[Jj](?![AaEeIiUu])|\\u0027(?=[Jj])|[Jj])");
+            this._rx2 = Pattern.compile("([Jj][Oo][Ww]|[Ss][Hh][Cc][Hh]|[CcGgKkSsZzUuOo][Hh]|[Yy][Ww]|[Ee][Hh][Ww]|[Jj][EeIiUuAa]|[Hh][Jj]|[A-GIK-PR-VYZa-gik-pr-vyz])|(?<=[Ss][Hh][Cc][Hh])([Jj]\\u0027(?=[AaEeIiUu])|[Jj])|(?<=[CcGgKkSsZz][Hh])([Jj]\\u0027(?=[AaEeIiUu])|[Jj])|(?<=[BCDFGKLMNPRSTVZbcdfgklmnprstvzv])([Jj]\\u0027(?=[AaEeIiUu])|[Jj])|(\\u0027[Jj](?![AaEeIiUu])|\\u0027(?=[Jj])|[Jj])", Pattern.UNICODE_CHARACTER_CLASS);
             List<Map<String,String>> _maps2 = List.of(
                 Map.ofEntries(
                     entry("A","А"),entry("a","а"),entry("B","Б"),entry("b","б"),entry("V","В"),entry("v","в"),entry("GH","Г"),entry("Gh","Г"),entry("gH","г"),entry("gh","г"),entry("G","Ґ"),entry("g","ґ"),entry("D","Д"),entry("d","д"),entry("E","Е"),entry("e","е"),entry("JE","Є"),entry("Je","Є"),entry("jE","є"),entry("je","є"),entry("ZH","Ж"),entry("Zh","Ж"),entry("zH","ж"),entry("zh","ж"),entry("Z","З"),entry("z","з"),entry("Y","И"),entry("y","и"),entry("I","І"),entry("i","і"),entry("JI","Ї"),entry("Ji","Ї"),entry("jI","ї"),entry("ji","ї"),entry("KH","Х"),entry("Kh","Х"),entry("kH","х"),entry("kh","х"),entry("K","К"),entry("k","к"),entry("L","Л"),entry("l","л"),entry("M","М"),entry("m","м"),entry("N","Н"),entry("n","н"),entry("O","О"),entry("o","о"),entry("P","П"),entry("p","п"),entry("R","Р"),entry("r","р"),entry("SHCH","Щ"),entry("SHCh","Щ"),entry("SHcH","Щ"),entry("SHch","Щ"),entry("ShCH","Щ"),entry("ShCh","Щ"),entry("ShcH","Щ"),entry("Shch","Щ"),entry("sHCH","щ"),entry("sHCh","щ"),entry("sHcH","щ"),entry("sHch","щ"),entry("shCH","щ"),entry("shCh","щ"),entry("shcH","щ"),entry("shch","щ"),entry("SH","Ш"),entry("Sh","Ш"),entry("sH","ш"),entry("sh","ш"),entry("S","С"),entry("s","с"),entry("T","Т"),entry("t","т"),entry("U","У"),entry("u","у"),entry("F","Ф"),entry("f","ф"),entry("CH","Ч"),entry("Ch","Ч"),entry("cH","ч"),entry("ch","ч"),entry("C","Ц"),entry("c","ц"),entry("JU","Ю"),entry("Ju","Ю"),entry("jU","ю"),entry("ju","ю"),entry("JA","Я"),entry("Ja","Я"),entry("jA","я"),entry("ja","я"),entry("HJ","Ь"),entry("Hj","Ь"),entry("hJ","ь"),entry("hj","ь"),entry("JOW","Ё"),entry("JOw","Ё"),entry("JoW","Ё"),entry("Jow","Ё"),entry("jOW","ё"),entry("jOw","ё"),entry("joW","ё"),entry("jow","ё"),entry("UH","Ў"),entry("Uh","Ў"),entry("uH","ў"),entry("uh","ў"),entry("OH","Ъ"),entry("Oh","Ъ"),entry("oH","ъ"),entry("oh","ъ"),entry("YW","Ы"),entry("Yw","Ы"),entry("yW","ы"),entry("yw","ы"),entry("EHW","Э"),entry("EHw","Э"),entry("EhW","Э"),entry("Ehw","Э"),entry("eHW","э"),entry("eHw","э"),entry("ehW","э"),entry("ehw","э")
