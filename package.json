@@ -29,6 +29,8 @@
   "bin": "js/cli.js",
   "files": [],
   "scripts": {
+    "postpack": "git checkout readme.md",
+    "prepack": "cp js/readme.md readme.md",
     "test": "node js/testuklatn.js"
   }
 }
