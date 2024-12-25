@@ -17,6 +17,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Version
+      run: mvn -version
+
     - name: Test
       working-directory: ${{github.workspace}}/java
       run: mvn -q test
