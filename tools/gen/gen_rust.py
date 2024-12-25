@@ -280,10 +280,14 @@ def gen_transforms(fns, default_table=None):
 //! assert_eq!(s, "Паляниця");
 //! ```
 //!
-//! Select a transliteration scheme:
+//! Set the transliteration scheme:
 //! ```
 //! let s = uklatn::encode("Борщ", uklatn::Table::Dstu9112B);
 //! assert_eq!(s, "Borshch");
+//! ```
+//! ```
+//! let s = uklatn::encode("Шевченко", uklatn::Table::Kmu55);
+//! assert_eq!(s, "Shevchenko");
 //! ```
 //!
 use {

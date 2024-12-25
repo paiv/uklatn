@@ -15,9 +15,11 @@ defmodule Paiv.UkrainianLatin do
       iex> Paiv.UkrainianLatin.decode("Paljanycja")
       "Паляниця"
 
-  Select a transliteration scheme:
+  Set the transliteration scheme:
       iex> Paiv.UkrainianLatin.encode("Борщ", :DSTU_9112_B)
       "Borshch"
+      iex> Paiv.UkrainianLatin.encode("Шевченко", :KMU_55)
+      "Shevchenko"
   """
 
   @doc """

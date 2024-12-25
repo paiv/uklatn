@@ -12,8 +12,9 @@
 #     tr.encode('Доброго вечора!')
 #     tr.decode('Paljanycja')
 #
-# Select a transliteration scheme:
-#     tr.encode('Борщ', 'DSTU_9112_A')
+# Set the transliteration scheme:
+#     tr.encode('Борщ', 'DSTU_9112_B')
+#     tr.encode('Шевченко', 'KMU_55')
 #
 class UkrainianLatin
 

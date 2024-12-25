@@ -12,13 +12,14 @@ Usage:
 using paiv.uklatn;
 
 UkrainianLatin tr = new UkrainianLatin();
-string s = tr.Encode("Доброго вечора!");
-string t = tr.Decode("Paljanycja");
+tr.Encode("Доброго вечора!");
+tr.Decode("Paljanycja");
 ```
 
-Select a transliteration scheme:
+Set the transliteration scheme:
 ```csharp
-s = tr.Encode("Борщ", UkrainianLatin.Table.DSTU_9112_A);
+tr.Encode("Борщ", UkrainianLatin.Table.DSTU_9112_B);
+tr.Encode("Шевченко", UkrainianLatin.Table.KMU_55);
 ```
 
 Notes

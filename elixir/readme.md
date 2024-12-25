@@ -1,6 +1,5 @@
 Paiv.UkrainianLatin
 ==
-
 Ukrainian Cyrillic transliteration to Latin script.
 
 Supported transliteration schemes:
@@ -20,7 +19,7 @@ decode("Paljanycja")
 #=> "Паляниця"
 ```
 
-Select a transliteration scheme:
+Set the transliteration scheme:
 ```elixir
 encode("Борщ", :DSTU_9112_B)
 #=> "Borshch"
@@ -31,4 +30,3 @@ Notes
 --
 Input is assumed to be in Ukrainian (Cyrillic or Latin script), and will be processed in full.
 If your data has mixed languages, do preprocessing to extract Ukrainian chunks.
-

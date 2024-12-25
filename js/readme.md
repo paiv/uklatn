@@ -2,17 +2,23 @@ uklatn
 ==
 Ukrainian Cyrillic transliteration to Latin script.
 
+Supported transliteration schemes:
+- [DSTU 9112:2021](https://uk.wikipedia.org/wiki/ДСТУ_9112:2021)
+- [KMU 55:2010](https://zakon.rada.gov.ua/laws/show/55-2010-п)
+
+
 
 Usage:
 ```js
 import * as uklatn from 'uklatn';
-let s = uklatn.encode('Доброго вечора!');
-let t = uklatn.decode('Paljanycja');
+
+uklatn.encode('Доброго вечора!');
+uklatn.decode('Paljanycja');
 ```
 
-Select a transliteration scheme:
+Set the transliteration scheme:
 ```js
-uklatn.encode('Борщ', 'DSTU_9112_A');
+uklatn.encode('Борщ', 'DSTU_9112_B');
 uklatn.encode('Шевченко', 'KMU_55');
 ```
 

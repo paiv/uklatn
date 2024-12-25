@@ -246,9 +246,11 @@ def gen_transforms(fns, default_table=None):
       iex> Paiv.UkrainianLatin.decode("Paljanycja")
       "Паляниця"
 
-  Select a transliteration scheme:
+  Set the transliteration scheme:
       iex> Paiv.UkrainianLatin.encode("Борщ", :DSTU_9112_B)
       "Borshch"
+      iex> Paiv.UkrainianLatin.encode("Шевченко", :KMU_55)
+      "Shevchenko"
   """
 
   @doc """

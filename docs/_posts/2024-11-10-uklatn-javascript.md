@@ -22,13 +22,14 @@ Usage:
 
 ```js
 import * as uklatn from 'uklatn';
-let s = uklatn.encode('Доброго вечора!');
-let t = uklatn.decode('Paljanycja');
+
+uklatn.encode('Доброго вечора!');
+uklatn.decode('Paljanycja');
 ```
 
-Select a transliteration scheme:
+Set the transliteration scheme:
 ```js
-uklatn.encode('Борщ', 'DSTU_9112_A');
+uklatn.encode('Борщ', 'DSTU_9112_B');
 uklatn.encode('Шевченко', 'KMU_55');
 ```
 

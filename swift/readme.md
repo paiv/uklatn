@@ -9,14 +9,15 @@ Supported transliteration schemes:
 
 ```swift
 import UkrainianLatin
-let s = try! encode("Доброго вечора!")
-let t = try! decode("Paljanycja")
-print(s, t)
+
+try encode("Доброго вечора!")
+try decode("Paljanycja")
 ```
 
-Select a transliteration scheme:
+Set the transliteration scheme:
 ```swift
-try encode("Борщ", table: UKLatnTable.DSTU_9112_A)
+try encode("Борщ", table: UKLatnTable.DSTU_9112_B)
+try encode("Шевченко", table: UKLatnTable.KMU_55)
 ```
 
 

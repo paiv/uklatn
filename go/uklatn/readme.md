@@ -13,9 +13,10 @@ import "github.com/paiv/uklatn/go/uklatn"
 uklatn.EncodeString("Доброго вечора!", uklatn.DefaultTable)
 ```
 
-Select a transliteration scheme:
+Set the transliteration scheme:
 ```go
-uklatn.EncodeString("Борщ", uklatn.DSTU_9112_A)
+uklatn.EncodeString("Борщ", uklatn.DSTU_9112_B)
+uklatn.EncodeString("Шевченко", uklatn.KMU_55)
 ```
 
 
@@ -23,5 +24,3 @@ Notes
 --
 Input is assumed to be in Ukrainian (Cyrillic or Latin script), and will be processed in full.
 If your data has mixed languages, do preprocessing to extract Ukrainian chunks.
-
-

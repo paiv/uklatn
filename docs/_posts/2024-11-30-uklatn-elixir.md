@@ -29,7 +29,7 @@ decode("Paljanycja")
 #=> "Паляниця"
 ```
 
-Select a transliteration scheme:
+Set the transliteration scheme:
 ```elixir
 encode("Борщ", :DSTU_9112_B)
 #=> "Borshch"

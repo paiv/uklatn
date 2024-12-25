@@ -14,14 +14,15 @@ Usage
 require 'uklatn'
 
 tr = UkrainianLatin.new
-puts tr.encode('Доброго вечора!')
-puts tr.decode('Paljanycja')
+
+tr.encode('Доброго вечора!')
+tr.decode('Paljanycja')
 ```
 
-Select a transliteration scheme:
+Set the transliteration scheme:
 
 ```ruby
-tr.encode('Борщ', 'DSTU_9112_A')
+tr.encode('Борщ', 'DSTU_9112_B')
 tr.encode('Шевченко', 'KMU_55')
 ```
 

@@ -26,7 +26,7 @@ encode("Доброго вечора!", Table::default());
 decode("Paljanycja", Table::default());
 ```
 
-Select a transliteration scheme:
+Set the transliteration scheme:
 
 ```rust
 encode("Борщ", Table::Dstu9112B);

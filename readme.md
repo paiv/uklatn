@@ -24,6 +24,7 @@ npm install uklatn
 Usage:
 ```js
 import * as uklatn from 'uklatn';
+
 uklatn.encode("Доброго вечора!");
 uklatn.decode("Paljanycja");
 ```
@@ -128,4 +129,3 @@ Notes
 --
 Input is assumed to be in Ukrainian (Cyrillic or Latin script), and will be processed in full.
 If your data has mixed languages, do preprocessing to extract Ukrainian chunks.
-

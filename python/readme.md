@@ -10,15 +10,15 @@ Supported transliteration schemes:
 Usage:
 ```py
 import uklatn
-s = uklatn.encode("Доброго вечора!")
-print(s)
-t = uklatn.decode("Paljanycja")
-print(t)
+
+uklatn.encode("Доброго вечора!")
+uklatn.decode("Paljanycja")
 ```
 
-Select a transliteration scheme:
+Set the transliteration scheme:
 ```py
-s = uklatn.encode("Борщ", uklatn.DSTU_9112_A)
+uklatn.encode("Борщ", uklatn.DSTU_9112_B)
+uklatn.encode("Шевченко", uklatn.KMU_55)
 ```
 
 Notes
