@@ -1,6 +1,6 @@
 [package]
 name = "uklatn"
-version = "1.18.0"
+version = "1.20.0"
 license = "MIT"
 homepage = "https://github.com/paiv/uklatn"
 repository = "https://github.com/paiv/uklatn"

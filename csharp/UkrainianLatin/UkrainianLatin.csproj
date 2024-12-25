@@ -11,7 +11,7 @@
     <Copyright>Copyright © 2024 Pavlo Ivashkov</Copyright>
 
     <PackageId>UkrainianLatin</PackageId>
-    <PackageVersion>1.14.1</PackageVersion>
+    <PackageVersion>1.20.0</PackageVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>ukraine;transliteration;romanization</PackageTags>
     <PackageProjectUrl>https://github.com/paiv/uklatn</PackageProjectUrl>

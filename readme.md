@@ -49,7 +49,7 @@ Add dependency to pom.xml:
 <dependency>
     <groupId>io.github.paiv.uklatn</groupId>
     <artifactId>uklatn</artifactId>
-    <version>1.12.0</version>
+    <version>1.20.0</version>
 </dependency>
 ```
 
@@ -90,7 +90,7 @@ Elixir package
 
 Add package dependency:
 ```elixir
-{:uklatn, "~> 1.17"}
+{:uklatn, "~> 1.20"}
 ```
 
 

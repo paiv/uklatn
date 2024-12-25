@@ -4,7 +4,7 @@ defmodule Paiv.UkrainianLatin.MixProject do
   def project do
     [
       app: :uklatn,
-      version: "1.17.0",
+      version: "1.20.0",
       elixir: "~> 1.12",
       description: "Ukrainian Cyrillic transliteration to Latin script",
       homepage_url: "https://github.com/paiv/uklatn",
