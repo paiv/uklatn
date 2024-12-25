@@ -163,7 +163,7 @@ def gen_transforms(fns, default_table=None):
 
     def _emit_trrules(rules):
         tpl = '''\
-        this._rx&sid = Pattern.compile(&rx);
+        this._rx&sid = Pattern.compile(&rx, Pattern.UNICODE_CHARACTER_CLASS);
         List<Map<String,String>> _maps&sid = List.of(
             &mappings
         );
