@@ -12,7 +12,7 @@ Install
 
 Add package dependency:
 ```elixir
-{:uklatn, "~> 1.17"}
+{:uklatn, "~> 1.20"}
 ```
 
 
