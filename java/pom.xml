@@ -5,7 +5,7 @@
 
   <groupId>io.github.paiv.uklatn</groupId>
   <artifactId>uklatn</artifactId>
-  <version>1.20.0</version>
+  <version>1.20.2</version>
 
   <name>uklatn</name>
   <description>Ukrainian Cyrillic transliteration to Latin script</description>
