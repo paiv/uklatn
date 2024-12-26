@@ -22,14 +22,14 @@ Usage
 ```swift
 import UkrainianLatin
 
-try encode("Доброго вечора!")
-try decode("Paljanycja")
+encode("Доброго вечора!")
+decode("Paljanycja")
 ```
 
 Set the transliteration scheme:
 ```swift
-try encode("Борщ", table: UKLatnTable.DSTU_9112_B)
-try encode("Шевченко", table: UKLatnTable.KMU_55)
+encode("Борщ", table: UKLatnTable.DSTU_9112_B)
+encode("Шевченко", table: UKLatnTable.KMU_55)
 ```
 
 

@@ -33,33 +33,33 @@ def gen_tests(fns, default_table):
 
     def _emit_tests(kind, table):
         if kind[0] == 'c':
-            yield f'let enc = try encode(cyr, table: UKLatnTable.{table})\n'
+            yield f'let enc = encode(cyr, table: UKLatnTable.{table})\n'
             yield 'XCTAssertEqual(lat, enc)\n'
         else:
-            yield f'let dec = try decode(lat, table: UKLatnTable.{table})\n'
+            yield f'let dec = decode(lat, table: UKLatnTable.{table})\n'
             yield 'XCTAssertEqual(cyr, dec)\n'
         if kind[-1] == 'r':
             if kind[0] == 'c':
-                yield f'let dec = try decode(lat, table: UKLatnTable.{table})\n'
+                yield f'let dec = decode(lat, table: UKLatnTable.{table})\n'
                 yield 'XCTAssertEqual(cyr, dec)\n'
             else:
-                yield f'let enc = try encode(cyr, table: UKLatnTable.{table})\n'
+                yield f'let enc = encode(cyr, table: UKLatnTable.{table})\n'
                 yield 'XCTAssertEqual(lat, enc)\n'
 
     def _emit_tests_default(kind):
         def _tests():
             if kind[0] == 'c':
-                yield 'let enc = try encode(cyr)\n'
+                yield 'let enc = encode(cyr)\n'
                 yield 'XCTAssertEqual(lat, enc)\n'
             else:
-                yield 'let dec = try decode(lat)\n'
+                yield 'let dec = decode(lat)\n'
                 yield 'XCTAssertEqual(cyr, dec)\n'
             if kind[-1] == 'r':
                 if kind[0] == 'c':
-                    yield 'let dec = try decode(lat)\n'
+                    yield 'let dec = decode(lat)\n'
                     yield 'XCTAssertEqual(cyr, dec)\n'
                 else:
-                    yield 'let enc = try encode(cyr)\n'
+                    yield 'let enc = encode(cyr)\n'
                     yield 'XCTAssertEqual(lat, enc)\n'
         tpl = '''
         for (cyr, lat) in data {
@@ -67,18 +67,6 @@ def gen_tests(fns, default_table):
         }
         '''
         return template.format(tpl, tests=_tests)
-
-    def _emit_decode_throws(table):
-        tpl = '''
-        func test_decode_&{table}_throws() throws {
-            XCTAssertThrowsError(
-                try decode("lat", table: UKLatnTable.&{table})
-            ) { error in
-                XCTAssertEqual(error as? UKLatnError, UKLatnError.invalidTable(UKLatnTable.&{table}.rawValue))
-            }
-        }
-        '''
-        return template.format(tpl, table=table)
 
     def _emit_testset(data, table, cname):
         def _dump(data):
@@ -93,7 +81,7 @@ def gen_tests(fns, default_table):
 
         def _test_kind(kind, data, table):
             tpl = '''
-            func test_&{kind}_&{table}() throws {
+            func test_&{kind}_&{table}() {
                 let data: [(String, String)] = [
                 &data
                 ]
@@ -117,8 +105,6 @@ def gen_tests(fns, default_table):
                 xs = [(cyr,lat) for k,cyr,lat in data if k == kind]
                 if not xs: continue
                 yield _test_kind(kind, xs, table)
-            if all_c2l(data):
-                yield _emit_decode_throws(table)
 
         tpl = '''
 
@@ -218,7 +204,7 @@ def gen_transforms(fns, default_table=None):
             &trdefs
 
             @Sendable
-            func transform(_ text: String) throws -> String {
+            func transform(_ text: String) -> String {
                 var text = text
                 &trbody
                 return text
@@ -278,13 +264,8 @@ def gen_transforms(fns, default_table=None):
     context['global_tables'] = _emit_tables
     context['default_table'] = default_table
 
-    tpl = '''/* uklatn - https://github.com/paiv/uklatn */
+    tpl = r'''/* uklatn - https://github.com/paiv/uklatn */
 import Foundation
-
-
-public enum UKLatnError: Error, Equatable {
-    case invalidTable(Int)
-}
 
 
 /// Transliterates a string of Ukrainian Cyrillic to Latin script.
@@ -297,12 +278,12 @@ public enum UKLatnError: Error, Equatable {
 ///     - `KMU_55`: KMU 55:2010
 /// - Returns: The transliterated string.
 @Sendable
-public func encode(_ text: String, table: UKLatnTable = .&{default_table}) throws -> String {
+public func encode(_ text: String, table: UKLatnTable = .&{default_table}) -> String {
     guard let transform = _UklatnTables[table]?.encode
     else {
-        throw UKLatnError.invalidTable(table.rawValue)
+        preconditionFailure("invalid encoding table \(table)")
     }
-    return try transform(text)
+    return transform(text)
 }
 
 
@@ -315,12 +296,12 @@ public func encode(_ text: String, table: UKLatnTable = .&{default_table}) throw
 ///     - `DSTU_9112_B`: DSTU 9112:2021 System B
 /// - Returns: The transliterated string.
 @Sendable
-public func decode(_ text: String, table: UKLatnTable = .&{default_table}) throws -> String {
+public func decode(_ text: String, table: UKLatnTable = .&{default_table}) -> String {
     guard let transform = _UklatnTables[table]?.decode
     else {
-        throw UKLatnError.invalidTable(table.rawValue)
+        preconditionFailure("invalid decoding table \(table)")
     }
-    return try transform(text)
+    return transform(text)
 }
 
 
@@ -361,7 +342,7 @@ public enum UKLatnTable : Int, Sendable {
 
 
 private struct _UKLatnCodec : Sendable {
-    typealias Transform = (@Sendable (String) throws -> String)
+    typealias Transform = (@Sendable (String) -> String)
     let encode: Transform?
     let decode: Transform?
 }

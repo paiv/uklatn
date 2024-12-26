@@ -6,7 +6,7 @@ import XCTest
 
 class Dstu9112ATests: XCTestCase {
 
-    func test_c2lr_DSTU_9112_A() throws {
+    func test_c2lr_DSTU_9112_A() {
         let data: [(String, String)] = [
         (
             "Україна, Хмельницький",
@@ -79,21 +79,21 @@ class Dstu9112ATests: XCTestCase {
         ]
 
         for (cyr, lat) in data {
-            let enc = try encode(cyr, table: UKLatnTable.DSTU_9112_A)
+            let enc = encode(cyr, table: UKLatnTable.DSTU_9112_A)
             XCTAssertEqual(lat, enc)
-            let dec = try decode(lat, table: UKLatnTable.DSTU_9112_A)
+            let dec = decode(lat, table: UKLatnTable.DSTU_9112_A)
             XCTAssertEqual(cyr, dec)
         }
 
         for (cyr, lat) in data {
-            let enc = try encode(cyr)
+            let enc = encode(cyr)
             XCTAssertEqual(lat, enc)
-            let dec = try decode(lat)
+            let dec = decode(lat)
             XCTAssertEqual(cyr, dec)
         }
     }
 
-    func test_c2l_DSTU_9112_A() throws {
+    func test_c2l_DSTU_9112_A() {
         let data: [(String, String)] = [
         (
             "в’я в'я",
@@ -106,17 +106,17 @@ class Dstu9112ATests: XCTestCase {
         ]
 
         for (cyr, lat) in data {
-            let enc = try encode(cyr, table: UKLatnTable.DSTU_9112_A)
+            let enc = encode(cyr, table: UKLatnTable.DSTU_9112_A)
             XCTAssertEqual(lat, enc)
         }
 
         for (cyr, lat) in data {
-            let enc = try encode(cyr)
+            let enc = encode(cyr)
             XCTAssertEqual(lat, enc)
         }
     }
 
-    func test_l2c_DSTU_9112_A() throws {
+    func test_l2c_DSTU_9112_A() {
         let data: [(String, String)] = [
         (
             "я є ю",
@@ -141,12 +141,12 @@ class Dstu9112ATests: XCTestCase {
         ]
 
         for (cyr, lat) in data {
-            let dec = try decode(lat, table: UKLatnTable.DSTU_9112_A)
+            let dec = decode(lat, table: UKLatnTable.DSTU_9112_A)
             XCTAssertEqual(cyr, dec)
         }
 
         for (cyr, lat) in data {
-            let dec = try decode(lat)
+            let dec = decode(lat)
             XCTAssertEqual(cyr, dec)
         }
     }
@@ -155,7 +155,7 @@ class Dstu9112ATests: XCTestCase {
 
 class Dstu9112BTests: XCTestCase {
 
-    func test_c2lr_DSTU_9112_B() throws {
+    func test_c2lr_DSTU_9112_B() {
         let data: [(String, String)] = [
         (
             "Україна, Хмельницький",
@@ -228,14 +228,14 @@ class Dstu9112BTests: XCTestCase {
         ]
 
         for (cyr, lat) in data {
-            let enc = try encode(cyr, table: UKLatnTable.DSTU_9112_B)
+            let enc = encode(cyr, table: UKLatnTable.DSTU_9112_B)
             XCTAssertEqual(lat, enc)
-            let dec = try decode(lat, table: UKLatnTable.DSTU_9112_B)
+            let dec = decode(lat, table: UKLatnTable.DSTU_9112_B)
             XCTAssertEqual(cyr, dec)
         }
     }
 
-    func test_c2l_DSTU_9112_B() throws {
+    func test_c2l_DSTU_9112_B() {
         let data: [(String, String)] = [
         (
             "в’я в'я",
@@ -248,12 +248,12 @@ class Dstu9112BTests: XCTestCase {
         ]
 
         for (cyr, lat) in data {
-            let enc = try encode(cyr, table: UKLatnTable.DSTU_9112_B)
+            let enc = encode(cyr, table: UKLatnTable.DSTU_9112_B)
             XCTAssertEqual(lat, enc)
         }
     }
 
-    func test_l2c_DSTU_9112_B() throws {
+    func test_l2c_DSTU_9112_B() {
         let data: [(String, String)] = [
         (
             "я ї є ю г ж х щ ш ч ь",
@@ -270,7 +270,7 @@ class Dstu9112BTests: XCTestCase {
         ]
 
         for (cyr, lat) in data {
-            let dec = try decode(lat, table: UKLatnTable.DSTU_9112_B)
+            let dec = decode(lat, table: UKLatnTable.DSTU_9112_B)
             XCTAssertEqual(cyr, dec)
         }
     }
@@ -279,7 +279,7 @@ class Dstu9112BTests: XCTestCase {
 
 class Kmu55Tests: XCTestCase {
 
-    func test_c2l_KMU_55() throws {
+    func test_c2l_KMU_55() {
         let data: [(String, String)] = [
         (
             "Україна, Хмельницький",
@@ -352,16 +352,8 @@ class Kmu55Tests: XCTestCase {
         ]
 
         for (cyr, lat) in data {
-            let enc = try encode(cyr, table: UKLatnTable.KMU_55)
+            let enc = encode(cyr, table: UKLatnTable.KMU_55)
             XCTAssertEqual(lat, enc)
-        }
-    }
-
-    func test_decode_KMU_55_throws() throws {
-        XCTAssertThrowsError(
-            try decode("lat", table: UKLatnTable.KMU_55)
-        ) { error in
-            XCTAssertEqual(error as? UKLatnError, UKLatnError.invalidTable(UKLatnTable.KMU_55.rawValue))
         }
     }
 }

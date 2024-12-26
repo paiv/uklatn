@@ -17,27 +17,24 @@ struct MyApp {
                 try transformFile(file, direction: args.direction, table: args.table)
             }
             else if let text = args.text {
-                try transformText(text, direction: args.direction, table: args.table)
+                transformText(text, direction: args.direction, table: args.table)
             }
         }
         catch let error as AppArgs.ParseError {
             AppArgs.printError(error, to: &stderr)
-        }
-        catch UKLatnError.invalidTable(let table) {
-            AppArgs.printError(.invalidTable("\(table)"), to: &stderr)
         }
         catch {
             print(error, to: &stderr)
         }
     }
 
-    private static func transformText(_ text: String, direction: AppArgs.TransformDirection, table: UKLatnTable) throws {
+    private static func transformText(_ text: String, direction: AppArgs.TransformDirection, table: UKLatnTable) {
         let value: String
         switch direction {
         case .cyr2lat:
-            value = try encode(text, table: table)
+            value = encode(text, table: table)
         case .lat2cyr:
-            value = try decode(text, table: table)
+            value = decode(text, table: table)
         }
         print("\(value)")
     }
@@ -45,13 +42,13 @@ struct MyApp {
     private static func transformFile(_ file: String, direction: AppArgs.TransformDirection, table: UKLatnTable) throws {
         if file == "-" {
             while let text = readLine() {
-                try transformText(text, direction: direction, table: table)
+                transformText(text, direction: direction, table: table)
             }
         }
         else {
             var encoding: String.Encoding = .utf8
             let text = try String(contentsOfFile: file, usedEncoding: &encoding)
-            try transformText(text, direction: direction, table: table)
+            transformText(text, direction: direction, table: table)
         }
     }
 }

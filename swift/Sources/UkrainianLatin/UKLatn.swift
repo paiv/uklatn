@@ -4,11 +4,6 @@
 import Foundation
 
 
-public enum UKLatnError: Error, Equatable {
-    case invalidTable(Int)
-}
-
-
 /// Transliterates a string of Ukrainian Cyrillic to Latin script.
 ///
 /// - Parameters:
@@ -19,12 +14,12 @@ public enum UKLatnError: Error, Equatable {
 ///     - `KMU_55`: KMU 55:2010
 /// - Returns: The transliterated string.
 @Sendable
-public func encode(_ text: String, table: UKLatnTable = .DSTU_9112_A) throws -> String {
+public func encode(_ text: String, table: UKLatnTable = .DSTU_9112_A) -> String {
     guard let transform = _UklatnTables[table]?.encode
     else {
-        throw UKLatnError.invalidTable(table.rawValue)
+        preconditionFailure("invalid encoding table \(table)")
     }
-    return try transform(text)
+    return transform(text)
 }
 
 
@@ -37,12 +32,12 @@ public func encode(_ text: String, table: UKLatnTable = .DSTU_9112_A) throws -> 
 ///     - `DSTU_9112_B`: DSTU 9112:2021 System B
 /// - Returns: The transliterated string.
 @Sendable
-public func decode(_ text: String, table: UKLatnTable = .DSTU_9112_A) throws -> String {
+public func decode(_ text: String, table: UKLatnTable = .DSTU_9112_A) -> String {
     guard let transform = _UklatnTables[table]?.decode
     else {
-        throw UKLatnError.invalidTable(table.rawValue)
+        preconditionFailure("invalid decoding table \(table)")
     }
-    return try transform(text)
+    return transform(text)
 }
 
 
@@ -91,7 +86,7 @@ public enum UKLatnTable : Int, Sendable {
 
 
 private struct _UKLatnCodec : Sendable {
-    typealias Transform = (@Sendable (String) throws -> String)
+    typealias Transform = (@Sendable (String) -> String)
     let encode: Transform?
     let decode: Transform?
 }
@@ -107,7 +102,7 @@ private let _Uklatn_uk_uk_Latn_DSTU_9112_A: @Sendable () -> _UKLatnCodec.Transfo
     ]
 
     @Sendable
-    func transform(_ text: String) throws -> String {
+    func transform(_ text: String) -> String {
         var text = text
         text = text.precomposedStringWithCanonicalMapping // NFC
         text = text.replacing(_rx1) { (i, match) in
@@ -129,7 +124,7 @@ private let _Uklatn_uk_uk_Latn_DSTU_9112_B: @Sendable () -> _UKLatnCodec.Transfo
     ]
 
     @Sendable
-    func transform(_ text: String) throws -> String {
+    func transform(_ text: String) -> String {
         var text = text
         text = text.precomposedStringWithCanonicalMapping // NFC
         text = text.replacing(_rx1) { (i, match) in
@@ -157,7 +152,7 @@ private let _Uklatn_uk_uk_Latn_KMU_55: @Sendable () -> _UKLatnCodec.Transform = 
     ]
 
     @Sendable
-    func transform(_ text: String) throws -> String {
+    func transform(_ text: String) -> String {
         var text = text
         text = text.precomposedStringWithCanonicalMapping // NFC
         text = text.replacing(_rx1) { (i, match) in
@@ -187,7 +182,7 @@ private let _Uklatn_uk_Latn_DSTU_9112_A_uk: @Sendable () -> _UKLatnCodec.Transfo
     ]
 
     @Sendable
-    func transform(_ text: String) throws -> String {
+    func transform(_ text: String) -> String {
         var text = text
         text = text.precomposedStringWithCanonicalMapping // NFC
         text = text.replacing(_rx1) { (i, match) in
@@ -219,7 +214,7 @@ private let _Uklatn_uk_Latn_DSTU_9112_B_uk: @Sendable () -> _UKLatnCodec.Transfo
     ]
 
     @Sendable
-    func transform(_ text: String) throws -> String {
+    func transform(_ text: String) -> String {
         var text = text
         text = text.precomposedStringWithCanonicalMapping // NFC
         text = text.replacing(_rx1) { (i, match) in
