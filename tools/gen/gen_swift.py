@@ -33,17 +33,17 @@ def gen_tests(fns, default_table):
 
     def _emit_tests(kind, table):
         if kind[0] == 'c':
-            yield f'let enc = encode(cyr, table: UKLatnTable.{table})\n'
+            yield f'let enc = encode(cyr, table: .{table})\n'
             yield 'XCTAssertEqual(lat, enc)\n'
         else:
-            yield f'let dec = decode(lat, table: UKLatnTable.{table})\n'
+            yield f'let dec = decode(lat, table: .{table})\n'
             yield 'XCTAssertEqual(cyr, dec)\n'
         if kind[-1] == 'r':
             if kind[0] == 'c':
-                yield f'let dec = decode(lat, table: UKLatnTable.{table})\n'
+                yield f'let dec = decode(lat, table: .{table})\n'
                 yield 'XCTAssertEqual(cyr, dec)\n'
             else:
-                yield f'let enc = encode(cyr, table: UKLatnTable.{table})\n'
+                yield f'let enc = encode(cyr, table: .{table})\n'
                 yield 'XCTAssertEqual(lat, enc)\n'
 
     def _emit_tests_default(kind):

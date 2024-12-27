@@ -79,9 +79,9 @@ class Dstu9112ATests: XCTestCase {
         ]
 
         for (cyr, lat) in data {
-            let enc = encode(cyr, table: UKLatnTable.DSTU_9112_A)
+            let enc = encode(cyr, table: .DSTU_9112_A)
             XCTAssertEqual(lat, enc)
-            let dec = decode(lat, table: UKLatnTable.DSTU_9112_A)
+            let dec = decode(lat, table: .DSTU_9112_A)
             XCTAssertEqual(cyr, dec)
         }
 
@@ -106,7 +106,7 @@ class Dstu9112ATests: XCTestCase {
         ]
 
         for (cyr, lat) in data {
-            let enc = encode(cyr, table: UKLatnTable.DSTU_9112_A)
+            let enc = encode(cyr, table: .DSTU_9112_A)
             XCTAssertEqual(lat, enc)
         }
 
@@ -141,7 +141,7 @@ class Dstu9112ATests: XCTestCase {
         ]
 
         for (cyr, lat) in data {
-            let dec = decode(lat, table: UKLatnTable.DSTU_9112_A)
+            let dec = decode(lat, table: .DSTU_9112_A)
             XCTAssertEqual(cyr, dec)
         }
 
@@ -228,9 +228,9 @@ class Dstu9112BTests: XCTestCase {
         ]
 
         for (cyr, lat) in data {
-            let enc = encode(cyr, table: UKLatnTable.DSTU_9112_B)
+            let enc = encode(cyr, table: .DSTU_9112_B)
             XCTAssertEqual(lat, enc)
-            let dec = decode(lat, table: UKLatnTable.DSTU_9112_B)
+            let dec = decode(lat, table: .DSTU_9112_B)
             XCTAssertEqual(cyr, dec)
         }
     }
@@ -248,7 +248,7 @@ class Dstu9112BTests: XCTestCase {
         ]
 
         for (cyr, lat) in data {
-            let enc = encode(cyr, table: UKLatnTable.DSTU_9112_B)
+            let enc = encode(cyr, table: .DSTU_9112_B)
             XCTAssertEqual(lat, enc)
         }
     }
@@ -270,7 +270,7 @@ class Dstu9112BTests: XCTestCase {
         ]
 
         for (cyr, lat) in data {
-            let dec = decode(lat, table: UKLatnTable.DSTU_9112_B)
+            let dec = decode(lat, table: .DSTU_9112_B)
             XCTAssertEqual(cyr, dec)
         }
     }
@@ -352,7 +352,7 @@ class Kmu55Tests: XCTestCase {
         ]
 
         for (cyr, lat) in data {
-            let enc = encode(cyr, table: UKLatnTable.KMU_55)
+            let enc = encode(cyr, table: .KMU_55)
             XCTAssertEqual(lat, enc)
         }
     }

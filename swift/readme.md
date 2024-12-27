@@ -16,8 +16,8 @@ decode("Paljanycja")
 
 Set the transliteration scheme:
 ```swift
-encode("Борщ", table: UKLatnTable.DSTU_9112_B)
-encode("Шевченко", table: UKLatnTable.KMU_55)
+encode("Борщ", table: .DSTU_9112_B)
+encode("Шевченко", table: .KMU_55)
 ```
 
 
