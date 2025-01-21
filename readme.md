@@ -16,9 +16,9 @@ JavaScript package
 --
 - [uklatn JavaScript package](js/)
 
-Install with npm:
+Install with JSR:
 ```sh
-npm install uklatn
+npx jsr add @paiv/uklatn
 ```
 
 Usage:
