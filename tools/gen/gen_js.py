@@ -259,10 +259,11 @@ def gen_transforms(fns, default_table=None):
 * Transliterates a string of Ukrainian Cyrillic to Latin script.
 *
 * @param {string} text - the text to transliterate
-* @param {string} table - transliteration system, one of:
+* @param {string} [table] - transliteration system, one of:
 *  - "DSTU_9112_A": DSTU 9112:2021 System A
 *  - "DSTU_9112_B": DSTU 9112:2021 System B
 *  - "KMU_55": KMU 55:2010
+* @returns {string} transliterated text
 */
 export function encode(text, table) {
     if (table === undefined) { table = &{default_table}; }
@@ -278,9 +279,10 @@ export function encode(text, table) {
 * Re-transliterates a string of Ukrainian Latin to Cyrillic script.
 *
 * @param {string} text - the text to transliterate
-* @param {string} table - transliteration system, one of:
+* @param {string} [table] - transliteration system, one of:
 *  - "DSTU_9112_A": DSTU 9112:2021 System A
 *  - "DSTU_9112_B": DSTU 9112:2021 System B
+* @returns {string} transliterated text
 */
 export function decode(text, table) {
     if (table === undefined) { table = &{default_table}; }

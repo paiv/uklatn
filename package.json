@@ -27,7 +27,7 @@
   "type": "module",
   "main": "js/uklatn.js",
   "bin": "js/cli.js",
-  "files": [],
+  "files": ["js/*.ts"],
   "scripts": {
     "postpack": "git checkout readme.md",
     "prepack": "cp js/readme.md readme.md",
