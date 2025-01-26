@@ -252,6 +252,9 @@ def gen_transforms(fns, default_table=None):
     context['default_table'] = repr(default_table)
 
     tpl = '''/* uklatn.js - https://github.com/paiv/uklatn */
+
+// @ts-self-types="./uklatn.d.ts"
+
 &{global_tables}
 
 

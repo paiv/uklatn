@@ -2,6 +2,9 @@
 
 /* uklatn.js - https://github.com/paiv/uklatn */
 
+// @ts-self-types="./uklatn.d.ts"
+
+
 class _Uklatn_uk_uk_Latn_DSTU_9112_A {
     constructor() {
         this._rx1 = /(?<=^|[^\p{L}\p{M}\p{N}])([Ьь])|([Ьь](?=[АаЕеУу])|[ЄЮЯ](?=\u0301?[а-щьюяєіїґ’])|(?<=[Б-ДЖЗК-НП-ТФ-Щб-джзк-нп-тф-щҐґ])[Йй])|([ЁЄІЇЎА-яёєіїўҐґ’])/gu;
