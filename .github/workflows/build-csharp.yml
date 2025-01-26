@@ -8,6 +8,7 @@ on:
     branches: [main]
     paths:
     - 'csharp/**'
+    - '.github/workflows/build-csharp.yml'
 
 jobs:
 
@@ -16,6 +17,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 6
+
+    - name: .NET version
+      run: dotnet --info
 
     - name: Test
       working-directory: ${{github.workspace}}/csharp
