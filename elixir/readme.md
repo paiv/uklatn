@@ -12,6 +12,7 @@ Usage
 
 ```elixir
 import Paiv.UkrainianLatin
+
 encode("Доброго вечора!")
 #=> "Dobroğo večora!"
 
@@ -23,6 +24,9 @@ Set the transliteration scheme:
 ```elixir
 encode("Борщ", :DSTU_9112_B)
 #=> "Borshch"
+
+encode("Шевченко", :KMU_55)
+#=> "Shevchenko"
 ```
 
 

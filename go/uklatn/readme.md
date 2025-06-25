@@ -11,6 +11,7 @@ Supported transliteration schemes:
 import "github.com/paiv/uklatn/go/uklatn"
 
 uklatn.EncodeString("Доброго вечора!", uklatn.DefaultTable)
+uklatn.DecodeString("Paljanycja", uklatn.DefaultTable)
 ```
 
 Set the transliteration scheme:
