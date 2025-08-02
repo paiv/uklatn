@@ -160,9 +160,9 @@ if __name__ == '__main__':
     parse_c.add_argument('source', nargs='*', help='source directory')
     parse_c.set_defaults(func=gen_c)
 
-    parse_py = subpar.add_parser('js', help='JavaScript code generator')
-    parse_py.add_argument('source', nargs='*', help='source directory')
-    parse_py.set_defaults(func=gen_js)
+    parse_js = subpar.add_parser('js', help='JavaScript code generator')
+    parse_js.add_argument('source', nargs='*', help='source directory')
+    parse_js.set_defaults(func=gen_js)
 
     parse_py = subpar.add_parser('py', help='Python code generator')
     parse_py.add_argument('source', nargs='*', help='source directory')

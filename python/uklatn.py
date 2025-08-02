@@ -6,10 +6,10 @@
 
 https://github.com/paiv/uklatn
 
-encode(...): tranliterate Cyrlllic to Latin script
+encode(...): transliterate Cyrlllic to Latin script
 decode(...): re-transliterate Latin script back to Cyrillic
 
-Tranliteration schemes:
+Transliteration schemes:
  - DSTU_9112_A (default)
  - DSTU_9112_B
  - KMU_55

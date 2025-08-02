@@ -228,10 +228,10 @@ def gen_transforms(fns, default_table=None):
 
 https://github.com/paiv/uklatn
 
-encode(...): tranliterate Cyrlllic to Latin script
+encode(...): transliterate Cyrlllic to Latin script
 decode(...): re-transliterate Latin script back to Cyrillic
 
-Tranliteration schemes:
+Transliteration schemes:
 &{doc_tables}
 
 For example,
