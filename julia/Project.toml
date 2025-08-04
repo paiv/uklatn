@@ -1,0 +1,16 @@
+name = "UkrainianLatin"
+uuid = "d932fbc0-74b0-44ca-9a64-41f37a8ecec9"
+version = "1.23.0"
+
+[deps]
+Unicode = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
+
+[compat]
+julia = "1.7"
+
+[extras]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Documenter", "Test"]

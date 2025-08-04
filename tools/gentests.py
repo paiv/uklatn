@@ -84,6 +84,17 @@ def gen_py(args):
     logger.info('PY generator end')
 
 
+def gen_julia(args):
+    logger.info('Julia generator start')
+    from gen import gen_julia
+
+    source = _basegen(args, 'src/tests', 'test*.json', gen_julia.gen_tests)
+    for text in source:
+        print(text, end='')
+
+    logger.info('Julia generator end')
+
+
 def gen_csharp(args):
     logger.info('C# generator start')
     from gen import gen_csharp
@@ -167,6 +178,10 @@ if __name__ == '__main__':
     parse_py = subpar.add_parser('py', help='Python code generator')
     parse_py.add_argument('source', nargs='*', help='source directory')
     parse_py.set_defaults(func=gen_py)
+
+    parse_julia = subpar.add_parser('julia', help='Julia code generator')
+    parse_julia.add_argument('source', nargs='*', help='source directory')
+    parse_julia.set_defaults(func=gen_julia)
 
     parse_java = subpar.add_parser('java', help='Java code generator')
     parse_java.add_argument('source', nargs='*', help='source directory')

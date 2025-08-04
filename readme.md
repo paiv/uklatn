@@ -5,7 +5,7 @@ Ukrainian Cyrillic transliteration to Latin script.
 [![standwithukraine](docs/StandWithUkraine.svg)](https://ukrainewar.carrd.co/)
 [![](https://github.com/paiv/uklatn/actions/workflows/test-builds.yml/badge.svg)](https://github.com/paiv/uklatn/actions)
 
-[JavaScript](#javascript-package) | [Python](#python-module) | [C](c/) | [Java](#java-library) | [.NET](#net-package) | [Go](#go-package) | [PHP](#php-package) | [Elixir](#elixir-package) | [Swift](#swift-package) | [Ruby](#ruby-gem) | [Rust](#rust-crate)
+[JavaScript](#javascript-package) | [Python](#python-module) | [C](c/) | [Java](#java-library) | [.NET](#net-package) | [Go](#go-package) | [PHP](#php-package) | [Elixir](#elixir-package) | [Julia](#julia-package) | [Swift](#swift-package) | [Ruby](#ruby-gem) | [Rust](#rust-crate)
 
 Supported transliteration schemes:
 - [DSTU 9112:2021](https://uk.wikipedia.org/wiki/ДСТУ_9112:2021)
@@ -93,6 +93,16 @@ Add package dependency:
 {:uklatn, "~> 1.20"}
 ```
 
+
+Julia package
+--
+- [uklatn Julia package](julia/)
+
+Add package dependency:
+```julia-repl
+julia> ]
+pkg> add https://github.com/paiv/uklatn:julia/
+```
 
 Swift package
 --
