@@ -95,137 +95,111 @@ function decode(s::AbstractString, table::Symbol)
 end
 
 
-struct _ReplacementMaps
-    maps::Vector{Dict{String, String}}
-end
-
-
-Base._replace(io::IO, repl_s::_ReplacementMaps, str, r, re::Base.RegexAndMatchData) = begin
-    for i = 1:length(repl_s.maps)
-        n = Base.PCRE.substring_length_bynumber(re.match_data, i)
-        if n > 0
-            k = str[r]
-            s = get(repl_s.maps[i], k, k)
-            write(io, s)
-            break
-        end
-    end
-end
-
-
 struct _Uklatn_uk_uk_Latn_DSTU_9112_A
-    rx1::Regex
-    tr1::_ReplacementMaps
+    rx1::NTuple{3, Pair{Regex, Function}}
 
     function _Uklatn_uk_uk_Latn_DSTU_9112_A()
-        rx1 = r"\b([Ьь])|([Ьь](?=[АаЕеУу])|[ЄЮЯ](?=\u0301?[а-щьюяєіїґ’])|(?<=[Б-ДЖЗК-НП-ТФ-Щб-джзк-нп-тф-щҐґ])[Йй])|([ЁЄІЇЎА-яёєіїўҐґ’])"
+        rx1 = [r"\b([Ьь])", r"([Ьь](?=[АаЕеУу])|[ЄЮЯ](?=\u0301?[а-щьюяєіїґ’])|(?<=[Б-ДЖЗК-НП-ТФ-Щб-джзк-нп-тф-щҐґ])[Йй])", r"([ЁЄІЇЎА-яёєіїўҐґ’])"]
         maps1 = [Dict([("Ь","Ĵ"),("ь","ĵ")]), Dict([("Ь","J'"),("ь","j'"),("Є","Je"),("Ю","Ju"),("Я","Ja"),("Й","'J"),("й","'j")]), Dict([("А","A"),("а","a"),("Б","B"),("б","b"),("В","V"),("в","v"),("Г","Ğ"),("г","ğ"),("Ґ","G"),("ґ","g"),("Д","D"),("д","d"),("Е","E"),("е","e"),("Є","JE"),("є","je"),("Ж","Ž"),("ж","ž"),("З","Z"),("з","z"),("И","Y"),("и","y"),("І","I"),("і","i"),("Ї","Ï"),("ї","ï"),("К","K"),("к","k"),("Л","L"),("л","l"),("М","M"),("м","m"),("Н","N"),("н","n"),("О","O"),("о","o"),("П","P"),("п","p"),("Р","R"),("р","r"),("С","S"),("с","s"),("Т","T"),("т","t"),("У","U"),("у","u"),("Ф","F"),("ф","f"),("Х","X"),("х","x"),("Ц","C"),("ц","c"),("Ч","Č"),("ч","č"),("Ш","Š"),("ш","š"),("Щ","Ŝ"),("щ","ŝ"),("Ю","JU"),("ю","ju"),("Я","JA"),("я","ja"),("Ь","J"),("ь","j"),("Й","J"),("й","j"),("’","'"),("Ё","Ö"),("ё","ö"),("Ў","Ŭ"),("ў","ŭ"),("Ъ","Ǒ"),("ъ","ǒ"),("Ы","Ȳ"),("ы","ȳ"),("Э","Ē"),("э","ē")])]
-        tr1 = _ReplacementMaps(maps1)
-        new(rx1, tr1)
+        tr1 = Tuple(r => s -> get(m, s, s) for (r,m) in zip(rx1, maps1))
+        new(tr1)
     end
 end
 
 function _transform(table::_Uklatn_uk_uk_Latn_DSTU_9112_A, text::AbstractString)
     text = normalize(text, :NFC)
-    text = replace(text, table.rx1 => table.tr1)
+    text = replace(text, table.rx1...)
     text = normalize(text, :NFC)
     return text
 end
 
 
 struct _Uklatn_uk_uk_Latn_DSTU_9112_B
-    rx1::Regex
-    tr1::_ReplacementMaps
+    rx1::NTuple{3, Pair{Regex, Function}}
 
     function _Uklatn_uk_uk_Latn_DSTU_9112_B()
-        rx1 = r"([Ьь](?=[АаЕеІіУу])|(?<=[Б-ДЖЗК-НП-ТФ-Щб-джзк-нп-тф-щҐґ])[Йй])|([ГЄЖЇХЩШЧЮЯЁЎЪЫЭ](?=\u0301?[а-яёєіїўґ’])|\b[Ьь])|([ЁЄІЇЎА-яёєіїўҐґ’])"
+        rx1 = [r"([Ьь](?=[АаЕеІіУу])|(?<=[Б-ДЖЗК-НП-ТФ-Щб-джзк-нп-тф-щҐґ])[Йй])", r"([ГЄЖЇХЩШЧЮЯЁЎЪЫЭ](?=\u0301?[а-яёєіїўґ’])|\b[Ьь])", r"([ЁЄІЇЎА-яёєіїўҐґ’])"]
         maps1 = [Dict([("Ь","J'"),("ь","j'"),("Й","'J"),("й","'j")]), Dict([("Г","Gh"),("Є","Je"),("Ж","Zh"),("Ї","Ji"),("Х","Kh"),("Щ","Shch"),("Ш","Sh"),("Ч","Ch"),("Ю","Ju"),("Я","Ja"),("Ё","Jow"),("Ў","Uh"),("Ъ","Oh"),("Ы","Yw"),("Э","Ehw"),("Ь","Hj"),("ь","hj")]), Dict([("А","A"),("а","a"),("Б","B"),("б","b"),("В","V"),("в","v"),("Г","GH"),("г","gh"),("Ґ","G"),("ґ","g"),("Д","D"),("д","d"),("Е","E"),("е","e"),("Є","JE"),("є","je"),("Ж","ZH"),("ж","zh"),("З","Z"),("з","z"),("И","Y"),("и","y"),("І","I"),("і","i"),("Ї","JI"),("ї","ji"),("Х","KH"),("х","kh"),("К","K"),("к","k"),("Л","L"),("л","l"),("М","M"),("м","m"),("Н","N"),("н","n"),("О","O"),("о","o"),("П","P"),("п","p"),("Р","R"),("р","r"),("Щ","SHCH"),("щ","shch"),("Ш","SH"),("ш","sh"),("С","S"),("с","s"),("Т","T"),("т","t"),("У","U"),("у","u"),("Ф","F"),("ф","f"),("Ч","CH"),("ч","ch"),("Ц","C"),("ц","c"),("Ю","JU"),("ю","ju"),("Я","JA"),("я","ja"),("Й","J"),("й","j"),("Ь","J"),("ь","j"),("’","'"),("Ё","JOW"),("ё","jow"),("Ў","UH"),("ў","uh"),("Ъ","OH"),("ъ","oh"),("Ы","YW"),("ы","yw"),("Э","EHW"),("э","ehw")])]
-        tr1 = _ReplacementMaps(maps1)
-        new(rx1, tr1)
+        tr1 = Tuple(r => s -> get(m, s, s) for (r,m) in zip(rx1, maps1))
+        new(tr1)
     end
 end
 
 function _transform(table::_Uklatn_uk_uk_Latn_DSTU_9112_B, text::AbstractString)
     text = normalize(text, :NFC)
-    text = replace(text, table.rx1 => table.tr1)
+    text = replace(text, table.rx1...)
     text = normalize(text, :NFC)
     return text
 end
 
 
 struct _Uklatn_uk_uk_Latn_KMU_55
-    rx1::Regex
-    tr1::_ReplacementMaps
-    rx2::Regex
-    tr2::_ReplacementMaps
+    rx1::NTuple{1, Pair{Regex, Function}}
+    rx2::NTuple{4, Pair{Regex, Function}}
 
     function _Uklatn_uk_uk_Latn_KMU_55()
-        rx1 = r"(?<=[ЁЄІЇЎА-яёєіїўҐґ])([’\u0027])(?=[ЁЄІЇЎА-яёєіїўҐґ])"
+        rx1 = [r"(?<=[ЁЄІЇЎА-яёєіїўҐґ])([’\u0027])(?=[ЁЄІЇЎА-яёєіїўҐґ])"]
         maps1 = [Dict([("’",""),("'","")])]
-        tr1 = _ReplacementMaps(maps1)
-        rx2 = r"\b([ЄЇЮЯ])(?=\u0301?[а-яёєіїўґ’])|\b([ЙйЄЇЮЯєїюя])|([Зз]Г|[ЖХЦЩШЧЄЇЮЯ])(?=\u0301?[а-яёєіїўґ’])|([Зз][Гг]|[ЄІЇА-ЩЬЮ-щьюяєіїҐґ’])"
+        tr1 = Tuple(r => s -> get(m, s, s) for (r,m) in zip(rx1, maps1))
+        rx2 = [r"\b([ЄЇЮЯ])(?=\u0301?[а-яёєіїўґ’])", r"\b([ЙйЄЇЮЯєїюя])", r"([Зз]Г|[ЖХЦЩШЧЄЇЮЯ])(?=\u0301?[а-яёєіїўґ’])", r"([Зз][Гг]|[ЄІЇА-ЩЬЮ-щьюяєіїҐґ’])"]
         maps2 = [Dict([("Є","Ye"),("Ї","Yi"),("Ю","Yu"),("Я","Ya")]), Dict([("Й","Y"),("й","y"),("Є","YE"),("є","ye"),("Ї","YI"),("ї","yi"),("Ю","YU"),("ю","yu"),("Я","YA"),("я","ya")]), Dict([("ЗГ","ZGh"),("зГ","zGh"),("Ж","Zh"),("Х","Kh"),("Ц","Ts"),("Щ","Shch"),("Ш","Sh"),("Ч","Ch"),("Є","Ie"),("Ї","I"),("Ю","Iu"),("Я","Ia")]), Dict([("ЗГ","ZGH"),("Зг","Zgh"),("зГ","zGH"),("зг","zgh"),("А","A"),("а","a"),("Б","B"),("б","b"),("В","V"),("в","v"),("Г","H"),("г","h"),("Ґ","G"),("ґ","g"),("Д","D"),("д","d"),("Е","E"),("е","e"),("Є","IE"),("є","ie"),("Ж","ZH"),("ж","zh"),("З","Z"),("з","z"),("И","Y"),("и","y"),("І","I"),("і","i"),("Ї","I"),("ї","i"),("Х","KH"),("х","kh"),("К","K"),("к","k"),("Л","L"),("л","l"),("М","M"),("м","m"),("Н","N"),("н","n"),("О","O"),("о","o"),("П","P"),("п","p"),("Р","R"),("р","r"),("Щ","SHCH"),("щ","shch"),("Ш","SH"),("ш","sh"),("С","S"),("с","s"),("Т","T"),("т","t"),("У","U"),("у","u"),("Ф","F"),("ф","f"),("Ч","CH"),("ч","ch"),("Ц","TS"),("ц","ts"),("Ю","IU"),("ю","iu"),("Я","IA"),("я","ia"),("Й","I"),("й","i"),("Ь",""),("ь",""),("’","")])]
-        tr2 = _ReplacementMaps(maps2)
-        new(rx1, tr1, rx2, tr2)
+        tr2 = Tuple(r => s -> get(m, s, s) for (r,m) in zip(rx2, maps2))
+        new(tr1, tr2)
     end
 end
 
 function _transform(table::_Uklatn_uk_uk_Latn_KMU_55, text::AbstractString)
     text = normalize(text, :NFC)
-    text = replace(text, table.rx1 => table.tr1)
-    text = replace(text, table.rx2 => table.tr2)
+    text = replace(text, table.rx1...)
+    text = replace(text, table.rx2...)
     text = normalize(text, :NFC)
     return text
 end
 
 
 struct _Uklatn_uk_Latn_DSTU_9112_A_uk
-    rx1::Regex
-    tr1::_ReplacementMaps
-    rx2::Regex
-    tr2::_ReplacementMaps
+    rx1::NTuple{1, Pair{Regex, Function}}
+    rx2::NTuple{3, Pair{Regex, Function}}
 
     function _Uklatn_uk_Latn_DSTU_9112_A_uk()
-        rx1 = r"([ÁáÉéÍíÓóÚúÝýḮḯ])"
+        rx1 = [r"([ÁáÉéÍíÓóÚúÝýḮḯ])"]
         maps1 = [Dict([("Á","Á"),("á","á"),("É","É"),("é","é"),("Í","Í"),("í","í"),("Ó","Ó"),("ó","ó"),("Ú","Ú"),("ú","ú"),("Ý","Ý"),("ý","ý"),("Ḯ","Ḯ"),("ḯ","ḯ")])]
-        tr1 = _ReplacementMaps(maps1)
-        rx2 = r"(J[Ee]|j[Ee]|J[Uu]|j[Uu]|J[Aa]|j[Aa]|[A-GIK-PR-VXYZa-gik-pr-vxyzÏÖïöČčĒēĞğĴĵŜŝŠšŬŭŽžǑǒȲȳ])|(?<=[BbCcDdFfGgKkLlMmNnPpRrSsTtVvXxZzČčĞğŜŝŠšŽž])([Jj]\u0027(?=[AaEeUu])|[Jj])|(\u0027[Jj](?![AaEeIiUu])|\u0027(?=[Jj])|[Jj])"
+        tr1 = Tuple(r => s -> get(m, s, s) for (r,m) in zip(rx1, maps1))
+        rx2 = [r"(J[Ee]|j[Ee]|J[Uu]|j[Uu]|J[Aa]|j[Aa]|[A-GIK-PR-VXYZa-gik-pr-vxyzÏÖïöČčĒēĞğĴĵŜŝŠšŬŭŽžǑǒȲȳ])", r"(?<=[BbCcDdFfGgKkLlMmNnPpRrSsTtVvXxZzČčĞğŜŝŠšŽž])([Jj]\u0027(?=[AaEeUu])|[Jj])", r"(\u0027[Jj](?![AaEeIiUu])|\u0027(?=[Jj])|[Jj])"]
         maps2 = [Dict([("A","А"),("a","а"),("B","Б"),("b","б"),("V","В"),("v","в"),("Ğ","Г"),("ğ","г"),("G","Ґ"),("g","ґ"),("D","Д"),("d","д"),("E","Е"),("e","е"),("JE","Є"),("Je","Є"),("jE","є"),("je","є"),("Ž","Ж"),("ž","ж"),("Z","З"),("z","з"),("Y","И"),("y","и"),("I","І"),("i","і"),("Ï","Ї"),("ï","ї"),("K","К"),("k","к"),("L","Л"),("l","л"),("M","М"),("m","м"),("N","Н"),("n","н"),("O","О"),("o","о"),("P","П"),("p","п"),("R","Р"),("r","р"),("S","С"),("s","с"),("T","Т"),("t","т"),("U","У"),("u","у"),("F","Ф"),("f","ф"),("X","Х"),("x","х"),("C","Ц"),("c","ц"),("Č","Ч"),("č","ч"),("Š","Ш"),("š","ш"),("Ŝ","Щ"),("ŝ","щ"),("JU","Ю"),("Ju","Ю"),("jU","ю"),("ju","ю"),("JA","Я"),("Ja","Я"),("jA","я"),("ja","я"),("Ĵ","Ь"),("ĵ","ь"),("Ö","Ё"),("ö","ё"),("Ŭ","Ў"),("ŭ","ў"),("Ǒ","Ъ"),("ǒ","ъ"),("Ȳ","Ы"),("ȳ","ы"),("Ē","Э"),("ē","э")]), Dict([("J","Ь"),("j","ь"),("J'","Ь"),("j'","ь")]), Dict([("'J","Й"),("'j","й"),("'","’"),("J","Й"),("j","й")])]
-        tr2 = _ReplacementMaps(maps2)
-        new(rx1, tr1, rx2, tr2)
+        tr2 = Tuple(r => s -> get(m, s, s) for (r,m) in zip(rx2, maps2))
+        new(tr1, tr2)
     end
 end
 
 function _transform(table::_Uklatn_uk_Latn_DSTU_9112_A_uk, text::AbstractString)
     text = normalize(text, :NFC)
-    text = replace(text, table.rx1 => table.tr1)
-    text = replace(text, table.rx2 => table.tr2)
+    text = replace(text, table.rx1...)
+    text = replace(text, table.rx2...)
     text = normalize(text, :NFC)
     return text
 end
 
 
 struct _Uklatn_uk_Latn_DSTU_9112_B_uk
-    rx1::Regex
-    tr1::_ReplacementMaps
-    rx2::Regex
-    tr2::_ReplacementMaps
+    rx1::NTuple{1, Pair{Regex, Function}}
+    rx2::NTuple{5, Pair{Regex, Function}}
 
     function _Uklatn_uk_Latn_DSTU_9112_B_uk()
-        rx1 = r"([ÁáÉéÍíÓóÚúÝý])"
+        rx1 = [r"([ÁáÉéÍíÓóÚúÝý])"]
         maps1 = [Dict([("Á","Á"),("á","á"),("É","É"),("é","é"),("Í","Í"),("í","í"),("Ó","Ó"),("ó","ó"),("Ú","Ú"),("ú","ú"),("Ý","Ý"),("ý","ý")])]
-        tr1 = _ReplacementMaps(maps1)
-        rx2 = r"([Jj][Oo][Ww]|[Ss][Hh][Cc][Hh]|[CcGgKkSsZzUuOo][Hh]|[Yy][Ww]|[Ee][Hh][Ww]|[Jj][EeIiUuAa]|[Hh][Jj]|[A-GIK-PR-VYZa-gik-pr-vyz])|(?<=[Ss][Hh][Cc][Hh])([Jj]\u0027(?=[AaEeIiUu])|[Jj])|(?<=[CcGgKkSsZz][Hh])([Jj]\u0027(?=[AaEeIiUu])|[Jj])|(?<=[BCDFGKLMNPRSTVZbcdfgklmnprstvzv])([Jj]\u0027(?=[AaEeIiUu])|[Jj])|(\u0027[Jj](?![AaEeIiUu])|\u0027(?=[Jj])|[Jj])"
+        tr1 = Tuple(r => s -> get(m, s, s) for (r,m) in zip(rx1, maps1))
+        rx2 = [r"([Jj][Oo][Ww]|[Ss][Hh][Cc][Hh]|[CcGgKkSsZzUuOo][Hh]|[Yy][Ww]|[Ee][Hh][Ww]|[Jj][EeIiUuAa]|[Hh][Jj]|[A-GIK-PR-VYZa-gik-pr-vyz])", r"(?<=[Ss][Hh][Cc][Hh])([Jj]\u0027(?=[AaEeIiUu])|[Jj])", r"(?<=[CcGgKkSsZz][Hh])([Jj]\u0027(?=[AaEeIiUu])|[Jj])", r"(?<=[BCDFGKLMNPRSTVZbcdfgklmnprstvzv])([Jj]\u0027(?=[AaEeIiUu])|[Jj])", r"(\u0027[Jj](?![AaEeIiUu])|\u0027(?=[Jj])|[Jj])"]
         maps2 = [Dict([("A","А"),("a","а"),("B","Б"),("b","б"),("V","В"),("v","в"),("GH","Г"),("Gh","Г"),("gH","г"),("gh","г"),("G","Ґ"),("g","ґ"),("D","Д"),("d","д"),("E","Е"),("e","е"),("JE","Є"),("Je","Є"),("jE","є"),("je","є"),("ZH","Ж"),("Zh","Ж"),("zH","ж"),("zh","ж"),("Z","З"),("z","з"),("Y","И"),("y","и"),("I","І"),("i","і"),("JI","Ї"),("Ji","Ї"),("jI","ї"),("ji","ї"),("KH","Х"),("Kh","Х"),("kH","х"),("kh","х"),("K","К"),("k","к"),("L","Л"),("l","л"),("M","М"),("m","м"),("N","Н"),("n","н"),("O","О"),("o","о"),("P","П"),("p","п"),("R","Р"),("r","р"),("SHCH","Щ"),("SHCh","Щ"),("SHcH","Щ"),("SHch","Щ"),("ShCH","Щ"),("ShCh","Щ"),("ShcH","Щ"),("Shch","Щ"),("sHCH","щ"),("sHCh","щ"),("sHcH","щ"),("sHch","щ"),("shCH","щ"),("shCh","щ"),("shcH","щ"),("shch","щ"),("SH","Ш"),("Sh","Ш"),("sH","ш"),("sh","ш"),("S","С"),("s","с"),("T","Т"),("t","т"),("U","У"),("u","у"),("F","Ф"),("f","ф"),("CH","Ч"),("Ch","Ч"),("cH","ч"),("ch","ч"),("C","Ц"),("c","ц"),("JU","Ю"),("Ju","Ю"),("jU","ю"),("ju","ю"),("JA","Я"),("Ja","Я"),("jA","я"),("ja","я"),("HJ","Ь"),("Hj","Ь"),("hJ","ь"),("hj","ь"),("JOW","Ё"),("JOw","Ё"),("JoW","Ё"),("Jow","Ё"),("jOW","ё"),("jOw","ё"),("joW","ё"),("jow","ё"),("UH","Ў"),("Uh","Ў"),("uH","ў"),("uh","ў"),("OH","Ъ"),("Oh","Ъ"),("oH","ъ"),("oh","ъ"),("YW","Ы"),("Yw","Ы"),("yW","ы"),("yw","ы"),("EHW","Э"),("EHw","Э"),("EhW","Э"),("Ehw","Э"),("eHW","э"),("eHw","э"),("ehW","э"),("ehw","э")]), Dict([("J","Ь"),("j","ь"),("J'","Ь"),("j'","ь")]), Dict([("J","Ь"),("j","ь"),("J'","Ь"),("j'","ь")]), Dict([("J","Ь"),("j","ь"),("J'","Ь"),("j'","ь")]), Dict([("'J","Й"),("'j","й"),("'","’"),("J","Й"),("j","й")])]
-        tr2 = _ReplacementMaps(maps2)
-        new(rx1, tr1, rx2, tr2)
+        tr2 = Tuple(r => s -> get(m, s, s) for (r,m) in zip(rx2, maps2))
+        new(tr1, tr2)
     end
 end
 
 function _transform(table::_Uklatn_uk_Latn_DSTU_9112_B_uk, text::AbstractString)
     text = normalize(text, :NFC)
-    text = replace(text, table.rx1 => table.tr1)
-    text = replace(text, table.rx2 => table.tr2)
+    text = replace(text, table.rx1...)
+    text = replace(text, table.rx2...)
     text = normalize(text, :NFC)
     return text
 end

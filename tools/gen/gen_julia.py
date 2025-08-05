@@ -148,17 +148,13 @@ def gen_transforms(fns, default_table=None):
         return s.startswith('uk_Latn_')
     def _load_rules(data):
         return [s if isinstance(s, str) else [
-            '|'.join(r['regex'] for r in s),
+            [r['regex'] for r in s],
             [r['map'] for r in s]
         ] for s in data]
     def _j(s):
         s = json.dumps(s, ensure_ascii=False)
         s = re.sub(r'(?<!\\)\$', '\\$', s)
         return s
-
-    def _emit_dict(d):
-        s = ', '.join(f'({_j(k)}, {_j(v)})' for k,v in d.items())
-        return f'Dict([{s}])'
 
     def _emit_maps(ls):
         def m(d):
@@ -170,22 +166,24 @@ def gen_transforms(fns, default_table=None):
     def _emit_trrules(cname, rules):
         def _fdef():
             tpl = '''\
-            rx&sid::Regex
-            tr&sid::_ReplacementMaps
-            '''
-            for sid, section in enumerate(rules):
-                if not isinstance(section, str):
-                    yield template.format(tpl, sid=sid)
-
-        def _finit():
-            tpl = '''\
-            rx&sid = r"&rx"
-            maps&sid = &maps
-            tr&sid = _ReplacementMaps(maps&sid)
+            rx&sid::NTuple{&n, Pair{Regex, Function}}
             '''
             for sid, section in enumerate(rules):
                 if not isinstance(section, str):
                     rx, maps = section
+                    n = len(maps)
+                    yield template.format(tpl, sid=sid, n=n)
+
+        def _finit():
+            tpl = '''\
+            rx&sid = &rx
+            maps&sid = &maps
+            tr&sid = Tuple(r => s -> get(m, s, s) for (r,m) in zip(rx&sid, maps&sid))
+            '''
+            for sid, section in enumerate(rules):
+                if not isinstance(section, str):
+                    rx, maps = section
+                    rx = '[' + ', '.join(f'r"{s}"' for s in rx) + ']'
                     yield template.format(tpl, sid=sid, rx=rx,
                         maps=_emit_maps(maps))
 
@@ -193,7 +191,7 @@ def gen_transforms(fns, default_table=None):
             res = list()
             for sid, section in enumerate(rules):
                 if not isinstance(section, str):
-                    res.append(f'rx{sid}, tr{sid}')
+                    res.append(f'tr{sid}')
             return ', '.join(res)
 
         tpl = '''\
@@ -214,7 +212,7 @@ def gen_transforms(fns, default_table=None):
                     raise Exception(f'invalid transform: {section!r}')
                 yield f'text = normalize(text, :{section})\n'
             else:
-                yield f'text = replace(text, table.rx{sid} => table.tr{sid})\n'
+                yield f'text = replace(text, table.rx{sid}...)\n'
 
     def _emit_tr(cname, rules):
         ctx = dict(cname=cname)
@@ -377,24 +375,6 @@ function decode(s::AbstractString, table::Symbol)
         &match_dec_table
         throw(ArgumentError("invalid table :$table"))
     )
-end
-
-
-struct _ReplacementMaps
-    maps::Vector{Dict{String, String}}
-end
-
-
-Base._replace(io::IO, repl_s::_ReplacementMaps, str, r, re::Base.RegexAndMatchData) = begin
-    for i = 1:length(repl_s.maps)
-        n = Base.PCRE.substring_length_bynumber(re.match_data, i)
-        if n > 0
-            k = str[r]
-            s = get(repl_s.maps[i], k, k)
-            write(io, s)
-            break
-        end
-    end
 end
 &{global_tables}
 
