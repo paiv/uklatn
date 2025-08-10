@@ -101,7 +101,7 @@ Julia package
 Add package dependency:
 ```julia-repl
 julia> ]
-pkg> add https://github.com/paiv/uklatn:julia/
+pkg> add UkrainianLatin
 ```
 
 Swift package

@@ -4,7 +4,7 @@ title:  "Julia package for Ukrainian Cyrillic to Latin script transliteration"
 author: paiv
 ---
 
-- [https://github.com/paiv/uklatn/julia/](https://github.com/paiv/uklatn/julia/)
+- [https://juliahub.com/ui/Packages/General/UkrainianLatin](https://juliahub.com/ui/Packages/General/UkrainianLatin)
 
 
 Install
@@ -12,7 +12,7 @@ Install
 
 ```julia-repl
 julia> ]
-pkg> add https://github.com/paiv/uklatn:julia/
+pkg> add UkrainianLatin
 ```
 
 
