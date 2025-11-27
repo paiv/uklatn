@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it using the metadata from this file.
+doi: 10.5281/zenodo.15453558
+authors:
+- family-names: Pavel Ivashkov
+title: "paiv/uklatn"
+abstract: Ukrainian Cyrillic transliteration to Latin script
+license:
+- mit
+url: "https://github.com/paiv/uklatn"
+version: 1.24.0
+date-released: "2025-11-27"
+repository-code: "https://github.com/paiv/uklatn/tree/1.24.0"
